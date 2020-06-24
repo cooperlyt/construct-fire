@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: construct-fire
+  profiles:
+    active:
+      test
+  cloud:
+    config:
+      enabled: false
+
+server:
+  port: 19004
