@@ -16,7 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>cc.coopersoft.construct.fire.Application</start-class>
         <docker.image.name>coopersoft/construct-fire-check-service</docker.image.name>
-        <docker.image.tag>snapshot</docker.image.tag>
+        <docker.image.tag>latest</docker.image.tag>
+<!--        <docker.image.tag>snapshot</docker.image.tag>-->
     </properties>
 
     <repositories>

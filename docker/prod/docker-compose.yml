@@ -1,21 +1,93 @@
 version: '3'
 services:
+
+
+  database:
+    image: coopersoft/mariadb-min:v1
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - "/home/docker/data/db:/var/lib/mysql"
+    environment:
+      MYSQL_DATABASE: archives
+      MYSQL_ROOT_PASSWORD: p0stgr@s
+      TZ: Asia/Shanghai
+
+
+  #          nosse4  stable4  latest2
+  mediaservice:
+    image: coopersoft/archives-media-service:nosse2
+    restart: always
+    ports:
+      - "6699:6699"
+    volumes:
+      - "/home/docker/data/weedfs:/data"
+    environment:
+      TZ: Asia/Shanghai
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - "/home/docker/data/redis:/data"
+    command: redis-server --requirepass p0stgr@s
+
+  rmqnamesrv:
+    image: rocketmqinc/rocketmq
+    restart: always
+    ports:
+      - 9876:9876
+    volumes:
+      - /home/docker/data/rocketmq/logs:/home/rocketmq/logs
+      - /home/docker/data/rocketmq/store:/home/recketmq/store
+    command: sh mqnamesrv
+
+  rmqborker:
+    image: rocketmqinc/rocketmq
+    restart: always
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    volumes:
+      - /home/docker/data/rocketmq/logs:/home/rocketmq/logs
+      - /home/docker/data/rocketmq/store:/home/rocketmq/store
+      - /home/docker/data/rocketmq/broker.conf:/opt/rocketmq-4.4.0/conf/broker.conf
+    command: sh mqbroker -n rmqnamesrv:9876 -c ../conf/broker.conf
+    links:
+      - rmqnamesrv:rmqnamesrv
+    depends_on:
+      - rmqnamesrv
+
+
+  # rocket 控制台 非必要
+#  rmqconsole:
+#    image: styletang/rocketmq-console-ng
+#    ports:
+#      - 8087:8080
+#    depends_on:
+#      - rmqnamesrv
+#    links:
+#      - rmqnamesrv:rmqnamesrv
+#    environment:
+#      - JAVA_OPTS= -Dlogging.level.root=info   -Drocketmq.namesrv.addr=rmqnamesrv:9876
+#      - Dcom.rocketmq.sendMessageWithVIPChannel=false
+
   eurekaserver:
     image:   coopersoft/cloud-eurekasvr:latest
-    #    deploy:
-    #      resources:
-    #        limits:
-    ##          cpus: '0.05'
-    #          memory: 360M
-    #        reservations:
-    ##          cpus: '0.01'
-    #          memory: 128M
+    restart: always
     ports:
       - "8761:8761"
     environment:
       TZ: Asia/Shanghai
+
+
   configserver:
     image: coopersoft/cloud-confsvr:latest
+    restart: always
     ports:
       - "8888:8888"
     environment:
@@ -27,8 +99,11 @@ services:
       - eurekaserver:eurekaserver
     depends_on:
       - eurekaserver
+
+
   gatewayserver:
     image: coopersoft/cloud-gatewaysvr:latest
+    restart: always
     ports:
       - "5555:5555"
     environment:
@@ -46,93 +121,9 @@ services:
       - eurekaserver
       - configserver
 
-  database:
-    image: coopersoft/mariadb-min:v1
-    #      command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;' --innodb-flush-log-at-trx-commit=0
-    ports:
-      - "3306:3306"
-    volumes:
-      - "/home/docker/data/db:/var/lib/mysql"
-    environment:
-      #      - MYSQL_ROOT_PASSWORD=p0stgr@s
-      #      - MYSQL_DATABASE=archives
-      MYSQL_DATABASE: archives
-      MYSQL_ROOT_PASSWORD: p0stgr@s
-      #      MYSQL_ROOT_HOST: '%'
-      TZ: Asia/Shanghai
-  #        - MYSQL_USER=testuser
-  #        - MYSQL_PASSWORD=testpassword
-
-
-  #          nosse4  stable4
-  mediaservice:
-    image: coopersoft/archives-media-service:nosse2
-#    restart: always
-    ports:
-      - "6699:6699"
-    volumes:
-      - "/home/docker/data/weedfs:/data"
-    environment:
-      TZ: Asia/Shanghai
-
-  redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    volumes:
-      - "/home/docker/data/redis:/data"
-    command: redis-server --requirepass p0stgr@s
-
-  rmqnamesrv:
-    image: rocketmqinc/rocketmq
-    ports:
-      - 9876:9876
-    volumes:
-      - /home/docker/data/rocketmq/logs:/home/rocketmq/logs
-      - /home/docker/data/rocketmq/store:/home/recketmq/store
-    command: sh mqnamesrv
-
-  rmqborker:
-    image: rocketmqinc/rocketmq
-    ports:
-      - 10909:10909
-      - 10911:10911
-      - 10912:10912
-    volumes:
-      - /home/docker/data/rocketmq/logs:/home/rocketmq/logs
-      - /home/docker/data/rocketmq/store:/home/rocketmq/store
-      - /home/docker/data/rocketmq/broker.conf:/opt/rocketmq-4.4.0/conf/broker.conf
-    command: sh mqbroker -n rmqnamesrv:9876 -c ../conf/broker.conf
-    links:
-      - rmqnamesrv:rmqnamesrv
-    depends_on:
-      - rmqnamesrv
-
-
-  # rocket 控制台 非必要
-  rmqconsole:
-    image: styletang/rocketmq-console-ng
-    ports:
-      - 8087:8080
-    depends_on:
-      - rmqnamesrv
-    links:
-      - rmqnamesrv:rmqnamesrv
-    environment:
-      - JAVA_OPTS= -Dlogging.level.root=info   -Drocketmq.namesrv.addr=rmqnamesrv:9876
-      - Dcom.rocketmq.sendMessageWithVIPChannel=false
-
-
   authenticationservice:
     image: coopersoft/cloud-authentication-service:latest
-      #deploy:
-      #resources:
-      #limits:
-      #          cpus: '0.05'
-      #memory: 360M
-      #reservations:
-      #          cpus: '0.01'
-    #memory: 128M
+    restart: always
     ports:
       - "8901:8901"
     environment:
@@ -158,10 +149,11 @@ services:
 
   camunda:
     image: coopersoft/construct-camunda-service:latest
+    restart: always
     ports:
       - 18086:18086
     environment:
-      PROFILE: "dev"
+      PROFILE: "prod"
       SERVER_PORT: "18086"
       DATABASE_PORT:     3306
       CONFIGSERVER_PORT: 8888
@@ -186,20 +178,12 @@ services:
 
 
   corpservices:
-    image: coopersoft/construct-attach-corp-service:snapshot
-    #    deploy:
-    #      resources:
-    #        limits:
-    #          #          cpus: '0.05'
-    #          memory: 360M
-    #        reservations:
-    #          #          cpus: '0.01'
-    #          memory: 128M
-
+    image: coopersoft/construct-attach-corp-service:latest
+    restart: always
     expose:
       - "19001"
     environment:
-      PROFILE: "dev"
+      PROFILE: "prod"
       SERVER_PORT: "19001"
       CONFIGSERVER_PORT: 8888
       EUREKASERVER_PORT: 8761
@@ -223,11 +207,12 @@ services:
       - authenticationservice
 
   projectservices:
-    image: coopersoft/construct-project-service:snapshot
+    image: coopersoft/construct-project-service:latest
+    restart: always
     expose:
       - "19002"
     environment:
-      PROFILE: "dev"
+      PROFILE: "prod"
       SERVER_PORT: "19002"
       CONFIGSERVER_PORT: 8888
       EUREKASERVER_PORT: 8761
@@ -251,11 +236,12 @@ services:
       - authenticationservice
 
   cacheservices:
-    image: coopersoft/construct-project-cache-service:snapshot
+    image: coopersoft/construct-project-cache-service:latest
+    restart: always
     expose:
       - "19003"
     environment:
-      PROFILE: "dev"
+      PROFILE: "prod"
       SERVER_PORT: "19003"
       CONFIGSERVER_PORT: 8888
       EUREKASERVER_PORT: 8761
@@ -279,11 +265,12 @@ services:
       - authenticationservice
 
   fireconstructcheck:
-    image: coopersoft/construct-fire-check-service:snapshot
+    image: coopersoft/construct-fire-check-service:latest
+    restart: always
     expose:
       - "19004"
     environment:
-      PROFILE: "dev"
+      PROFILE: "prod"
       SERVER_PORT: "19004"
       CONFIGSERVER_PORT: 8888
       EUREKASERVER_PORT: 8761
@@ -305,3 +292,35 @@ services:
       - rmqnamesrv
       - authenticationservice
       - mediaservice
+
+  # ==================  client ===================================================
+
+
+  webclient:
+    image: coopersoft/construct-webclient:latest
+    restart: always
+    ports:
+      - "5200:5200"
+    network_mode: "host"
+    environment:
+      API_URL: 'http://192.168.1.21:5555'
+      FILE_URL: 'http://192.168.1.21:6699'
+
+  webcollaborativeclient:
+    image: coopersoft/construct-collaborative-webclient:latest
+    restart: always
+    ports:
+      - "5201:5201"
+    network_mode: "host"
+    environment:
+      API_URL: 'http://192.168.1.21:5555'
+      FILE_URL: 'http://192.168.1.21:6699'
+
+  website:
+    image: coopersoft/construct-website:nosse
+    restart: always
+    ports:
+      - "80:6698"
+    network_mode: "host"
+    volumes:
+      - /home/docker/data/website/resources.properties:/usr/local/openresty/nginx/conf/resources.properties
