@@ -1,32 +1,23 @@
 package cc.coopersoft.cloud.business.services;
 
-import cc.coopersoft.common.cloud.security.JWTUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LoginInfoServiceImpl implements LoginInfoService {
 
-    private static final String JWT_USER_NAME_KEY ="name";
-    private final JWTUtils jwtUtils;
-
-    public LoginInfoServiceImpl(JWTUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
-    }
 
     @Override
     public LoginInfo loginInfo() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        String username;
-
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
+        if (principal instanceof Jwt){
+            Jwt jwt = (Jwt) principal;
+            return LoginInfo.builder().id(jwt.getClaimAsString("preferred_username"))
+                    .name(jwt.getClaimAsString("given_name") + jwt.getClaimAsString("family_name")).build();
         }
+        throw new IllegalArgumentException("login user info not found!");
 
-        return new LoginInfo(username,jwtUtils.getDataStr(JWT_USER_NAME_KEY));
     }
 }

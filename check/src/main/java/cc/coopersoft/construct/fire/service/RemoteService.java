@@ -7,19 +7,20 @@ import cc.coopersoft.common.cloud.schemas.WeedFsResult;
 import cc.coopersoft.common.construct.project.Project;
 import cc.coopersoft.construct.fire.model.Report;
 import org.springframework.web.client.RequestCallback;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface RemoteService {
 
-    Project.Default project(long code);
+    Mono<Project.Default> project(long code);
 
-    long startBusiness(String define, long id, BusinessDescription.Description description);
+    Mono<Long> startBusiness(String define, long id, BusinessDescription.Description description);
 
     WeedFsResult uploadTemplateReport(String qr, String markText, String templateName, Object data);
 
     WeedFsResult uploadReport(RequestCallback requestCallback);
 
-    Long initBusinessDocuments(long corp, long id, String define);
+    Mono<Long> initBusinessDocuments(long corp, long id, String define);
 
 }

@@ -1,19 +1,27 @@
-security:
-  oauth2:
-    resource:
-      userInfoUri: http://authenticationservice:8091/auth/user
-
-
-eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    serviceUrl:
-      defaultZone: http://eurekaserver:8761/eureka/
+logging:
+  level:
+    com.netflix: WARN
+    org.springframework.web: WARN
+    cc.coopersoft: WARN
 
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          master-extend-cer:
+            provider: keycloak
+            client-id: extends
+            client-secret: f0efd4d7-3c26-430c-968f-d8987518a5b8
+            authorization-grant-type: client_credentials
+            scope: Master
+        provider:
+          keycloak:
+            authorization-uri: http://keycloak:8080/auth/realms/construction/protocol/openid-connect/auth
+            token-uri: http://keycloak:8080/auth/realms/construction/protocol/openid-connect/token
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/auth/realms/construction/protocol/openid-connect/certs
   cloud:
     stream:
       bindings:
@@ -31,7 +39,7 @@ spring:
     validationQuery: "SELECT 1"
     url: "jdbc:mysql://database:3306/CONSTRUCT?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false"
     username: "root"
-    password: "{cipher}4788dfe1ccbe6485934aec2ffeddb06163ea3d616df5fd75be96aadd4df1da91"
+    password: "p0stgr@s"
     driver-class-name: "com.mysql.cj.jdbc.Driver"
   jpa:
     database: "MYSQL"
@@ -66,6 +74,3 @@ report:
   mark: "东港市住房和城乡建设局"
   address:  "http://mediaservice:6699/upload/"
 
-
-signing:
-  key: "345345fsdfsf5345"

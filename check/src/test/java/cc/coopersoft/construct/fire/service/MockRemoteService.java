@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RequestCallback;
+import reactor.core.publisher.Mono;
 
 import java.util.Date;
 
@@ -20,7 +21,7 @@ import java.util.Date;
 public class MockRemoteService implements RemoteService {
 
   @Override
-    public Project.Default project(long code) {
+    public Mono<Project.Default> project(long code) {
 
         JoinCorpInfo corpInfo = new JoinCorpInfo();
         corpInfo.setGroupId("test");
@@ -67,15 +68,15 @@ public class MockRemoteService implements RemoteService {
 
 
         log.debug("return mock project");
-        return  result;
+        return  Mono.just(result);
     }
 
     @Override
-    public long startBusiness(String define, long id, BusinessDescription.Description description) {
+    public Mono<Long> startBusiness(String define, long id, BusinessDescription.Description description) {
         log.debug("mock start business");
       log.debug(description.getKeys());
 
-        return id;
+        return Mono.just(id);
     }
 
     @Override
@@ -101,8 +102,8 @@ public class MockRemoteService implements RemoteService {
     }
 
     @Override
-    public Long initBusinessDocuments(long corp, long id, String define) {
-        return null;
+    public Mono<Long> initBusinessDocuments(long corp, long id, String define) {
+        return Mono.empty();
     }
 
 }

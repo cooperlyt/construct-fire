@@ -1,16 +1,15 @@
 package cc.coopersoft.cloud.business.security;
 
 import cc.coopersoft.cloud.business.camunda.security.filter.rest.StatelessUserAuthenticationFilter;
+import cc.coopersoft.common.cloud.keycloak.KeycloakAuthenticationConverter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-@Configuration
-@Order(2)
-public class BusinessSecurityConfig extends ResourceServerConfigurerAdapter {
+@EnableWebSecurity
+public class BusinessSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Override
@@ -18,13 +17,15 @@ public class BusinessSecurityConfig extends ResourceServerConfigurerAdapter {
         http
                 .authorizeRequests()
 
-                .antMatchers("/master/**").hasAuthority("Master")
-                .antMatchers("/trust/**").hasAuthority("Trust")
-                .antMatchers("/manager/**").hasAuthority("DATA_MGR")
+                .antMatchers("/master/**").hasAuthority("SCOPE_Master")
+                .antMatchers("/trust/**").hasAuthority("SCOPE_Trust")
+                .antMatchers("/manager/**").hasRole("DATA.MGR")
                 //.antMatchers("/publish/**", "/app/**", "/lib/**", "/api/**").permitAll()
-                .anyRequest().permitAll();
+                .anyRequest().permitAll()
+                .and()
+                .oauth2ResourceServer().jwt()
+                .jwtAuthenticationConverter(new KeycloakAuthenticationConverter("master"));
     }
-
 
     @Bean
     public FilterRegistrationBean statelessUserAuthenticationFilter(){

@@ -6,50 +6,55 @@ import cc.coopersoft.common.construct.project.Project;
 import cc.coopersoft.common.report.PdfReport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpMessageConverterExtractor;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import static org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction.clientRegistrationId;
+
 
 
 @Service
 @Slf4j
+@RefreshScope
 public class RemoteServiceImpl implements RemoteService {
 
     @Value("${report.address}")
     private String reportServerAddress = "";
 
-    private final OAuth2RestTemplate oAuth2RestTemplate;
+    private final WebClient webClient;
 
-    public RemoteServiceImpl(OAuth2RestTemplate oAuth2RestTemplate) {
-        this.oAuth2RestTemplate = oAuth2RestTemplate;
+    public RemoteServiceImpl(WebClient webClient) {
+        this.webClient = webClient;
     }
 
     @Override
-    public Project.Default project(long code) {
-        ResponseEntity<Project.Default> restExchange = oAuth2RestTemplate.exchange(
-                "http://construct-project-cache/data/project/{code}",
-                HttpMethod.GET, null,Project.Default.class,code);
-        return restExchange.getBody();
+    public Mono<Project.Default> project(long code) {
+        return webClient
+                .get()
+                .uri("http://construct-project-cache/data/project/{code}",code)
+                .attributes(clientRegistrationId("master-extend-cer"))
+                .retrieve()
+                .bodyToMono(Project.Default.class);
     }
 
     @Override
-    public long startBusiness(String define, long id, BusinessDescription.Description description) {
-
-        ResponseEntity<Long> restExchange = oAuth2RestTemplate.exchange(
-                "http://camundasvr/adapter/fire/start/{define}/{id}",
-                HttpMethod.POST, new HttpEntity<>(description),Long.class, define, id);
-        Long result = restExchange.getBody();
-        if (result == null){
-            throw new IllegalStateException("business not create");
-        }
-        return result;
+    public Mono<Long> startBusiness(String define, long id, BusinessDescription.Description description) {
+        return webClient
+                .post()
+                .uri("http://camundasvr/adapter/fire/start/{define}/{id}", define, id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(description),BusinessDescription.Description.class)
+                .attributes(clientRegistrationId("master-extend-cer"))
+                .retrieve()
+                .bodyToMono(Long.class);
     }
 
     private WeedFsResult executeReportUpload(RequestCallback requestCallback) {
@@ -82,15 +87,14 @@ public class RemoteServiceImpl implements RemoteService {
     }
 
     @Override
-    public Long initBusinessDocuments(long corp, long id, String define) {
-        ResponseEntity<Long> restExchange = oAuth2RestTemplate.exchange(
-                "http://camundasvr/trust/doc/{corp}/define/{define}/{id}/init",
-                HttpMethod.POST, null ,Long.class, corp,define, id);
-        Long result = restExchange.getBody();
-        if (result == null){
-            throw new IllegalStateException("init fail!");
-        }
-        return result;
+    public Mono<Long> initBusinessDocuments(long corp, long id, String define) {
+        return webClient
+                .post()
+                .uri("http://camundasvr/trust/doc/{corp}/define/{define}/{id}/init",corp,define, id)
+                .attributes(clientRegistrationId("master-extend-cer"))
+                .retrieve()
+                .bodyToMono(Long.class);
+
     }
 
 

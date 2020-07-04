@@ -1,23 +1,24 @@
 package cc.coopersoft.construct.fire.security;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import cc.coopersoft.common.cloud.keycloak.KeycloakAuthenticationConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-@Configuration
-@Order(1)
-public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+@EnableWebSecurity
+public class ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers("/publish/**").permitAll()
-                .antMatchers("/template/**").hasAuthority("FIRE_CONSTRUCT_CHECK")
-                .antMatchers("/attach/**").hasAuthority("Trust")
-                .antMatchers("/manager/**").hasAuthority("Master")
-                .anyRequest().authenticated();
+                .antMatchers("/attach/**").hasAuthority("SCOPE_Trust")
+                .antMatchers("/manager/**").hasAuthority("SCOPE_Master")
+                .anyRequest().authenticated()
+                .and()
+                .oauth2ResourceServer().jwt()
+                .jwtAuthenticationConverter(new KeycloakAuthenticationConverter("master"));
     }
 
 }

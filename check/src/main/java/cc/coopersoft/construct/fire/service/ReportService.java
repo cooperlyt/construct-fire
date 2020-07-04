@@ -12,6 +12,7 @@ import com.itextpdf.text.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RequestCallback;
@@ -22,6 +23,7 @@ import java.util.*;
 
 @Service
 @Slf4j
+@RefreshScope
 public class ReportService {
 
     @Value("${report.mark:}")

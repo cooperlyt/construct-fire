@@ -6,6 +6,7 @@ import org.camunda.bpm.engine.rest.util.EngineUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import javax.servlet.*;
 import java.io.IOException;
@@ -29,16 +30,18 @@ public class StatelessUserAuthenticationFilter implements Filter {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String username;
-
         if (principal instanceof UserDetails) {
             username = ((UserDetails) principal).getUsername();
+        } else if (principal instanceof Jwt){
+            Jwt jwt = (Jwt) principal;
+            username = jwt.getClaimAsString("preferred_username");
         } else {
             username = principal.toString();
         }
 
 
         try {
-            engine.getIdentityService().setAuthentication(username, getUserGroups(username));
+            engine.getIdentityService().setAuthentication(username, getUserGroups());
             chain.doFilter(request, response);
         } finally {
             clearAuthentication(engine);
@@ -55,11 +58,15 @@ public class StatelessUserAuthenticationFilter implements Filter {
         engine.getIdentityService().clearAuthentication();
     }
 
-    private List<String> getUserGroups(String userId){
+    private List<String> getUserGroups(){
 
         List<String> groupIds;
 
         org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        authentication.getAuthorities().stream().forEach(auth -> {
+            log.debug("getAuthority:" + auth.getAuthority());
+        });
 
         groupIds = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

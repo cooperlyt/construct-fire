@@ -3,4 +3,12 @@ logging:
     com.netflix: WARN
     org.springframework.web: WARN
     cc.coopersoft: DEBUG
+    org.camunda.bpm.engine.impl.persistence.entity: DEBUG
 
+camunda.bpm:
+  database:
+    schema-update: true
+
+spring:
+  jpa:
+    show-sql: "true"

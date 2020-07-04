@@ -1,10 +1,9 @@
 package cc.coopersoft.cloud.business.camunda.security;
 
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
 //@Configuration
-//@Order(SecurityProperties.BASIC_AUTH_ORDER - 15)
-public class WebAppSecurityConfig extends ResourceServerConfigurerAdapter {
+//@Order(SecurityProperties.BASIC_AUTH_ORDER - 15) extends ResourceServerConfigurerAdapter
+public class WebAppSecurityConfig  {
 
 //    @Override
 //    public void configure(HttpSecurity http) throws Exception {

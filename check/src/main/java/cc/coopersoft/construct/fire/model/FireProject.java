@@ -1,8 +1,8 @@
 package cc.coopersoft.construct.fire.model;
 
+import cc.coopersoft.common.cloud.json.JsonRawDeserializer;
+import cc.coopersoft.common.cloud.json.JsonRawSerialize;
 import cc.coopersoft.common.construct.project.*;
-import cc.coopersoft.common.json.JsonRawDeserializer;
-import cc.coopersoft.common.json.JsonRawSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;

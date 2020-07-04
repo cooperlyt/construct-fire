@@ -247,9 +247,9 @@ public class BusinessService {
         description.getBusinessKeys().add(new BusinessKey(BUSINESS_PROJECT_SEARCH_CATEGORY,String.valueOf(result.getInfo().getProjectCode())));
 
 
-        long id = remoteService.startBusiness(FIRE_CHECK_BUSINESS_DEFINE,result.getId(),description);
+        Long id = remoteService.startBusiness(FIRE_CHECK_BUSINESS_DEFINE,result.getId(),description).block();
 
-        if (id != result.getId()){
+        if (id == null ||  !id.equals(result.getId()) ){
             throw new IllegalStateException("business id error!");
         }
         return result;
@@ -282,7 +282,8 @@ public class BusinessService {
         check.getInfo().setQualified(false);
 
 
-        Project.Default project = remoteService.project(check.getInfo().getProjectCode());
+        Project.Default project = remoteService.project(check.getInfo().getProjectCode()).block();
+
         if (project == null || !project.isEnable()){
             throw new IllegalArgumentException("project not found or is disabled!");
         }
