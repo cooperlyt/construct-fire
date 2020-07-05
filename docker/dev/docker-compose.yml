@@ -198,6 +198,21 @@ services:
       - keycloak
       - consul
 
+  camundaconsole:
+    image: coopersoft/camunda-console:latest
+    ports:
+      - 18902:18902
+    environment:
+      PROFILE: "default"
+      SERVER_PORT: "18902"
+      CAMUNDA_PORT: 18086
+    depends_on:
+      - database
+      - camunda
+    links:
+      - database:database
+      - camunda:camunda
+
   fireconstructcheck:
     image: coopersoft/construct-fire-check-service:snapshot
     expose:
