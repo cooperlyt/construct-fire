@@ -61,17 +61,6 @@ public class FireCheckInfo {
     @JsonIgnore
     private boolean qualified;
 
-    //
-    @Column(name = "FILE_NUMBER", length = 32)
-    @JsonView(Title.class)
-    @Size(max = 32)
-    private String applyFile;
-
-    @Column(name = "FIRE_DESIGN_FILE", length = 32)
-    @Size(max = 32)
-    @JsonView(Title.class)
-    private String fireFile;
-
     @Column(name = "CONSTRUCTION_FILE", length = 32)
     @Size(max = 32)
     @JsonView(Title.class)

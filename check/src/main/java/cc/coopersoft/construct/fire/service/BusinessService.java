@@ -361,9 +361,7 @@ public class BusinessService {
     private String checkKeys(FireCheckInfo check){
         String keys = String.valueOf(check.getProjectCode());
 
-        keys = keys.trim() + " " + StringUtils.defaultIfBlank(check.getApplyFile(),"");
         keys = keys.trim() + " " + StringUtils.defaultIfBlank(check.getConstructFile(),"");
-        keys = keys.trim() + " " + StringUtils.defaultIfBlank(check.getFireFile(),"");
         keys = keys.trim() + " " + StringUtils.defaultIfBlank(check.getContracts(),"");
         keys = keys.trim() + " " + StringUtils.defaultIfBlank(check.getTel(), "");
         keys = keys.trim() + " " + StringUtils.defaultIfBlank(check.getProject().getName(),"");

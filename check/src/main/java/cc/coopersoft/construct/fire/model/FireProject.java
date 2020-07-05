@@ -83,7 +83,9 @@ public class FireProject implements java.io.Serializable, ProjectCorpSummary {
     @JsonView(Title.class)
     private ProjectRegInfo.Type type;
 
-
+    @Column(name = "PUT_MONEY")
+    @JsonView(Title.class)
+    private BigDecimal putMoney;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "PROPERTY", length = 6)

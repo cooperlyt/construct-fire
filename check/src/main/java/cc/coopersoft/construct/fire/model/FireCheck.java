@@ -39,6 +39,12 @@ public class FireCheck {
         Review
     }
 
+    public enum NoAcceptType{
+        WRONG_APPLY, //1错误的申请
+        WRONG_FILE,  //2文件不符合要求
+        LESS_FILE   //3 缺少文件
+    }
+
     @Id
     @Column(name = "ID", nullable = false, unique = true)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -50,6 +56,11 @@ public class FireCheck {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonView(FireCheckInfo.Title.class)
     private Status status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "NO_ACCEPT_TYPE", length = 11)
+    @JsonView(FireCheckInfo.Title.class)
+    private NoAcceptType noAcceptType;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "APPLY_TIME", nullable = false)
