@@ -2,11 +2,13 @@ package cc.coopersoft.construct.fire.service;
 
 import cc.coopersoft.common.business.BusinessDescription;
 import cc.coopersoft.common.cloud.schemas.WeedFsResult;
+import cc.coopersoft.common.construct.corp.Corp;
 import cc.coopersoft.common.construct.project.Project;
 import cc.coopersoft.common.report.PdfReport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -54,7 +56,8 @@ public class RemoteServiceImpl implements RemoteService {
                 .body(Mono.just(description),BusinessDescription.Description.class)
                 .attributes(clientRegistrationId("master-extend-cer"))
                 .retrieve()
-                .bodyToMono(Long.class);
+                .bodyToMono(String.class)
+                .map(Long::parseLong);
     }
 
     private WeedFsResult executeReportUpload(RequestCallback requestCallback) {
@@ -93,7 +96,8 @@ public class RemoteServiceImpl implements RemoteService {
                 .uri("http://camundasvr/trust/doc/{corp}/define/{define}/{id}/init",corp,define, id)
                 .attributes(clientRegistrationId("master-extend-cer"))
                 .retrieve()
-                .bodyToMono(Long.class);
+                .bodyToMono(String.class)
+                .map(Long::parseLong);
 
     }
 

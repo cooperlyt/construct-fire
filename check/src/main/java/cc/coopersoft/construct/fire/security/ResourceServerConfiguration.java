@@ -15,6 +15,7 @@ public class ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/publish/**").permitAll()
                 .antMatchers("/attach/**").hasAuthority("SCOPE_Trust")
                 .antMatchers("/manager/**").hasAuthority("SCOPE_Master")
+                .antMatchers("/actuator/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer().jwt()

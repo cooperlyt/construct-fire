@@ -3,7 +3,7 @@ logging:
     com.netflix: WARN
     org.springframework.web: WARN
     cc.coopersoft: DEBUG
-    org.camunda.bpm.engine.impl.persistence.entity: DEBUG
+    org.camunda: DEBUG
 
 
 camunda.bpm:
@@ -30,7 +30,7 @@ spring:
           name-server:
             192.168.1.21:9876
   datasource:
-    url: "jdbc:mysql://127.0.0.1:3306/CONSTRUCT?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false"
+    url: "jdbc:mysql://127.0.0.1:3306/camunda?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false"
     username: "root"
     password: "5257mq99"
     platform: mysql

@@ -1,9 +1,5 @@
 package cc.coopersoft.cloud.business.security;
 
-import cc.coopersoft.cloud.business.camunda.security.filter.rest.StatelessUserAuthenticationFilter;
-import cc.coopersoft.common.cloud.keycloak.KeycloakAuthenticationConverter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -22,17 +18,30 @@ public class BusinessSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/manager/**").hasRole("DATA.MGR")
                 //.antMatchers("/publish/**", "/app/**", "/lib/**", "/api/**").permitAll()
                 .anyRequest().permitAll()
-                .and()
+                .and().antMatcher("/master/**")
                 .oauth2ResourceServer().jwt()
-                .jwtAuthenticationConverter(new KeycloakAuthenticationConverter("master"));
+                .jwtAuthenticationConverter(new JwtCamundaAuthenticationConverter())
+                .and().and().antMatcher("/trust/**")
+                .oauth2ResourceServer().jwt()
+                .jwtAuthenticationConverter(new JwtCamundaAuthenticationConverter())
+                .and().and().antMatcher("/manager/**")
+                .oauth2ResourceServer().jwt()
+                .jwtAuthenticationConverter(new JwtCamundaAuthenticationConverter())
+                .and().and().antMatcher("/rest/**")
+                .oauth2ResourceServer().jwt()
+                .jwtAuthenticationConverter(new JwtCamundaAuthenticationConverter())
+                .and().and().antMatcher("/adapter/**")
+                .oauth2ResourceServer().jwt()
+                .jwtAuthenticationConverter(new JwtCamundaAuthenticationConverter());
+
     }
 
-    @Bean
-    public FilterRegistrationBean statelessUserAuthenticationFilter(){
-        FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
-        filterRegistration.setFilter(new StatelessUserAuthenticationFilter());
-        filterRegistration.setOrder(102); // make sure the filter is registered after the Spring Security Filter Chain
-        filterRegistration.addUrlPatterns("/rest/*","/adapter/*");
-        return filterRegistration;
-    }
+//    @Bean
+//    public FilterRegistrationBean statelessUserAuthenticationFilter(){
+//        FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
+//        filterRegistration.setFilter(new StatelessUserAuthenticationFilter());
+//        filterRegistration.setOrder(102); // make sure the filter is registered after the Spring Security Filter Chain
+//        filterRegistration.addUrlPatterns("/rest/*","/adapter/*");
+//        return filterRegistration;
+//    }
 }

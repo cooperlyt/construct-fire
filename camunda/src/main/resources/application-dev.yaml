@@ -1,9 +1,12 @@
 logging:
   level:
     com.netflix: WARN
-    org.springframework.web: WARN
     cc.coopersoft: DEBUG
     org.camunda.bpm.engine.impl.persistence.entity: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    #    org.springframework.boot.autoconfigure: DEBUG
 
 camunda.bpm:
   database:

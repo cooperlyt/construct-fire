@@ -35,6 +35,9 @@ spring:
   jpa:
     database: "MYSQL"
     show-sql: "false"
+    hibernate:
+      naming:
+        physical-strategy: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
     properties:
       hibernate:
         ddl-auto: "none"

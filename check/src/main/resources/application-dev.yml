@@ -4,6 +4,7 @@ logging:
     com.netflix: WARN
     org.springframework.web: WARN
     cc.coopersoft: DEBUG
+    org.springframework: DEBUG
 
 spring:
   jpa:
