@@ -12,25 +12,12 @@ public class BusinessSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-
                 .antMatchers("/master/**").hasAuthority("SCOPE_Master")
                 .antMatchers("/trust/**").hasAuthority("SCOPE_Trust")
                 .antMatchers("/manager/**").hasRole("DATA.MGR")
                 //.antMatchers("/publish/**", "/app/**", "/lib/**", "/api/**").permitAll()
                 .anyRequest().permitAll()
-                .and().antMatcher("/master/**")
-                .oauth2ResourceServer().jwt()
-                .jwtAuthenticationConverter(new JwtCamundaAuthenticationConverter())
-                .and().and().antMatcher("/trust/**")
-                .oauth2ResourceServer().jwt()
-                .jwtAuthenticationConverter(new JwtCamundaAuthenticationConverter())
-                .and().and().antMatcher("/manager/**")
-                .oauth2ResourceServer().jwt()
-                .jwtAuthenticationConverter(new JwtCamundaAuthenticationConverter())
-                .and().and().antMatcher("/rest/**")
-                .oauth2ResourceServer().jwt()
-                .jwtAuthenticationConverter(new JwtCamundaAuthenticationConverter())
-                .and().and().antMatcher("/adapter/**")
+                .and()
                 .oauth2ResourceServer().jwt()
                 .jwtAuthenticationConverter(new JwtCamundaAuthenticationConverter());
 
