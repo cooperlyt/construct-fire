@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
@@ -24,5 +26,10 @@ public class BuildCheckOpinion {
     @Column(name = "PASS")
     @JsonView(FireCheck.Details.class)
     private Boolean pass;
+
+    @Column(name = "USE_PROPERTY", length = 16)
+    @Enumerated(EnumType.STRING)
+    @JsonView(FireCheck.Details.class)
+    private FireCheckInfo.UseProperty property;
 
 }

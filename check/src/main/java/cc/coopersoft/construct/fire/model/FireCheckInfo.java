@@ -80,11 +80,6 @@ public class FireCheckInfo {
     @JsonView(Title.class)
     private Date designFileDate;
 
-    @Column(name = "USE_PROPERTY", length = 16)
-    @Enumerated(EnumType.STRING)
-    @JsonView(Title.class)
-    private UseProperty property;
-
     @Column(name = "PART", nullable = false)
     @JsonView(Title.class)
     private boolean part;
@@ -94,10 +89,7 @@ public class FireCheckInfo {
     @JsonView(Title.class)
     private String conclusion;
 
-    @Column(name = "OLD_USE", length = 16)
-    @Size(max = 16)
-    @JsonView(Title.class)
-    private String oldUse;
+
 
     @OneToOne(fetch = FetchType.LAZY, optional = false, mappedBy = "check", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -123,6 +115,11 @@ public class FireCheckInfo {
     @JsonManagedReference
     @JsonView(FireCheck.Details.class)
     private ModifyWarmCheck warm;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "check", orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @JsonView(FireCheck.Details.class)
+    private UseChange useChange;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "check", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("order")

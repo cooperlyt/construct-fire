@@ -94,6 +94,10 @@ public class ProjectCorp {
     @JsonView(FireProject.Details.class)
     private String contacts;
 
+    @Column(name = "CONTACTS_ID", length = 32)
+    @JsonView(FireProject.Details.class)
+    private String contactsId;
+
     @Column(name = "TEL", length = 16)
     @JsonView(FireProject.Details.class)
     private String tel;
