@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @Entity
@@ -51,9 +53,12 @@ public class ModifyFitCheck implements java.io.Serializable{
 
     @Column(name = "AREA")
     @JsonView(FireCheck.Details.class)
+    @NotNull
     private BigDecimal area;
 
-    @Column(name = "LAYERS")
+    @Column(name = "LAYERS", length = 16)
+    @Size(max = 16)
+    @NotBlank
     @JsonView(FireCheck.Details.class)
-    private Integer layers;
+    private String layers;
 }

@@ -39,6 +39,11 @@ public class BuildCheck extends BuildCheckOpinion implements java.io.Serializabl
     @JsonView(FireCheck.Details.class)
     private int danger;
 
+    @Column(name = "USE_PROPERTY", length = 16)
+    @Enumerated(EnumType.STRING)
+    @JsonView(FireCheck.Details.class)
+    private FireCheckInfo.UseProperty property;
+
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "check", cascade = CascadeType.ALL,orphanRemoval = true, optional = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonView(FireCheck.Details.class)

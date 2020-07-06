@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "FIRE_CHECK_WARM")
@@ -44,7 +46,23 @@ public class ModifyWarmCheck implements java.io.Serializable{
     @NotNull
     private Type type;
 
-    @Column(name = "LAYERS")
+    @Column(name = "LAYERS", length = 16)
+    @Size(max = 16)
+    @NotBlank
     @JsonView(FireCheck.Details.class)
-    private Integer layers;
+    private String layers;
+
+    @Column(name = "PART", length = 32)
+    @Size(max = 32)
+    @NotBlank
+    @JsonView(FireCheck.Details.class)
+    private String part;
+
+
+    @Column(name = "MATERIAL", length = 32)
+    @Size(max = 32)
+    @NotBlank
+    @JsonView(FireCheck.Details.class)
+    private String material;
+
 }

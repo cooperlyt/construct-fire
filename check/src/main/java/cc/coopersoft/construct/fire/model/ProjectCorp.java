@@ -51,6 +51,7 @@ public class ProjectCorp {
                 .groupIdType(corp.getInfo().getGroupIdType())
                 .contacts(corp.getContacts())
                 .tel(corp.getTel())
+                .contactsId(corp.getContactsId())
                 .ownerId(corp.getInfo().getOwnerId())
                 .ownerIdType(corp.getInfo().getOwnerIdType())
                 .ownerName(corp.getInfo().getOwnerName()).build();

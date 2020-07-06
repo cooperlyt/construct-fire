@@ -50,6 +50,10 @@ public class ProjectBuildInfo implements java.io.Serializable{
     @JsonView(FireCheck.Details.class)
     private BigDecimal height;
 
+    @Column(name = "_LENGTH")
+    @JsonView(FireCheck.Details.class)
+    private BigDecimal length;
+
 
     @Column(name = "GROUND_AREA")
     @JsonView(FireCheck.Details.class)
