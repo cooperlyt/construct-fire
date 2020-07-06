@@ -27,9 +27,4 @@ public class BuildCheckOpinion {
     @JsonView(FireCheck.Details.class)
     private Boolean pass;
 
-    @Column(name = "USE_PROPERTY", length = 16)
-    @Enumerated(EnumType.STRING)
-    @JsonView(FireCheck.Details.class)
-    private FireCheckInfo.UseProperty property;
-
 }

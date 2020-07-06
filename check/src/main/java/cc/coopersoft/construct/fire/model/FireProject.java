@@ -33,6 +33,7 @@ public class FireProject implements java.io.Serializable, ProjectCorpSummary {
                 .name(projectInfo.getName())
                 .address(projectInfo.getAddress())
                 .type(projectInfo.getType())
+                .putMoney(projectInfo.getPutMoney())
                 .property(projectInfo.getProperty())
                 .modifyFit(projectInfo.getModifyFit())
                 .modifyWarm(projectInfo.getModifyWarm())

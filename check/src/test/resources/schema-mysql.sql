@@ -143,7 +143,7 @@ CREATE TABLE FIRE_CHECK_FIT
     ID bigint NOT NULL,
     PART varchar(10) NOT NULL,
     AREA decimal(19,2),
-    LAYERS int,
+    LAYERS varchar(16),
     PRIMARY KEY (ID)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET utf8;
 
@@ -248,7 +248,7 @@ CREATE TABLE FIRE_CHECK_WARM
 (
     ID bigint NOT NULL,
     TYPE varchar(2) NOT NULL,
-    LAYERS int,
+    LAYERS varchar(16),
     PART varchar(32),
     MATERIAL varchar(32),
     PRIMARY KEY (ID)
