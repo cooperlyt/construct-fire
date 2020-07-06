@@ -141,7 +141,7 @@ CREATE TABLE FIRE_CHECK_CONTENT
 CREATE TABLE FIRE_CHECK_FIT
 (
     ID bigint NOT NULL,
-    PART varchar(10) NOT NULL,
+    PART varchar(64) NOT NULL,
     AREA decimal(19,2),
     LAYERS varchar(16),
     PRIMARY KEY (ID)
@@ -282,6 +282,7 @@ CREATE TABLE FIRE_PROJECT
     PROPERTY varchar(6),
     TYPE varchar(19) NOT NULL,
     ALL_AREA decimal(19,2),
+    AREA decimal(19,2),
     PUT_MONEY decimal(19,2),
     MAIN_PROJECT_LEVEL varchar(8) NOT NULL,
     CORPS text,
