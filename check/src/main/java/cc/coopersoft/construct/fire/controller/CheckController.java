@@ -62,8 +62,10 @@ public class CheckController {
 
     @RequestMapping(value = "/check/{id}/file",method = {RequestMethod.POST, RequestMethod.PUT})
     @ResponseStatus(HttpStatus.CREATED)
-    public String fileCheck(@PathVariable("id") long id , @Valid @RequestBody List<CheckFile> files){
-        businessService.fileCheck(id,files);
+    public String fileCheck(@PathVariable("id") long id ,
+                            @RequestParam(value = "type", required = false) FireCheck.NoAcceptType noAcceptType,
+                            @Valid @RequestBody List<CheckFile> files){
+        businessService.fileCheck(id,files,noAcceptType);
         return String.valueOf(id);
     }
 

@@ -35,6 +35,7 @@ public class BusinessService {
 
 
     private static final String FIRE_CHECK_BUSINESS_DEFINE = "FIRE_CHECK";
+    private static final String FIRE_RECORD_BUSINESS_DEFINE = "FIRE_RECORD";
 
     private static final String BUSINESS_CORP_SEARCH_CATEGORY = "CORP";
     private static final String BUSINESS_PROJECT_SEARCH_CATEGORY = "PROJECT";
@@ -71,8 +72,9 @@ public class BusinessService {
     }
 
     @Transactional
-    public void fileCheck(long id , List<CheckFile> files){
+    public void fileCheck(long id , List<CheckFile> files, FireCheck.NoAcceptType noAcceptType){
         FireCheck check = fireCheckRepository.findById(id).orElseThrow();
+        check.setNoAcceptType(noAcceptType);
         files.forEach(file -> {
             file.setId(cachedUidGenerator.getUID());
             file.setCheck(check);
@@ -123,7 +125,8 @@ public class BusinessService {
 
         create(check);
         addCheckTable(check.getInfo());
-        remoteService.initBusinessDocuments(check.getCorp(),check.getId(),FIRE_CHECK_BUSINESS_DEFINE);
+
+        remoteService.initBusinessDocuments(check.getCorp(),check.getId(),check.getInfo().isSpecial() ? FIRE_CHECK_BUSINESS_DEFINE : FIRE_RECORD_BUSINESS_DEFINE);
 
         reportService.applyReport(check);
 
@@ -247,7 +250,7 @@ public class BusinessService {
         description.getBusinessKeys().add(new BusinessKey(BUSINESS_PROJECT_SEARCH_CATEGORY,String.valueOf(result.getInfo().getProjectCode())));
 
 
-        Long id = remoteService.startBusiness(FIRE_CHECK_BUSINESS_DEFINE,result.getId(),description).block();
+        Long id = remoteService.startBusiness(check.getInfo().isSpecial() ? FIRE_CHECK_BUSINESS_DEFINE : FIRE_RECORD_BUSINESS_DEFINE,result.getId(),description).block();
 
         if (id == null ||  !id.equals(result.getId()) ){
             throw new IllegalStateException("business id error!");
@@ -310,6 +313,7 @@ public class BusinessService {
                             .onArea(build.getOnArea())
                             .underArea(build.getUnderArea())
                             .height(build.getHeight())
+                            .length(build.getLength())
                             .check(buildCheck)
                             .build()).orElseThrow());
         }
