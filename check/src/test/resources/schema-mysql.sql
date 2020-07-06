@@ -301,6 +301,7 @@ CREATE TABLE FIRE_PROJECT_BUILD
     GROUND_FLOOR_COUNT int,
     UNDER_FLOOR_COUNT int,
     HEIGHT decimal(19,2),
+    _LENGTH decimal(19,2),
     ALL_AREA decimal(19,2),
     GROUND_AREA decimal(19,2),
     UNDER_AREA decimal(19,2),
