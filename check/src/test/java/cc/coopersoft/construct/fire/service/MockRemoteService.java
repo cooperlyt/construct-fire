@@ -44,7 +44,7 @@ public class MockRemoteService implements RemoteService {
 
         BuildRegInfo<BuildInfo> buildRegInfo = new BuildRegInfo<>();
         buildRegInfo.setCode(003);
-
+        buildRegInfo.setInfo(buildInfo);
 
 
 
