@@ -63,8 +63,8 @@ public class ReportTest {
 
     public static void sampleReport(OutputStream os, String qr, String markText, String templateName, Object data) {
         com.itextpdf.text.Document document = new Document(PageSize.A4);
-        Rectangle rectPageSize = new Rectangle(PageSize.A4);//横打
-        document.setPageSize(rectPageSize.rotate());
+//        Rectangle rectPageSize = new Rectangle(PageSize.A4);//横打
+//        document.setPageSize(rectPageSize.rotate());
         try {
             PdfWriter writer = PdfWriter.getInstance(document, os);
             writer.setEncryption(null, null, PdfWriter.ALLOW_PRINTING, PdfWriter.STANDARD_ENCRYPTION_128);
@@ -97,16 +97,17 @@ public class ReportTest {
         project.setModifyWarm(true);
         project.setModifyUse(true);
         project.setPutMoney(new BigDecimal(123345));
+        project.setArea(new BigDecimal(111110000.00));
 
 
         ProjectCorp projectCorp = new ProjectCorp();
         ProjectCorp.JoinCorpPK joinCorpPK1 = new ProjectCorp.JoinCorpPK();
-        joinCorpPK1.setCode(defaultUidGenerator.getUID());
+        joinCorpPK1.setCode(id);
         joinCorpPK1.setProject(project);
-        joinCorpPK1.setProperty(CorpProperty.Developer);
+        joinCorpPK1.setProperty(CorpProperty.Construct);
         projectCorp.setId(joinCorpPK1);
         projectCorp.setLevel(1);
-        projectCorp.setName("开发单位");
+        projectCorp.setName("施工单位");
         projectCorp.setGroupIdType(GroupIdType.COMPANY_CODE);
         projectCorp.setGroupId("营业执照编号");
         projectCorp.setContacts("负责人");
@@ -115,6 +116,76 @@ public class ReportTest {
         projectCorp.setOwnerName("法人姓名");
         projectCorp.setOwnerIdType(PersonIdType.MASTER_ID);
         project.getCorps().add(projectCorp);
+
+
+        ProjectCorp projectCorp2 = new ProjectCorp();
+        ProjectCorp.JoinCorpPK joinCorpPK2 = new ProjectCorp.JoinCorpPK();
+        joinCorpPK2.setCode(id);
+        joinCorpPK2.setProject(project);
+        joinCorpPK2.setProperty(CorpProperty.Developer);
+        projectCorp2.setId(joinCorpPK2);
+        projectCorp2.setLevel(2);
+        projectCorp2.setName("建设单位");
+        projectCorp2.setGroupIdType(GroupIdType.COMPANY_CODE);
+        projectCorp2.setGroupId("建设单位营业执照编号");
+        projectCorp2.setContacts("建设单位负责人");
+        projectCorp2.setTel("1333355555");
+        projectCorp2.setContactsId("负责人ID");
+        projectCorp2.setOwnerName("建设单位法人姓名");
+        projectCorp2.setOwnerIdType(PersonIdType.MASTER_ID);
+        project.getCorps().add(projectCorp2);
+
+        ProjectCorp projectCorp3 = new ProjectCorp();
+        ProjectCorp.JoinCorpPK joinCorpPK3 = new ProjectCorp.JoinCorpPK();
+        joinCorpPK3.setCode(id);
+        joinCorpPK3.setProject(project);
+        joinCorpPK3.setProperty(CorpProperty.FireCheck);
+        projectCorp3.setId(joinCorpPK3);
+        projectCorp3.setLevel(3);
+        projectCorp3.setName("技术服务机构");
+        projectCorp3.setGroupIdType(GroupIdType.COMPANY_CODE);
+        projectCorp3.setGroupId("技术服务机构营业执照编号");
+        projectCorp3.setContacts("技术服务机构负责人");
+        projectCorp3.setTel("1333355555");
+        projectCorp3.setContactsId("负责人ID");
+        projectCorp3.setOwnerName("技术服务机构法人姓名");
+        projectCorp3.setOwnerIdType(PersonIdType.MASTER_ID);
+        project.getCorps().add(projectCorp3);
+
+        ProjectCorp projectCorp4 = new ProjectCorp();
+        ProjectCorp.JoinCorpPK joinCorpPK4 = new ProjectCorp.JoinCorpPK();
+        joinCorpPK4.setCode(id);
+        joinCorpPK4.setProject(project);
+        joinCorpPK4.setProperty(CorpProperty.Supervisor);
+        projectCorp4.setId(joinCorpPK4);
+        projectCorp4.setLevel(3);
+        projectCorp4.setName("工程监理");
+        projectCorp4.setGroupIdType(GroupIdType.COMPANY_CODE);
+        projectCorp4.setGroupId("工程监理营业执照编号");
+        projectCorp4.setContacts("工程监理负责人");
+        projectCorp4.setTel("1333357775");
+        projectCorp4.setContactsId("负责人ID");
+        projectCorp4.setOwnerName("工程监理法人姓名");
+        projectCorp4.setOwnerIdType(PersonIdType.MASTER_ID);
+        project.getCorps().add(projectCorp4);
+
+        ProjectCorp projectCorp5 = new ProjectCorp();
+        ProjectCorp.JoinCorpPK joinCorpPK5 = new ProjectCorp.JoinCorpPK();
+        joinCorpPK5.setCode(id);
+        joinCorpPK5.setProject(project);
+        joinCorpPK5.setProperty(CorpProperty.Design);
+        projectCorp5.setId(joinCorpPK5);
+        projectCorp5.setLevel(3);
+        projectCorp5.setName("设计单位");
+        projectCorp5.setGroupIdType(GroupIdType.COMPANY_CODE);
+        projectCorp5.setGroupId("设计单位执照编号");
+        projectCorp5.setContacts("设计单位负责人");
+        projectCorp5.setTel("1333359995");
+        projectCorp5.setContactsId("负责人ID");
+        projectCorp5.setOwnerName("设计单位法人姓名");
+        projectCorp5.setOwnerIdType(PersonIdType.MASTER_ID);
+        project.getCorps().add(projectCorp5);
+
 
         FireCheckInfo fireCheckInfo = new FireCheckInfo();
         fireCheckInfo.setId(id);
@@ -130,6 +201,7 @@ public class ReportTest {
         fireCheckInfo.setSpecial(true);
         fireCheckInfo.setQualified(true);
         fireCheckInfo.setProject(project);
+        fireCheckInfo.setProjectCode(project.getId());
         project.setCheck(fireCheckInfo);
 
 
@@ -172,7 +244,7 @@ public class ReportTest {
         modifyFitCheck.setId(defaultUidGenerator.getUID());
         modifyFitCheck.setArea(new BigDecimal(123.00));
         modifyFitCheck.setLayers("10fit");
-        modifyFitCheck.setPart(ModifyFitCheck.PART.CELL);
+        modifyFitCheck.setPart("部位1,部位2");//用逗号分隔
         modifyFitCheck.setCheck(fireCheckInfo);
         fireCheckInfo.setFit(modifyFitCheck);
 
@@ -219,10 +291,11 @@ public class ReportTest {
 
 
     @Test
-    @Ignore
     public void TestReport(){
-        Optional<ProjectCorp> joinCorp = testCorpRepository.findByIdCodeAndIdProjectId(Long.valueOf(2201),Long.valueOf(2020052201));
+        this.CreateFireCheckInfo();
         FireCheck fireCheck = businessService.fireCheck(Long.valueOf(2020052201)).get();
+        Optional<ProjectCorp> joinCorp = testCorpRepository.findByIdCodeAndIdProperty(fireCheck.getId(),CorpProperty.Developer);
+
         Map<String, Object> data = new HashMap<>();
         data.put("fireCheck", fireCheck);
         data.put("org", "东港市住房和城乡建设局");
@@ -240,7 +313,7 @@ public class ReportTest {
         try {
             Files.deleteIfExists(Paths.get("D:\\report\\test.pdf"));
             fileOutputStream = new FileOutputStream("D:\\report\\test.pdf");
-            sampleReport(fileOutputStream, Long.toString(fireCheck.getId()), "东港市住房和城乡建设局", "completedContractsRecodApply.ftl", data);
+            sampleReport(fileOutputStream, Long.toString(fireCheck.getId()), "东港市住房和城乡建设局", "specialFireCheckRecordApply.ftl", data);
             File file = new File("D:\\report\\test.pdf"); // 创建文件对象
             // Desktop.getDesktop().open(file);
         } catch (FileNotFoundException e) {
