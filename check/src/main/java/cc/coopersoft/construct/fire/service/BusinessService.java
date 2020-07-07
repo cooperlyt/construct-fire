@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -290,7 +291,15 @@ public class BusinessService {
         if (project == null || !project.isEnable()){
             throw new IllegalArgumentException("project not found or is disabled!");
         }
-        check.getInfo().setProject(FireProject.instance(check.getInfo(),project));
+
+        BigDecimal sum = project.getBuilds().stream()
+                .map(BuildRegInfo::getInfo)
+                .map(item -> ((item.getOnArea() == null) ? BigDecimal.ZERO : item.getOnArea()).add((item.getUnderArea() == null) ? BigDecimal.ZERO :  item.getUnderArea()))
+                .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+
+        check.getInfo().setProject(FireProject.instance(check.getInfo(),project, sum));
+
+
 
         check.getInfo().getProject().getCorps().stream().filter(corp ->
                 corp.getCode() == check.getCorp()

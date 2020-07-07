@@ -24,7 +24,7 @@ import java.util.Set;
 @Builder
 public class FireProject implements java.io.Serializable, ProjectCorpSummary {
 
-    public static FireProject instance(FireCheckInfo check, Project.Default project){
+    public static FireProject instance(FireCheckInfo check, Project.Default project, BigDecimal area){
         ProjectRegInfo projectInfo = project.getInfo();
         FireProject result = FireProject.builder()
                 .id(check.getId())
@@ -39,7 +39,9 @@ public class FireProject implements java.io.Serializable, ProjectCorpSummary {
                 .modifyWarm(projectInfo.getModifyWarm())
                 .modifyUse(projectInfo.getModifyUse())
                 .importantType(projectInfo.getImportantType())
-                .landArea((projectInfo.getLandArea())).build();
+                .landArea((projectInfo.getLandArea()))
+                .area(area)
+                .build();
         ProjectCorpSummary.fillProjectCorpSummary(result,project.getCorps());
 
         for(JoinCorp<JoinCorpInfo> corp: project.getCorps()){
@@ -113,6 +115,10 @@ public class FireProject implements java.io.Serializable, ProjectCorpSummary {
     @Column(name = "ALL_AREA")
     @JsonView(Title.class)
     private BigDecimal landArea;
+
+    @Column(name = "AREA")
+    @JsonView(Title.class)
+    private BigDecimal area;
 
     @Column(name = "CORPS")
     @JsonDeserialize(using = JsonRawDeserializer.class)
