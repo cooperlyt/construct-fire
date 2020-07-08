@@ -21,6 +21,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.*;
 
+/**
+ * 新版报表信息
+ * 特殊建设工程消防验收申请表           specialFireCheckRecordApply.ftl
+ * 特殊建设工程消防验收申请受理凭证      specialApply.ftl
+ * 特殊建设工程消防验收不予受理凭证      specialApplyNot.ftl
+ * 特殊建设工程消防验收意见书           specialControlAcceptance.ftl
+ * 建设工程消防验收备案表               FireCheckRecordApply.ftl
+ * 建设工程消防验收备案凭证             apply.ftl
+ * 建设工程消防验收不予备案凭证         applyNot
+ */
+
 @Service
 @Slf4j
 @RefreshScope
@@ -157,6 +168,7 @@ public class ReportService {
 
         addReport(fireCheck,name,false,remoteService.uploadReport(requestCallback));
     }
+
 
     // 测试报表
     public static void main(String[] args) {
