@@ -74,8 +74,9 @@
                         </#if>
                     </#list>
                 </#if>
-                <p class="text" style="line-height: 25px"> 经审查，存在以下情形，不予受理。□1.依法不需要消防验收；□2.依法不属于本部门管辖，应当向有关单位申请；√3.提交的上列第
-                    <strong class="underline">${notSelect!}</strong>项材料为不合格材料。</p>
+                <p class="text" style="line-height: 25px"> 存在以下情形，不予备案。□1.依法不应办理消防验收备案；√2.提交的上列第；
+                    <strong class="underline">${notSelect!}</strong>项材料不符合相关要求。□3．申请材料不齐全，需要补 正上列第__项材料。
+                </p>
 
 
 
