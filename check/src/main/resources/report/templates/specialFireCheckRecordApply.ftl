@@ -46,7 +46,7 @@
             <td width="12%" >工程名称：</td>
             <td width="52%">${fireCheck.info.project.name!} &nbsp;&nbsp;（印章）</td>
             <td width="12%" >申请日期：</td>
-            <td width="24%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+            <td width="24%">${fireCheck.applyTime?string("yyyy年MM月dd日")}</td>
         </tr>
     </table>
 
