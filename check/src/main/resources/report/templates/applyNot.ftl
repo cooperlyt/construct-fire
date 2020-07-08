@@ -66,7 +66,7 @@
         <tr>
             <td></td>
             <td  style="font-size: 110%" align="right" height="30px">
-                <p> ${.now?string("yyyy")}年${.now?string("mm")}月${.now?string("dd")}日</p>
+                <p> ${.now?string("yyyy年MM月dd日")}</p>
             </td>
         </tr>
         <tr>

@@ -31,74 +31,94 @@
 
 
 <body>
+<#if fireCheck.info.builds?exists && (fireCheck.info.builds?size>0)>
+    <#assign i=0,j=0/>
+    <#list fireCheck.info.builds as buildcount>
+        <#if buildcount.pass?exists && buildcount.pass == true>
+            <#assign i=i+1 />
+        </#if>
+    </#list>
+    <#list fireCheck.info.builds as build>
 
-<div class="page" >
-    <div class="hTitle"><p><strong>${org}</strong></p></div>
-    <div class="hTitle"><p><strong>建设工程消防验收申请受理通知书</strong></p></div>
-    <div class="right"><p>东住建消验受(${word})字第${fireCheck.id?string["0"]}号</p></div>
-    <div><p><strong class="underline">${joinCorp.name!}</strong>：</p></div>
-    <div class="text"><p>根据《中华人民共和国消防法》第十三条及相关规定，你单位<strong class="underline">${fireCheck.applyTime?string("yyyy年MM月dd日")}</strong>申请的建设工程（地址：<strong class="underline">${fireCheck.info.project.address!}</strong> ）消防验收，提供了下列材料： </p></div>
-    <#if fireCheck.files?exists>
-        <#list fireCheck.files?sort_by("id")  as  file>
-            <#if file.pass == true>
-                <p style="line-height: 30px">√ ${file_index + 1}.${file.name}</p>
-            <#else>
-                <p style="line-height: 30px">× ${file_index + 1}.${file.name}</p>
-            </#if>
-
-
-        </#list>
-    </#if>
-    <p class="text">经审查，申请符合规定，予以受理。自受理消防验收申请之日起二十个工作日内开展消防验收，并出具消防验收意见。依法需要听证、检验、检测、鉴定的，所需时间不计算在内。</p>
-    <table border="0" width="100%" >
-        <tr>
-            <td></td>
-            <td class="right" style="font-size: 110%" height="30px">
-                <p>东港市住房和城乡建设局</p>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td  style="font-size: 110%" align="right" height="30px">
-                <p> ${.now?string("yyyy")}年${.now?string("mm")}月${.now?string("dd")}日</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="font-size: 110%" width="35%" height="30px">
-                建设单位签收：
-            </td>
-            <td>
-
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-
-            </td>
-            <td style="font-size: 110%" align="right" height="30px">
-                <p>年 &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;月&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;日&nbsp; &nbsp; &nbsp; &nbsp;</p>
-            </td>
-        </tr>
-
-        <tr>
-            <td colspan="2" style="font-size: 110%" align="center" height="30px">
-                <p>一式二份，一份交建设单位，一份存档。</p>
-            </td>
-        </tr>
-    </table>
-<#--    <p>jfreechart</p>-->
-<#--    <div>-->
-<#--        <img src="${scatterUrl}" alt="散点图" width="700" height="600"/>-->
-<#--    </div>-->
-</div>
-
-<#--<span style="page-break-after:always;"></span>-->
-<#--<div class="page">-->
-<#--    -->
-<#--</div>-->
+        <#if build.pass?exists && build.pass == true>
+            <#assign j=j+1/>
+            <div class="page" >
+                <div class="hTitle"><p><strong>${org}</strong></p></div>
+                <div class="hTitle"><p><strong>建设工程消防验收备案凭证</strong></p></div>
+                <div class="right"><p>（文号:${fireCheck.id?string["0"]})</p></div>
+                <div><p><strong class="underline">${joinCorp.name!}</strong>：</p></div>
 
 
+                <div class="text"><p>根据《中华人民共和国建筑法》《中华人民共和国消防法》《建设 工程质量管理条例》《建设工程消防设计审查验收管理暂行规定》等有关规定，你单位于<strong class="underline">${fireCheck.applyTime?string("yyyy年MM月dd日")}</strong>申请<strong class="underline">${fireCheck.info.project.name!}</strong>(楼幢幢名称:<strong class="underline">${build.info.name!}</strong>)建设工程
+                        (地址:<strong class="underline">${fireCheck.info.project.address!}</strong>;建筑面积:地上:<strong class="underline">${(build.info.onArea?string('#.000'))!}</strong>;地下:<strong class="underline">${(build.info.underArea?string('#.000'))!}</strong>平方米;建筑层数:地上<strong class="underline">${build.info.onCount!}</strong>层、地下<strong class="underline">${build.info.underCount!}</strong>
+                        层，建筑高度:<strong class="underline">${build.info.height!}</strong>米，使用性质:
+                        <#if (enumData)?exists>
+                            <#list enumData as enumItem>
+                                <#if enumItem.type == "UseProperty" && enumItem.code ==build.property>
+                                    <strong class="underline">${enumItem.desc!}</strong>
+                                </#if>
+                            </#list>
+                        </#if>
+                        )消防验收备案，备案申请表编号为<strong class="underline">${fireCheck.id?string["0"]}</strong>） ，提交的下列备案材料：
+                    </p></div>
+
+
+                <#if fireCheck.files?exists>
+                    <#list fireCheck.files?sort_by("id")  as  file>
+                        <#if file.pass == true>
+                            <p style="line-height: 20px">√ ${file_index + 1}.${file.name}</p>
+                        <#else>
+                            <p style="line-height: 20px">× ${file_index + 1}.${file.name}</p>
+                        </#if>
+                    </#list>
+                </#if>
+                <p class="text">备案材料齐全，准予备案</p>
+
+
+
+                <table border="0" width="100%" >
+                    <tr>
+                        <td></td>
+                        <td  style="font-size: 110%" align="center" height="50px">
+                            <p>（印章）</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td  style="font-size: 110%" align="center" height="30px">
+                            <p> ${.now?string("yyyy年MM月dd日")}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 110%" width="35%" height="30px">
+                            建设单位签收：
+                        </td>
+                        <td style="font-size: 110%" align="right" height="30px">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 110%" width="35%" height="30px">
+
+                        </td>
+                        <td style="font-size: 110%" align="center" height="30px">
+                            <p>年 &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;月&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;日</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" style="font-size: 110%" align="center" height="30px">
+                            <p>备注：本凭证一式两份，一份交建设单位，一份存档</p>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </#if>
+        <#if j lte i-1>
+            <span style="page-break-after:always;"></span>
+        </#if>
+    </#list>
+</#if>
 </body>
-
 </html>
