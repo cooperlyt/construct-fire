@@ -271,7 +271,7 @@
                             <td width="10%" style="border-right:0.5px">长度(m)</td>
                             <td width="10%" style="border-right:0.5px">占地面积(㎡)</td>
                             <td width="10%" style="border-right:0.5px">地上建筑面积(㎡)</td>
-                            <td width="10%">地下建筑面积（㎡）</td>
+                            <td width="10%">地下建筑面积(㎡)</td>
                         </tr>
                         <#list fireCheck.info.builds as build>
                             <tr align="center" valign="middle">
@@ -317,13 +317,25 @@
                             <tr align="center" valign="middle">
                                 <td width="20%"  style="border-right:0.5px;border-top: 0.5px" rowspan="2" colspan="2">装饰装修</td>
                                 <td style="border-right:0.5px;border-top: 0.5px" height="40px" colspan="2">装修部位</td>
-                                <td style="border-top: 0.5px" colspan="8"></td>
+                                <#assign partName="">
+                                <#if fireCheck.info.fit.part??>
+                                    <#list fireCheck.info.fit.part?split(",") as part>
+                                        <#if (enumData)?exists>
+                                            <#list enumData as enumItem>
+                                                <#if enumItem.type == "PART"  && enumItem.code==part >
+                                                    <#assign partName = partName+"    "+enumItem.desc>
+                                                </#if>
+                                            </#list>
+                                        </#if>
+                                    </#list>
+                                </#if>
+                                <td style="border-top: 0.5px" colspan="8">${partName}</td>
                             </tr>
                             <tr align="center" valign="middle">
                                 <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">装修面积(㎡)</td>
-                                <td style="border-top: 0.5px;border-right: 0.5px" colspan="3"></td>
+                                <td style="border-top: 0.5px;border-right: 0.5px" colspan="3">${(fireCheck.info.fit.area?string('#.000'))!}</td>
                                 <td style="border-right:0.5px;border-top: 0.5px" colspan="2">装修所在层数</td>
-                                <td style="border-top: 0.5px" colspan="3"></td>
+                                <td style="border-top: 0.5px" colspan="3">${fireCheck.info.fit.layers!}</td>
                             </tr>
                         <#else>
                             <tr align="center" valign="middle">
@@ -338,228 +350,270 @@
                                 <td style="border-top: 0.5px" colspan="3"></td>
                             </tr>
                         </#if>
+
+                        <#if fireCheck.info.useChange?exists>
+                            <tr>
+                                <td width="20%"  style="border-right:0.5px;border-top: 0.5px"  colspan="2">改变用途</td>
+                                <td style="border-right:0.5px;border-top: 0.5px" height="40px" colspan="2">使用性质</td>
+                                <#if (enumData)?exists>
+                                    <#list enumData as enumItem>
+                                        <#if enumItem.type == "UseProperty" && enumItem.code==fireCheck.info.useChange.property>
+                                            <#assign cProperty = enumItem.desc>
+                                        </#if>
+                                    </#list>
+                                </#if>
+                                <td style="border-top: 0.5px;border-right: 0.5px" colspan="3">${cProperty!}</td>
+                                <td style="border-right:0.5px;border-top: 0.5px" height="40px" colspan="2">原有用途</td>
+                                <td style="border-top: 0.5px;" colspan="3">${fireCheck.info.useChange.oldUse!}</td>
+                            </tr>
+                        <#else>
+                            <tr>
+                                <td width="20%"  style="border-right:0.5px;border-top: 0.5px"  colspan="2">改变用途</td>
+                                <td style="border-right:0.5px;border-top: 0.5px" height="40px" colspan="2">使用性质</td>
+                                <td style="border-top: 0.5px;border-right: 0.5px" colspan="3"></td>
+                                <td style="border-right:0.5px;border-top: 0.5px" height="40px" colspan="2">原有用途</td>
+                                <td style="border-top: 0.5px;" colspan="3"></td>
+                            </tr>
+                        </#if>
+                        <#if fireCheck.info.warm?exists>
+                            <tr align="center" valign="middle">
+                                <td width="20%"  style="border-right:0.5px;border-top: 0.5px" rowspan="2" colspan="2">建筑保温</td>
+                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">材料类别</td>
+                                <#if (enumData)?exists>
+                                    <#list enumData as enumItem>
+                                        <#if enumItem.type == "WarmType" && enumItem.code==fireCheck.info.warm.type>
+                                            <#assign ctype = enumItem.desc>
+                                        </#if>
+                                    </#list>
+                                </#if>
+                                <td style="border-top: 0.5px;border-right: 0.5px" colspan="3">${ctype!}</td>
+                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2">保温所在层数</td>
+                                <td style="border-top: 0.5px" colspan="3">${fireCheck.info.warm.layers!}</td>
+                            </tr>
+                            <tr align="center" valign="middle">
+                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">保温部位</td>
+                                <td style="border-top: 0.5px;border-right: 0.5px" colspan="3">${fireCheck.info.warm.part!}</td>
+                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2">保温材料</td>
+                                <td style="border-top: 0.5px" colspan="3">${fireCheck.info.warm.material!}</td>
+                            </tr>
+                        <#else>
+                        <tr align="center" valign="middle">
+                            <td width="20%"  style="border-right:0.5px;border-top: 0.5px" rowspan="2" colspan="2">建筑保温</td>
+                            <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">材料类别</td>
+                            <td style="border-top: 0.5px;border-right: 0.5px" colspan="3"></td>
+                            <td style="border-right:0.5px;border-top: 0.5px" colspan="2">保温所在层数</td>
+                            <td style="border-top: 0.5px" colspan="3"></td>
+                        </tr>
+                        <tr align="center" valign="middle">
+                            <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">保温部位</td>
+                            <td style="border-top: 0.5px;border-right: 0.5px" colspan="3"></td>
+                            <td style="border-right:0.5px;border-top: 0.5px" colspan="2">保温材料</td>
+                            <td style="border-top: 0.5px" colspan="3"></td>
+
+                        </#if>
                     </table>
                 </td>
             </tr>
-            <tr align="center" valign="middle">
-                <td colspan="7" with="100%" >
-                    <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
-                        <tr>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">验收内容</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" >验收情况</td>
-                            <td width="24%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">验收内容</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" >验收情况</td>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">验收内容</td>
-                            <td width="10%" style="border-right:0px;border-bottom: 0.5px" >验收情况</td>
-                        </tr>
-                        <tr>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□建筑类别</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="24%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□防火分区</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□安全疏散</td>
-                            <td width="10%" style="border-right:0px;border-bottom: 0.5px" ></td>
-                        </tr>
-                        <tr>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□总平面布局</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="24%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□室外消火栓系统</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□防烟分区</td>
-                            <td width="10%" style="border-right:0px;border-bottom: 0.5px" ></td>
-                        </tr>
-                        <tr>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□平面布置</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="24%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□火灾自动报警系统</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□消防电梯</td>
-                            <td width="10%" style="border-right:0px;border-bottom: 0.5px" ></td>
-                        </tr>
-                        <tr>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□消防水源</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="24%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□室内消火栓系统</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□防爆</td>
-                            <td width="10%" style="border-right:0px;border-bottom: 0.5px" ></td>
-                        </tr>
-                        <tr>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□消防电源</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="24%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□自动喷水灭火系统</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□灭火器</td>
-                            <td width="10%" style="border-right:0px;border-bottom: 0.5px" ></td>
-                        </tr>
-                        <tr>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□装修防火</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="24%" style="border-right:0.5px;border-bottom: 0.5px" height="40px">□其他灭火设施</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0.5px" ></td>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0px" rowspan="2">□其它</td>
-                            <td width="23%" style="border-right:0px;border-bottom: 0px" rowspan="2"></td>
-                        </tr>
 
-                        <tr>
-                            <td width="23%" style="border-right:0.5px;border-bottom: 0px" height="40px">□建筑保温</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0px" ></td>
-                            <td width="24%" style="border-right:0.5px;border-bottom: 0px" height="40px">□防烟排烟系统</td>
-                            <td width="10%" style="border-right:0.5px;border-bottom: 0px" ></td>
 
-                        </tr>
-                    </table>
-                </td>
 
-            </tr>
-
-            <tr>
-                <td colspan="7" with="100%" >
-                    <div style="text-align:left;clear: both" >
-                        <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
-                            <tr align="left" valign="top">
-                                <td width="50%" height="15px"  style="border-right:0.5px;"></td>
-                                <td width="50%"></td>
-                            </tr>
-                            <tr align="left" valign="top">
-                                <td width="50%" style="border-right:0.5px;border-bottom: 0.5px;text-indent: 2em" height="145px">&nbsp;&nbsp;&nbsp;消防工程验收结论：</td>
-                                <td width="50%" style="border-right:0px;border-bottom: 0.5px;text-indent: 2em" >&nbsp;&nbsp;&nbsp;其他需要说明的情况：</td>
-                            </tr>
-                            <tr>
-                                <td width="50%" style="border-right:0.5px;border-bottom: 0.5px" height="180px">
-                                    <div style="clear: both" >
-                                        <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
-                                            <tr align="left">
-                                                <td height="15px" colspan="2"></td>
-                                            </tr>
-                                            <tr align="left">
-                                                <td height="15px" style="text-blink:2em;">&nbsp;&nbsp;&nbsp;设计单位确认：</td>
-                                                <td ></td>
-                                            </tr>
-                                            <tr style="text-align: left" align="left">
-                                                <td height="60px" colspan="2"></td>
-                                            </tr>
-                                            <tr align="center" valign="top" >
-                                                <td></td>
-                                                <td height="40px">（设计单位印章）</td>
-                                            </tr>
-                                            <tr align="right" valign="top">
-                                                <td></td>
-                                                <td height="50px">&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
-                                            </tr>
-
-                                        </table>
-                                    </div>
-                                </td>
-                                <td width="50%" style="border-right:0px;border-bottom: 0.5px" >
-                                    <div style="clear: both" >
-                                        <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
-                                            <tr align="left">
-                                                <td height="15px" colspan="2"></td>
-                                            </tr>
-                                            <tr align="left">
-                                                <td height="15px">&nbsp;&nbsp;&nbsp;施工单位确认：</td>
-                                                <td ></td>
-                                            </tr>
-                                            <tr style="text-align: left" align="left">
-                                                <td height="60px" colspan="2"></td>
-                                            </tr>
-                                            <tr align="center" valign="top">
-                                                <td></td>
-                                                <td height="40px">（施工单位印章）</td>
-                                            </tr>
-                                            <tr align="right" valign="top">
-                                                <td></td>
-                                                <td height="50px">&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
-                                            </tr>
-
-                                        </table>
-                                    </div>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="50%" style="border-right:0.5px;border-bottom: 0px" height="180px">
-                                    <div style="clear: both" >
-                                        <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
-                                            <tr align="left">
-                                                <td height="15px" colspan="2"></td>
-                                            </tr>
-                                            <tr align="left">
-                                                <td height="15px" style="text-blink:2em;">&nbsp;&nbsp;&nbsp;监理单位确认：</td>
-                                                <td ></td>
-                                            </tr>
-                                            <tr style="text-align: left" align="left">
-                                                <td height="60px" colspan="2"></td>
-                                            </tr>
-                                            <tr align="center" valign="top" >
-                                                <td></td>
-                                                <td height="40px">（监理单位印章）</td>
-                                            </tr>
-                                            <tr align="right" valign="top">
-                                                <td></td>
-                                                <td height="50px">&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
-                                            </tr>
-
-                                        </table>
-                                    </div>
-                                </td>
-                                <td width="50%" style="border-right:0px;border-bottom: 0px" height="150px">
-                                    <div style="clear: both" >
-                                        <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
-                                            <tr align="left">
-                                                <td height="15px" colspan="2"></td>
-                                            </tr>
-                                            <tr align="left">
-                                                <td height="15px">&nbsp;&nbsp;&nbsp;建设单位确认：</td>
-                                                <td ></td>
-                                            </tr>
-                                            <tr style="text-align: left" align="left">
-                                                <td height="60px" colspan="2"></td>
-                                            </tr>
-                                            <tr align="center" valign="top">
-                                                <td></td>
-                                                <td height="40px">（建设单位印章）</td>
-                                            </tr>
-                                            <tr align="right" valign="top">
-                                                <td></td>
-                                                <td height="50">&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
-                                            </tr>
-
-                                        </table>
-                                    </div>
-
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
 
 
         </table>
     </div>
     <span style="page-break-after:always;"></span>
     <div class="page">
-        <div class="hTitle"><p><strong>说    明</strong></p></div>
-        <div class="text"><p><strong>1.此表由建设单位填写并加盖印章，申报表涉及多页，需要加盖骑缝章，没有单位印章的，由其负责人签名。填表前请仔细阅读《中华人民共和国消防法》等，确知享有的权利和应尽的义务。建设工程竣工验收情况涉及多家设计单位、施工单位、监理单位的，各单位均应予以确认。</strong></p></div>
-        <div class="text"><p><strong>2.建设单位应如实填写各项内容，对提交材料的真实性、完整性负责，不得虚构、伪造或编造事实，否则将承担相应的法律后果。</strong></p></div>
-        <div class="text"><p><strong>3.填写应使用钢笔和能够长期保持字迹的墨水或打印，字迹清楚，文面整洁，不得涂改。</strong></p></div>
-        <div class="text"><p><strong>4.表格设定的栏目，应逐项填写；不需填写的，应划“\”。表格中的“□”，表示可供选择，在选中内容前的“□”内画√。申报局部验收的，在“其他需要说明的情况”中注明。</strong></p></div><#--    <p>jfreechart</p>-->
-        <div class="text"><p><strong>5.关于“使用性质”的填报说明：</strong></p></div>
-        <div class="text"><p><strong>人员密集场所是指，公众聚集场所，医院的门诊楼、病房楼，学校的教学楼、图书馆、食堂和集体宿舍，养老院，福利院，托儿所，幼儿园，公共图书馆的阅览室，公共展览馆、博物馆的展示厅，劳动密集型企业的生产加工车间和员工集体宿舍，旅游、宗教活动场所等。</strong></p></div>
-        <div class="text"><p><strong>公众聚集场所是指，宾馆、饭店、商场、集贸市场、客运车站候车室、客运码头候船厅、民用机场航站楼、体育场馆、会堂以及公共娱乐场所等。</strong></p></div>
-        <div class="text"><p><strong>易燃易爆场所是指，生产、储存、装卸易燃易爆危险品的工厂、仓库和专用车站、码头，以及易燃易爆气体和液体的充装站、供应站、调压站等场所。</strong></p></div>
-        <div class="text"><p><strong> 6.申报建设工程竣工验收消防备案的，应同时上传提交下列电子版材料：</strong></p></div>
-        <div class="text"><p><strong>（1）工程竣工验收报告；</strong></p></div>
-        <div class="text"><p><strong>（2）有关消防设施的工程竣工图纸；</strong></p></div>
-        <div class="text"><p><strong>（3）消防产品质量合格证明文件；</strong></p></div>
-        <div class="text"><p><strong>（4）具有防火性能要求的建筑构件、建筑材料（含建筑保温材料）、装修材料符合国家标准或者行业标准的证明文件、出厂合格证</strong></p></div>
-        <div class="text"><p><strong>（5）消防设施检测合格证明文件；</strong></p></div>
-        <div class="text"><p><strong>（6）施工、工程监理、检测单位的合法身份证明和资质等级证明文件；</strong></p></div>
-        <div class="text"><p><strong>（7）建设单位的工商营业执照等合法身份证明文件；</strong></p></div>
-        <div class="text"><p><strong>（8）法律、行政法规规定的其他材料。</strong></p></div>
-        <div class="text"><p><strong>依法应该进行施工图审查的工程，还应提供施工图审查机构出具的综合审查合格书、技术咨询报告等相关材料。</strong></p></div>
+        <div style="text-align:center;clear: both" >
+            <table style="margin:auto; width:100%;font-size: 90%" border="0.3" cellspacing="0">
+                <tr>
+                   <td height="30px"><strong>施工过程中消防设施检测情况（如有）</strong></td>
+                </tr>
+                <tr>
+                    <td height="130px">
+                        <div style="clear: both" >
+                            <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >\
+                                <tr align="right" valign="middle">
+                                    <td height="90px" width="100%" colspan="2"></td>
+                                </tr>
+
+                                <tr align="right" valign="middle">
+                                    <td width="50%"></td>
+                                    <td width="50%" height="20px">技术服务机构（印章）：</td>
+                                </tr>
+                                <tr align="right" valign="middle">
+                                    <td width="50%" ></td>
+                                    <td width="50%" height="20px">项目负责人签名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="30px"><strong>建设工程竣工验收消防查验情况及意见</strong></td>
+                </tr>
+                <tr>
+                    <td height="130px">
+                        <div style="clear: both" >
+                            <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
+
+                                <tr style="text-align: left">
+                                    <td height="20px" width="50%">一、基本情况</td>
+                                    <td width="50%"></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="100%" colspan="2" height="60px"></td>
+                                </tr>
+
+                                <tr align="right" valign="middle">
+                                    <td width="50%"></td>
+                                    <td width="50%" height="20px">建设单位（印章）：</td>
+                                </tr>
+                                <tr align="right" valign="middle">
+                                    <td width="50%" ></td>
+                                    <td width="50%" height="20px">项目负责人签名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td height="130px">
+                        <div style="clear: both" >
+                            <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
+
+                                <tr style="text-align: left">
+                                    <td height="20px" width="50%">二、经审查合格的消防设计文件实施情况</td>
+                                    <td width="50%"></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="100%" colspan="2" height="60px"></td>
+                                </tr>
+
+                                <tr align="right" valign="middle">
+                                    <td width="50%"></td>
+                                    <td width="50%" height="20px">设计单位（印章）：</td>
+                                </tr>
+                                <tr align="right" valign="middle">
+                                    <td width="50%" ></td>
+                                    <td width="50%" height="20px">项目负责人签名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="130px">
+                        <div style="clear: both" >
+                            <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
+
+                                <tr style="text-align: left">
+                                    <td height="20px" width="50%">三、工程监理情况</td>
+                                    <td width="50%"></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="100%" colspan="2" height="60px"></td>
+                                </tr>
+
+                                <tr align="right" valign="middle">
+                                    <td width="50%"></td>
+                                    <td width="50%" height="20px">监理单位（印章）：</td>
+                                </tr>
+                                <tr align="right" valign="middle">
+                                    <td width="50%" ></td>
+                                    <td width="50%" height="20px">项目负责人签名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td height="130px">
+                        <div style="clear: both" >
+                            <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
+
+                                <tr style="text-align: left">
+                                    <td height="20px" width="50%">四、工程施工情况</td>
+                                    <td width="50%"></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="100%" colspan="2" height="60px"></td>
+                                </tr>
+
+                                <tr align="right" valign="middle">
+                                    <td width="50%">消防施工专业分包单位（印章）：</td>
+                                    <td width="50%" height="20px">施工总承包单位（印章）：</td>
+                                </tr>
+                                <tr align="right" valign="middle">
+                                    <td width="50%" height="20px">项目负责人签名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+                                    <td width="50%" height="20px">项目经理签名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td height="130px">
+                        <div style="clear: both" >
+                            <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
+
+                                <tr style="text-align: left">
+                                    <td height="20px" width="50%">五、消防设施性能、系统功能联调联试情况</td>
+                                    <td width="50%"></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="100%" colspan="2" height="60px"></td>
+                                </tr>
+
+                                <tr align="right" valign="middle">
+                                    <td width="50%"></td>
+                                    <td width="50%" height="20px">技术服务机构（印章）：</td>
+                                </tr>
+                                <tr align="right" valign="middle">
+                                    <td width="50%" ></td>
+                                    <td width="50%" height="20px">项目负责人签名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td height="120px">
+                        <div style="clear: both" >
+                            <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
+
+                                <tr style="text-align: left">
+                                    <td height="20px" width="50%">备注：${fireCheck.memo}</td>
+                                    <td width="50%"></td>
+                                </tr>
+
+                                <tr>
+                                    <td width="100%" colspan="2" height="40px"></td>
+                                </tr>
+
+                                <tr align="right" valign="middle">
+                                    <td width="50%"></td>
+                                    <td width="50%" height="20px"></td>
+                                </tr>
+                                <tr align="right" valign="middle">
+                                    <td width="50%" ></td>
+                                    <td width="50%" height="20px"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
     </div>
 </div>
 </body>
