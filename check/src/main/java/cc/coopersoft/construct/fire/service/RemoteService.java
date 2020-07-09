@@ -21,6 +21,6 @@ public interface RemoteService {
 
     WeedFsResult uploadReport(RequestCallback requestCallback);
 
-    Mono<Long> initBusinessDocuments(long id, String define);
+    void initBusinessDocuments(long id, String define);
 
 }

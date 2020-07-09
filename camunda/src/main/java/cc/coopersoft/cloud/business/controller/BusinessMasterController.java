@@ -49,5 +49,11 @@ public class BusinessMasterController {
         return documentService.businessDocuments(id);
     }
 
+    @RequestMapping(value = "/define/{define}/{id}/init", method = RequestMethod.POST)
+    public String initBusinessDocument(@PathVariable("id") long id, @PathVariable("define") String define){
+        log.debug("call init document: " + define + "->" + id);
+        documentService.initBusinessDocument(id,define);
+        return String.valueOf(id);
+    }
 
 }
