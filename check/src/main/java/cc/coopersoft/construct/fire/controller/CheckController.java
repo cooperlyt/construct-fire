@@ -9,6 +9,7 @@ import cc.coopersoft.construct.fire.service.BusinessService;
 import cc.coopersoft.construct.fire.service.FireCheckBusiness;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -56,7 +57,7 @@ public class CheckController {
                                   @RequestParam(value = "page", required = false) Optional<Integer> page,
                                   @RequestParam(value = "key", required = false) Optional<String> key,
                                   @RequestParam(value = "sort", required = false) Optional<String> sort,
-                                  @RequestParam(value = "dir", required = false) Optional<String> dir){
+                                  @RequestParam(value = "dir", required = false) Optional<Sort.Direction> dir){
         return fireCheckBusiness.search(status,page,key,sort,dir);
     }
 

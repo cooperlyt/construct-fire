@@ -102,7 +102,7 @@ public class MockRemoteService implements RemoteService {
     }
 
     @Override
-    public Mono<Long> initBusinessDocuments(long corp, long id, String define) {
+    public Mono<Long> initBusinessDocuments(long id, String define) {
         return Mono.empty();
     }
 

@@ -17,10 +17,13 @@ public abstract class MessageNotifyDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
+        Object comment = execution.getVariable("comment");
+
+
         Messages messages = Messages.builder()
                 .id(Long.parseLong(execution.getProcessBusinessKey()))
                 .type(getType())
-                .memo(String.valueOf(execution.getVariable("comment"))).build();
+                .memo(comment == null ? "" : String.valueOf(comment)).build();
 
         fireBusinessService.businessNotify(messages);
     }

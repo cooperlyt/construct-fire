@@ -151,7 +151,7 @@ public class FireCheckBusiness {
                                     Optional<Integer> page,
                                     Optional<String> key,
                                     Optional<String> sort,
-                                    Optional<String> dir){
+                                    Optional<Sort.Direction> dir){
         Specification<FireCheck> specification = (Specification<FireCheck>) (root, criteriaQuery, cb) -> {
             boolean countQuery = criteriaQuery.getResultType().equals(Long.class);
             List<Predicate> predicates = new LinkedList<>();
@@ -205,8 +205,8 @@ public class FireCheckBusiness {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        Sort sortable = Sort.by((dir.filter(s -> !"DESC".equals(s)).map(s -> Sort.Direction.ASC).orElse(Sort.Direction.DESC))
-                , (sort.orElse("regTime")));
+        Sort sortable = Sort.by(dir.orElse(Sort.Direction.DESC)
+                , sort.orElse("regTime"));
 
         return fireCheckRepository.findAll(specification, PageRequest.of(page.orElse(0),PAGE_SIZE,sortable));
     }

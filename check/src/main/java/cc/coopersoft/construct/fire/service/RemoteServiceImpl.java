@@ -90,10 +90,10 @@ public class RemoteServiceImpl implements RemoteService {
     }
 
     @Override
-    public Mono<Long> initBusinessDocuments(long corp, long id, String define) {
+    public Mono<Long> initBusinessDocuments(long id, String define) {
         return webClient
                 .post()
-                .uri("http://camundasvr/trust/doc/{corp}/define/{define}/{id}/init",corp,define, id)
+                .uri("http://camundasvr/manager/doc/define/{define}/{id}/init",define, id)
                 .attributes(clientRegistrationId("master-extend-cer"))
                 .retrieve()
                 .bodyToMono(String.class)

@@ -21,63 +21,37 @@ import java.util.stream.Collectors;
 @RequestMapping(value="/trust/doc")
 public class TrustController {
 
-    private static final String TRUST_ROLE_PREFIX = "T_";
-
     private final DocumentService documentService;
 
     private final BusinessService businessService;
 
-
-    private boolean hasCorpRole(long corp){
-        // need connect fire server valid corp in business
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(res -> {if (res.startsWith("ROLE_"))  return res.substring(5);  else return res; }) // Strip "ROLE_"
-                .collect(Collectors.toSet()).contains(TRUST_ROLE_PREFIX + corp);
-    }
 
     public TrustController(DocumentService documentService, BusinessService businessService) {
         this.documentService = documentService;
         this.businessService = businessService;
     }
 
-    @RequestMapping(value = "{corp}/define/{define}/{id}/init", method = RequestMethod.POST)
-    public String initBusinessDocument(@PathVariable("corp") long corp , @PathVariable("id") long id, @PathVariable("define") String define){
-        if (hasCorpRole(corp) && !businessService.existsBusiness(id)){
-            documentService.initBusinessDocument(id,define);
-            return String.valueOf(id);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
-    }
+    @RequestMapping(value = "/{id}/list", method = RequestMethod.GET)
+    public List<BusinessDocument> businessDocuments(@RequestParam("org") long corp , @PathVariable("id") long id){
 
-    @RequestMapping(value = "{corp}/{id}/list", method = RequestMethod.GET)
-    public List<BusinessDocument> businessDocuments(@PathVariable("corp") long corp , @PathVariable("id") long id){
-        if (hasCorpRole(corp)) {
-            return documentService.businessDocuments(id);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+        return documentService.businessDocuments(id);
+
     }
 
 
-    @RequestMapping(value = "{corp}/{docId}/edit", method = {RequestMethod.PUT, RequestMethod.POST})
-    public BusinessDocument editDocument(@PathVariable("corp") long corp,
+    @RequestMapping(value = "/{docId}/edit", method = {RequestMethod.PUT, RequestMethod.POST})
+    public BusinessDocument editDocument(@RequestParam("org") long corp,
                                          @PathVariable("docId") long docId,
                                          @Valid @RequestBody BusinessDocument businessDocument){
-        if (hasCorpRole(corp)) {
-            return documentService.editDocument(docId, businessDocument);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+        return documentService.editDocument(docId, businessDocument);
+
     }
 
-    @RequestMapping(value = "{corp}/{id}/add", method = RequestMethod.POST)
-    public BusinessDocument addDocument(@PathVariable("corp") long corp,
+    @RequestMapping(value = "/{id}/add", method = RequestMethod.POST)
+    public BusinessDocument addDocument(@RequestParam("org") long corp,
                                         @PathVariable("id") long id,
                                         @Valid @RequestBody BusinessDocument document){
-        if (hasCorpRole(corp) && !businessService.existsBusiness(id)){
+        if (!businessService.existsBusiness(id)){
             return documentService.addDocument(id, document);
         }else{
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
@@ -85,48 +59,30 @@ public class TrustController {
     }
 
 
-    @RequestMapping(value = "{corp}/{id}/del", method = RequestMethod.DELETE)
-    public String delDocument(@PathVariable("corp") long corp,@PathVariable("id") long id){
-        if (hasCorpRole(corp)){
-
-            documentService.delDocument(id);
-            return String.valueOf(id);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
-
+    @RequestMapping(value = "/{id}/del", method = RequestMethod.DELETE)
+    public String delDocument(@RequestParam("org") long corp,@PathVariable("id") long id){
+        documentService.delDocument(id);
+        return String.valueOf(id);
     }
 
 
-    @RequestMapping(value = "{corp}/file/{id}/del", method = RequestMethod.DELETE)
-    public String delFile(@PathVariable("corp") long corp,@PathVariable("id") String id){
-        if (hasCorpRole(corp)){
-            documentService.delFile(id);
-            return id;
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
-    }
-
-    @RequestMapping(value = "{corp}/file/{id}/order", method = {RequestMethod.PUT, RequestMethod.POST})
-    public String orderFile(@PathVariable("corp") long corp,@PathVariable("id") String id, @RequestParam(name = "before", required = false) Optional<String> before){
-        if (hasCorpRole(corp)){
-            documentService.orderFile(id,before);
-            return id;
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+    @RequestMapping(value = "/file/{id}/del", method = RequestMethod.DELETE)
+    public String delFile(@RequestParam("org") long corp,@PathVariable("id") String id){
+        documentService.delFile(id);
+        return id;
 
     }
 
+    @RequestMapping(value = "/file/{id}/order", method = {RequestMethod.PUT, RequestMethod.POST})
+    public String orderFile(@RequestParam("org") long corp,@PathVariable("id") String id, @RequestParam(name = "before", required = false) Optional<String> before){
+        documentService.orderFile(id,before);
+        return id;
+    }
 
-    @RequestMapping(value = "{corp}/{id}/file/add", method = RequestMethod.POST)
-    public BusinessFile addFile(@PathVariable("corp") long corp,@PathVariable("id") long id, @Valid @RequestBody BusinessFile file){
-        if (hasCorpRole(corp)){
-            return documentService.addFile(id,file);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+
+    @RequestMapping(value = "/{id}/file/add", method = RequestMethod.POST)
+    public BusinessFile addFile(@RequestParam("org") long corp,@PathVariable("id") long id, @Valid @RequestBody BusinessFile file){
+        return documentService.addFile(id,file);
     }
 
 

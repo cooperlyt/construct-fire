@@ -30,164 +30,106 @@ public class CorpCheckController {
         this.fireCheckBusiness = fireCheckBusiness;
     }
 
-    private static final String TRUST_ROLE_PREFIX = "T_";
-
-    private boolean hasCorpRole(long corp){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(res -> {if (res.startsWith("ROLE_"))  return res.substring(5);  else return res; }) // Strip "ROLE_"
-                .collect(Collectors.toSet()).contains(TRUST_ROLE_PREFIX + corp);
-    }
-
-    @RequestMapping(value = "/{corp}/review/{projectCode}", method = RequestMethod.POST)
+    @RequestMapping(value = "/review/{projectCode}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @JsonView(FireCheck.CreateResult.class)
-    public FireCheck review(@PathVariable("corp") long corp, @PathVariable("projectCode") long projectCode){
+    public FireCheck review(@RequestParam("org") long corp, @PathVariable("projectCode") long projectCode){
         return businessService.reviewBusiness(corp,projectCode);
     }
 
-    @RequestMapping(value = "/{corp}/prepare/{projectCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/prepare/{projectCode}", method = RequestMethod.GET)
     @JsonView(FireCheck.CreateResult.class)
-    public FireCheck getPrepare(@PathVariable("corp") long corp,@PathVariable("projectCode") long project ){
-        if (hasCorpRole(corp)){
-            return businessService.getPrepare(corp,project).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+    public FireCheck getPrepare(@RequestParam("org") long corp,@PathVariable("projectCode") long project ){
+
+        return businessService.getPrepare(corp,project).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
     }
 
-    @RequestMapping(value = "/{corp}/del/{id}", method = RequestMethod.DELETE)
-    public String delPrepare(@PathVariable("corp") long corp,@PathVariable("id") long id){
-        if (hasCorpRole(corp)){
-            businessService.delPrepare(corp, id);
-            return String.valueOf(id);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+    @RequestMapping(value = "/del/{id}", method = RequestMethod.DELETE)
+    public String delPrepare(@RequestParam("org") long corp,@PathVariable("id") long id){
+        businessService.delPrepare(corp, id);
+        return String.valueOf(id);
     }
 
     @RequestMapping(value = "prepare", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @JsonView(FireCheck.CreateResult.class)
-    public FireCheck prepare(@Valid @RequestBody FireCheck check){
-        if (hasCorpRole(check.getCorp())){
-
-            return businessService.prepareBusiness(check);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+    public FireCheck prepare(@RequestParam("org") long corp,@Valid @RequestBody FireCheck check){
+        check.setCorp(corp);
+        return businessService.prepareBusiness(check);
     }
 
-    @RequestMapping(value = "/{corp}/{id}/run", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/run", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @JsonView(FireCheck.CreateResult.class)
-    public FireCheck runPrepare(@PathVariable("corp") long corp, @PathVariable("id") long id){
-        if (hasCorpRole(corp)){
-            return businessService.runPrepareBusiness(corp,id);
-        }else {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+    public FireCheck runPrepare(@RequestParam("org") long corp, @PathVariable("id") long id){
+        return businessService.runPrepareBusiness(corp,id);
     }
 
-    @RequestMapping(value = "/{corp}/{id}/details", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/details", method = RequestMethod.GET)
     @JsonView(FireCheck.Details.class)
-    public FireCheck fireCheck(@PathVariable("corp") long corp ,@PathVariable("id") long id ){
-        if (hasCorpRole(corp)){
-            FireCheck check = businessService.fireCheck(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-            check.getInfo().getProject().getCorps().stream().filter((c) -> c.getCode() == corp).findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE));
-            return check;
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-
+    public FireCheck fireCheck(@RequestParam("org") long corp ,@PathVariable("id") long id ){
+        FireCheck check = businessService.fireCheck(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        check.getInfo().getProject().getCorps().stream().filter((c) -> c.getCode() == corp).findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE));
+        return check;
     }
 
-    @RequestMapping(value = "/{corp}/checks", method = RequestMethod.GET)
+    @RequestMapping(value = "/checks", method = RequestMethod.GET)
     @JsonView(FireCheck.Summary.class)
-    public List<FireCheck> search(@PathVariable("corp") long corp,
+    public List<FireCheck> search(@RequestParam("org") long corp,
                                   @RequestParam(value = "my", required = false) Boolean my,
                                   @RequestParam(value = "key", required = false) String key,
                                   @RequestParam(value = "status", required = false) FireCheck.Status status ){
-        if (hasCorpRole(corp)){
-            return fireCheckBusiness.search(corp,my,key,status);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
-
+        return fireCheckBusiness.search(corp,my,key,status);
     }
 
 
-    @RequestMapping(value = "/{corp}/project/{code}/status", method = RequestMethod.GET)
-    public String projectFireCheckStatus(@PathVariable("corp") long corp,
+    @RequestMapping(value = "/project/{code}/status", method = RequestMethod.GET)
+    public String projectFireCheckStatus(@RequestParam("org") long corp,
                                          @PathVariable("code") long projectCode){
-        if (hasCorpRole(corp)){
-            return businessService.projectFireCheckStatus(projectCode).name();
-        }else {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+        return businessService.projectFireCheckStatus(projectCode).name();
     }
 
 
-    @RequestMapping(value = "/{corp}/check/{id}/tables", method = RequestMethod.GET)
-    public List<CheckTable> getCheckTable(@PathVariable("corp") long corp,
+    @RequestMapping(value = "/check/{id}/tables", method = RequestMethod.GET)
+    public List<CheckTable> getCheckTable(@RequestParam("org") long corp,
                                           @PathVariable("id") long id){
-        if (hasCorpRole(corp)){
-            return fireCheckBusiness.getCheckTable(corp,id);
-        }else {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+
+        return fireCheckBusiness.getCheckTable(corp,id);
     }
 
     // power lower  valid business status is prepare and corp in business
 
-    @RequestMapping(value = "/{corp}/check/{id}/count", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/check/{id}/count", method = RequestMethod.PATCH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setCheckCount(@PathVariable("corp") long corp,
+    public void setCheckCount(@RequestParam("org") long corp,
                               @PathVariable("id") long id,
                               @RequestBody int count){
-        if (hasCorpRole(corp)){
-            fireCheckBusiness.setCheckCount(id,count);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
-
+        fireCheckBusiness.setCheckCount(id,count);
     }
 
-    @RequestMapping(value = "/{corp}/check/{id}/description", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/check/{id}/description", method = RequestMethod.PATCH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setCheckContentDescription(@PathVariable("corp") long corp,
+    public void setCheckContentDescription(@RequestParam("org") long corp,
                                            @PathVariable("id") long id,
                                            @RequestBody @Size(max = 32) String description){
-        if (hasCorpRole(corp)){
-            fireCheckBusiness.setCheckContentDescription(id,description);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
-
+        fireCheckBusiness.setCheckContentDescription(id,description);
     }
 
-    @RequestMapping(value = "/{corp}/check/{id}/part", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/check/{id}/part", method = RequestMethod.PATCH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setCheckContentPart(@PathVariable("corp") long corp,
+    public void setCheckContentPart(@RequestParam("org") long corp,
                                     @PathVariable("id") long id, String part){
-        if (hasCorpRole(corp)){
-            fireCheckBusiness.setCheckContentPart(id,part);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
-
+        fireCheckBusiness.setCheckContentPart(id,part);
     }
 
-    @RequestMapping(value = "/{corp}/check/{itemId}/{contentId}/qualified", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/check/{itemId}/{contentId}/qualified", method = RequestMethod.PATCH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setCheckContentQualified(@PathVariable("corp") long corp,
+    public void setCheckContentQualified(@RequestParam("org") long corp,
                                          @PathVariable("itemId") long itemId,
                                          @PathVariable("contentId") long contentId,
                                          @RequestBody boolean qualified){
-        if (hasCorpRole(corp)){
-            fireCheckBusiness.setCheckContentQualified(itemId, contentId, qualified);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
+        fireCheckBusiness.setCheckContentQualified(itemId, contentId, qualified);
+
     }
 }
