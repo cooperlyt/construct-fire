@@ -48,7 +48,8 @@
             <div class="page" >
                 <div class="hTitle"><p><strong>${org}</strong></p></div>
 
-                <div class="hTitle"><p><strong>建设工程消防验收备案抽查结果通知书</strong></p></div>
+                <div class="hTitle"><p><strong>建设工程消防验收备案抽查/复查结果通知书</strong></p></div>
+
 
                 <div class="right"><p>（文号:${fireCheck.id?string["0"]})</p></div>
                 <div><p><strong class="underline">${joinCorp.name!}</strong>：</p></div>
