@@ -55,7 +55,7 @@
 
 
 <div class="page" >
-    <div class="right"><p>业务编号：${fireCheck.id?string["0"]}号</p></div>
+    <div class="right"><p>文号：${fireCheck.id?string["0"]}</p></div>
 
     <div style="text-align:center;clear: both" >
         <table style="margin:auto; width:100%;font-size: 90%" border="0.2" cellspacing="0">

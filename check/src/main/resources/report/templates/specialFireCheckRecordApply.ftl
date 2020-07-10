@@ -39,7 +39,7 @@
 <div class="page" >
     <div class="hTitle"><p><strong>${org}</strong></p></div>
     <div class="hTitle"><p><strong>特殊建设工程消防验收申请表</strong></p></div>
-    <div class="right"><p>业务编号：${fireCheck.id?string["0"]}号</p></div>
+    <div class="right"><p>文号：${fireCheck.id?string["0"]}</p></div>
 
     <table table style="margin:auto; width:100%;font-size: 100%" border="0" cellspacing="0">
         <tr align="left" valign="middle">
