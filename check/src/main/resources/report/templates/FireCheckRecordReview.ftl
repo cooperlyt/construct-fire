@@ -23,7 +23,7 @@
             line-height: 20px;
         }.text1{
              text-indent: 2em;
-             line-height: 30px;
+             line-height: 35px;
          }
         .underline{
             text-decoration:underline;
@@ -47,7 +47,7 @@
             <#assign j=j+1/>
             <div class="page" >
                 <div class="hTitle"><p><strong>${org}</strong></p></div>
-                <div class="hTitle"><p><strong>建设工程消防验收备案凭证</strong></p></div>
+                <div class="hTitle"><p><strong>建设工程消防验收备案复查结果通知书</strong></p></div>
                 <div class="right"><p>（文号:${fireCheck.id?string["0"]})</p></div>
                 <div><p><strong class="underline">${joinCorp.name!}</strong>：</p></div>
 
@@ -62,26 +62,28 @@
                                 </#if>
                             </#list>
                         </#if>
-                        )消防验收备案，备案申请表编号为<strong class="underline">${fireCheck.id?string["0"]}</strong> ，提交的下列备案材料：
+                        ;备案申请表 编号：<strong class="underline">${fireCheck.id?string["0"]}</strong> ；备案凭证文号：<strong class="underline">${fireCheck.id?string["0"]}</strong>）被确定为检查对象。经检查：
                     </p></div>
 
-
-                <#if fireCheck.files?exists>
-                    <#list fireCheck.files?sort_by("id")  as  file>
-                        <#if file.pass == true>
-                            <p style="line-height: 15px">√ ${file_index + 1}.${file.name}</p>
-                        <#else>
-                            <p style="line-height: 15px">× ${file_index + 1}.${file.name}</p>
-                        </#if>
-                    </#list>
+                <#if fireCheck.status == "Qualified">
+                    <p class="text">该工程符合建设工程消防验收有关规定。</p>
+                    <div style="height: 130px"></div>
                 </#if>
-                <p class="text">备案材料齐全，准予备案</p>
 
-                <#if fireCheck.info.inRandom == true>
-                    <p class="text">该工程未被确定为检查对象。</p>
-                <#else>
-                    <p class="text">该工程被确定为检查对象，我单位将在十五个工作日内进行检 查，请做好准备。 </p>
+                <#if fireCheck.status == "Unqualified">
+                    <p class="text">该工程不符合建设工程消防验收有关规定。</p>
+                    <#if build.opinion??>
+                        <p class="text">主要存在以下问题：${build.opinion!}</p>
+                    <#else>
+                        <p class="text">主要存在以下问题：${fireCheck.opinion!}</p>
+                    </#if>
+                    <p class="text">你单位应立即停止使用，并对上述问题组织整改。整改完成后，应申请 复查，复查合格后方可使用。</p>
+                    <div style="height: 60px"></div>
                 </#if>
+
+
+
+
 
                 <table border="0" width="100%" >
                     <tr>

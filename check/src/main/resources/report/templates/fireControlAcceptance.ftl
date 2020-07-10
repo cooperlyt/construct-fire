@@ -75,9 +75,6 @@
     <p class="text">综合评定消防验收结论：合格。此结论仅对当日验收所涉及的系统及设施情况负责。</p>
     <p class="text">该工程如需扩建、改建(含室内外装修、建筑保温、用途变更)的，应当依法建设工程消防设计审查机构申请施工图设计文件审查或备案；属于公众聚集场所的，投入使用、营业前应向消防部门作出符合消防安全标准的承诺。</p>
     <p class="text"></p>
-<#--    <#list testArray as test>-->
-<#--        ${test}-->
-<#--    </#list>-->
 
     <table border="0" width="100%" >
         <tr>
@@ -89,7 +86,7 @@
         <tr>
             <td></td>
             <td  style="font-size: 110%" align="right" height="30px">
-                <p> ${.now?string("yyyy")}年${.now?string("mm")}月${.now?string("dd")}日</p>
+                <p> ${.now?string("yyyy年MM月dd日")}</p>
             </td>
         </tr>
         <tr>
