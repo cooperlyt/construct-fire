@@ -29,7 +29,11 @@ import java.util.*;
  * 特殊建设工程消防验收意见书           specialControlAcceptance.ftl
  * 建设工程消防验收备案表               FireCheckRecordApply.ftl
  * 建设工程消防验收备案凭证             apply.ftl
- * 建设工程消防验收不予备案凭证         applyNot
+ * 建设工程消防验收不予备案凭证         applyNot.ftl
+ * 建设工程消防验收备案抽查结果通知书    FireCheckRecordSpot.ftl
+ * 建设工程消防验收备案复查结果通知书    FireCheckRecordReview.ftl
+ * 建设工程消防验收备案抽查(复查)申请表  fireCheckRecordSFRApply.ftl
+ *
  */
 
 @Service
