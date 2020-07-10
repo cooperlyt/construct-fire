@@ -47,7 +47,10 @@
             <#assign j=j+1/>
             <div class="page" >
                 <div class="hTitle"><p><strong>${org}</strong></p></div>
-                <div class="hTitle"><p><strong>建设工程消防验收备案抽查结果通知书</strong></p></div>
+
+                <div class="hTitle"><p><strong>建设工程消防验收备案抽查/复查结果通知书</strong></p></div>
+
+
                 <div class="right"><p>（文号:${fireCheck.id?string["0"]})</p></div>
                 <div><p><strong class="underline">${joinCorp.name!}</strong>：</p></div>
 
@@ -77,7 +80,7 @@
                     <#else>
                         <p class="text">主要存在以下问题：${fireCheck.opinion!}</p>
                     </#if>
-                    <p class="text">你单位应立即停止使用，并对上述问题组织整改。整改完成后，应申请 复查，复查合格后方可使用。</p>
+                    <p class="text">你单位应立即停止使用，并对上述问题组织整改。整改完成后，应申请复查，复查合格后方可使用。</p>
                     <div style="height: 60px"></div>
                 </#if>
 

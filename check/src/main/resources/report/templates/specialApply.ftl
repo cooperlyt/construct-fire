@@ -44,7 +44,12 @@
             <#assign j=j+1/>
             <div class="page" >
                 <div class="hTitle"><p><strong>${org}</strong></p></div>
-                <div class="hTitle"><p><strong>特殊建设工程消防验收申请受理凭证</strong></p></div>
+                <#if fireCheck.status != "NoAccept">
+                    <div class="hTitle"><p><strong>特殊建设工程消防验收申请受理凭证</strong></p></div>
+                <#else>
+                    <div class="hTitle"><p><strong>特殊建设工程消防验收不予受理凭证</strong></p></div>
+                </#if>
+
                 <div class="right"><p>（文号:${fireCheck.id?string["0"]})</p></div>
                 <div><p><strong class="underline">${joinCorp.name!}</strong>：</p></div>
 
@@ -61,18 +66,25 @@
                         </#if>
                         )消防验收，并提交了下列材料
                     </p></div>
-
-
+                <#assign notSelect="">
                 <#if fireCheck.files?exists>
                     <#list fireCheck.files?sort_by("id")  as  file>
                         <#if file.pass == true>
-                            <p style="line-height: 20px">√ ${file_index + 1}.${file.name}</p>
+                            <p style="line-height: 18px">√ ${file_index + 1}.${file.name}</p>
                         <#else>
-                            <p style="line-height: 20px">× ${file_index + 1}.${file.name}</p>
+                            <p style="line-height: 18px">× ${file_index + 1}.${file.name}</p>
+                            <#assign notSelect = notSelect + ((file_index+1)?string("number"))+"   "/>
                         </#if>
                     </#list>
                 </#if>
-                <p class="text">申请材料齐全、符合要求，予以受理。</p>
+                <#if fireCheck.status != "NoAccept">
+                    <p class="text">申请材料齐全、符合要求，予以受理。</p>
+                <#else>
+                    <p class="text" style="line-height: 25px"> 存在以下情形，不予备案。□1.依法不应办理消防验收备案；√2.提交的上列第；
+                        <strong class="underline">${notSelect!}</strong>项材料不符合相关要求。□3．申请材料不齐全，需要补 正上列第__项材料。
+                    </p>
+                </#if>
+
 
 
 
@@ -90,24 +102,24 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-size: 110%" width="35%" height="30px">
+                        <td style="font-size: 110%" width="35%" height="25px">
                             建设单位签收：
                         </td>
-                        <td style="font-size: 110%" align="right" height="30px">
+                        <td style="font-size: 110%" align="right" height="25px">
 
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-size: 110%" width="35%" height="30px">
+                        <td style="font-size: 110%" width="35%" height="25px">
 
                         </td>
-                        <td style="font-size: 110%" align="center" height="30px">
+                        <td style="font-size: 110%" align="center" height="25px">
                             <p>年 &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;月&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;日</p>
                         </td>
                     </tr>
 
                     <tr>
-                        <td colspan="2" style="font-size: 110%" align="center" height="30px">
+                        <td colspan="2" style="font-size: 110%" align="center" height="20px">
                             <p>备注：本凭证一式两份，一份交建设单位，一份存档</p>
                         </td>
                     </tr>
