@@ -47,7 +47,12 @@
             <#assign j=j+1/>
             <div class="page" >
                 <div class="hTitle"><p><strong>${org}</strong></p></div>
-                <div class="hTitle"><p><strong>建设工程消防验收备案凭证</strong></p></div>
+                <#if fireCheck.status != "NoAccept">
+                    <div class="hTitle"><p><strong>建设工程消防验收备案凭证</strong></p></div>
+                <#else>
+                    <div class="hTitle"><p><strong>建设工程消防验收不予备案凭证</strong></p></div>
+                </#if>
+
                 <div class="right"><p>（文号:${fireCheck.id?string["0"]})</p></div>
                 <div><p><strong class="underline">${joinCorp.name!}</strong>：</p></div>
 
@@ -65,22 +70,30 @@
                         )消防验收备案，备案申请表编号为<strong class="underline">${fireCheck.id?string["0"]}</strong> ，提交的下列备案材料：
                     </p></div>
 
-
+                <#assign notSelect="">
                 <#if fireCheck.files?exists>
                     <#list fireCheck.files?sort_by("id")  as  file>
                         <#if file.pass == true>
                             <p style="line-height: 15px">√ ${file_index + 1}.${file.name}</p>
                         <#else>
                             <p style="line-height: 15px">× ${file_index + 1}.${file.name}</p>
+                            <#assign notSelect = notSelect + ((file_index+1)?string("number"))+"   "/>
                         </#if>
                     </#list>
                 </#if>
-                <p class="text">备案材料齐全，准予备案</p>
+                <#if fireCheck.status != "NoAccept">
+                    <p class="text">备案材料齐全，准予备案</p>
+                <#else>
+                    <p class="text" style="line-height: 25px"> 存在以下情形，不予备案。□1.依法不应办理消防验收备案；√2.提交的上列第；
+                        <strong class="underline">${notSelect!}</strong>项材料不符合相关要求。□3．申请材料不齐全，需要补 正上列第__项材料。
+                    </p>
+                </#if>
+
 
                 <#if fireCheck.info.inRandom == true>
                     <p class="text">该工程未被确定为检查对象。</p>
                 <#else>
-                    <p class="text">该工程被确定为检查对象，我单位将在十五个工作日内进行检 查，请做好准备。 </p>
+                    <p class="text">该工程被确定为检查对象，我单位将在十五个工作日内进行检查，请做好准备。 </p>
                 </#if>
 
                 <table border="0" width="100%" >
