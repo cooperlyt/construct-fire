@@ -61,7 +61,7 @@
                                 </#if>
                             </#list>
                         </#if>
-                        )消防验收备案，备案申请表编号为<strong class="underline">${fireCheck.id?string["0"]}</strong>） ，提交的下列备案材料：
+                        )消防验收备案，备案申请表编号为<strong class="underline">${fireCheck.id?string["0"]}</strong>，提交的下列备案材料：
                     </p></div>
 
 
