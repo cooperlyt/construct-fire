@@ -81,6 +81,7 @@ public class ReportTest {
 
 
     @Test
+    @Ignore
     public void CreateFireCheckInfo(){
         Long id = Long.valueOf(2020052201);
 
@@ -225,7 +226,7 @@ public class ReportTest {
         buildCheck.setCode(buildCheck.getId());
         buildCheck.setOpinion("buildChecky意见");
         buildCheck.setProperty(FireCheckInfo.UseProperty.DAN);
-        buildCheck.setPass(false);
+        buildCheck.setPass(true);
         buildCheck.setInfo(projectBuildInfo);
         projectBuildInfo.setCheck(buildCheck);
         buildCheck.setCheck(fireCheckInfo);
@@ -244,7 +245,7 @@ public class ReportTest {
         modifyFitCheck.setId(defaultUidGenerator.getUID());
         modifyFitCheck.setArea(new BigDecimal(123.00));
         modifyFitCheck.setLayers("10fit");
-        modifyFitCheck.setPart("部位1,部位2");//用逗号分隔
+        modifyFitCheck.setPart("CELL,WALL");//用逗号分隔
         modifyFitCheck.setCheck(fireCheckInfo);
         fireCheckInfo.setFit(modifyFitCheck);
 
@@ -275,7 +276,7 @@ public class ReportTest {
         FireCheck fireCheck = new FireCheck();
         fireCheck.setId(fireCheckInfo.getId());
         fireCheck.setInfo(fireCheckInfo);
-        fireCheck.setStatus(FireCheck.Status.Running);
+        fireCheck.setStatus(FireCheck.Status.Unqualified);
         fireCheck.setApplyTime(new Date());
         fireCheck.setRegTime(new Date());
         fireCheck.setNoAcceptType(FireCheck.NoAcceptType.LESS_FILE);
@@ -284,6 +285,20 @@ public class ReportTest {
         fireCheck.setType(FireCheck.Type.First);
         fireCheck.setCorp(projectCorp.getCode());
 
+        for (int i=1;i<10;i++){
+            CheckFile checkFile = new CheckFile();
+            checkFile.setId(i);
+            checkFile.setName("文件名文件名文件名文件名文件名文件名文件名-"+i);
+
+            checkFile.setCheck(fireCheck);
+            if (i/2 == 0) {
+                checkFile.setPass(true);
+            }else {
+                checkFile.setPass(false);
+            }
+            fireCheck.getFiles().add(checkFile);
+        }
+
 
         fireCheckRepository.save(fireCheck);
 
@@ -291,6 +306,7 @@ public class ReportTest {
 
 
     @Test
+    @Ignore
     public void TestReport(){
         this.CreateFireCheckInfo();
         FireCheck fireCheck = businessService.fireCheck(Long.valueOf(2020052201)).get();
@@ -313,7 +329,7 @@ public class ReportTest {
         try {
             Files.deleteIfExists(Paths.get("D:\\report\\test.pdf"));
             fileOutputStream = new FileOutputStream("D:\\report\\test.pdf");
-            sampleReport(fileOutputStream, Long.toString(fireCheck.getId()), "东港市住房和城乡建设局", "specialFireCheckRecordApply.ftl", data);
+            sampleReport(fileOutputStream, Long.toString(fireCheck.getId()), "东港市住房和城乡建设局", "fireCheckRecordSFRApply.ftl", data);
             File file = new File("D:\\report\\test.pdf"); // 创建文件对象
             // Desktop.getDesktop().open(file);
         } catch (FileNotFoundException e) {
