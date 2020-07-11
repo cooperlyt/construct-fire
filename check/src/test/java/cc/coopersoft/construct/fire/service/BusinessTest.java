@@ -19,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 
 
@@ -61,7 +63,7 @@ public class BusinessTest {
 
     @Test
     public void testTrust(){
-        fireCheckBusiness.search(1l,null,null, null);
+        fireCheckBusiness.search(1l,null,null, null, Optional.empty(),Optional.empty());
     }
 
     @Test

@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -79,8 +80,10 @@ public class CorpCheckController {
     public List<FireCheck> search(@RequestParam("org") long corp,
                                   @RequestParam(value = "my", required = false) Boolean my,
                                   @RequestParam(value = "key", required = false) String key,
-                                  @RequestParam(value = "status", required = false) FireCheck.Status status ){
-        return fireCheckBusiness.search(corp,my,key,status);
+                                  @RequestParam(value = "status", required = false) FireCheck.Status status,
+                                  @RequestParam(value = "special") Optional<Boolean> special,
+                                  @RequestParam(value = "inRandom") Optional<Boolean> inRandom){
+        return fireCheckBusiness.search(corp,my,key,status, special, inRandom);
     }
 
 

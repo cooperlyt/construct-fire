@@ -308,37 +308,37 @@ public class ReportTest {
     @Test
     @Ignore
     public void TestReport(){
-        this.CreateFireCheckInfo();
-        FireCheck fireCheck = businessService.fireCheck(Long.valueOf(2020052201)).get();
-        Optional<ProjectCorp> joinCorp = testCorpRepository.findByIdCodeAndIdProperty(fireCheck.getId(),CorpProperty.Developer);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("fireCheck", fireCheck);
-        data.put("org", "东港市住房和城乡建设局");
-        data.put("word", "DG");
-        data.put("joinCorp",joinCorp.get());
-        data.put("enumData", EnumData.values());
-        data.put("sheckTables", fireCheck.getInfo().getItems());
-        data.put("joinCorps",fireCheck.getInfo().getProject().getCorps());
-        List<String> testList = new ArrayList<>();
-        testList.add("test1");
-        testList.add("test2");
-        data.put("testArray", testList);
-
-        FileOutputStream fileOutputStream = null;
-        try {
-            Files.deleteIfExists(Paths.get("D:\\report\\test.pdf"));
-            fileOutputStream = new FileOutputStream("D:\\report\\test.pdf");
-            sampleReport(fileOutputStream, Long.toString(fireCheck.getId()), "东港市住房和城乡建设局", "fireCheckRecordSFRApply.ftl", data);
-            File file = new File("D:\\report\\test.pdf"); // 创建文件对象
-            // Desktop.getDesktop().open(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e){
-            System.out.println("delete text err");
-        }finally {
-            IOUtils.closeQuietly(fileOutputStream);
-        }
+//        this.CreateFireCheckInfo();
+//        FireCheck fireCheck = businessService.fireCheck(Long.valueOf(2020052201)).get();
+//        Optional<ProjectCorp> joinCorp = testCorpRepository.findByIdCodeAndIdProperty(fireCheck.getId(),CorpProperty.Developer);
+//
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("fireCheck", fireCheck);
+//        data.put("org", "东港市住房和城乡建设局");
+//        data.put("word", "DG");
+//        data.put("joinCorp",joinCorp.get());
+//        data.put("enumData", EnumData.values());
+//        data.put("sheckTables", fireCheck.getInfo().getItems());
+//        data.put("joinCorps",fireCheck.getInfo().getProject().getCorps());
+//        List<String> testList = new ArrayList<>();
+//        testList.add("test1");
+//        testList.add("test2");
+//        data.put("testArray", testList);
+//
+//        FileOutputStream fileOutputStream = null;
+//        try {
+//            Files.deleteIfExists(Paths.get("D:\\report\\test.pdf"));
+//            fileOutputStream = new FileOutputStream("D:\\report\\test.pdf");
+//            sampleReport(fileOutputStream, Long.toString(fireCheck.getId()), "东港市住房和城乡建设局", "fireCheckRecordSFRApply.ftl", data);
+//            File file = new File("D:\\report\\test.pdf"); // 创建文件对象
+//            // Desktop.getDesktop().open(file);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e){
+//            System.out.println("delete text err");
+//        }finally {
+//            IOUtils.closeQuietly(fileOutputStream);
+//        }
 
 
 
