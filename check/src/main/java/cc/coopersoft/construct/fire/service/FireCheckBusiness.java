@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.criteria.Fetch;
 import javax.persistence.criteria.Join;
@@ -96,7 +97,9 @@ public class FireCheckBusiness {
 
 
 
-    public List<FireCheck> search(long corp, Boolean my, String key, FireCheck.Status status){
+    public List<FireCheck> search(long corp, Boolean my, String key, FireCheck.Status status ,
+                                  Optional<Boolean> special,
+                                  Optional<Boolean> inRandom){
         Specification<FireCheck> specification = (Specification<FireCheck>) (root, criteriaQuery, cb) -> {
 
             List<Predicate> predicates = new LinkedList<>();
@@ -140,6 +143,23 @@ public class FireCheckBusiness {
                 keyPredicate.add(cb.like(projectJoin.get("corpTags"),_k));
                 predicates.add(cb.or(keyPredicate.toArray(new Predicate[0])));
             }
+
+            special.ifPresent(b -> {
+                if (b){
+                    predicates.add(cb.isTrue(infoJoin.get("special")));
+                }else{
+                    predicates.add(cb.isFalse(infoJoin.get("special")));
+                    inRandom.ifPresent(r -> {
+                        if (r){
+                            predicates.add(cb.isTrue(infoJoin.get("inRandom")));
+                        }else{
+                            predicates.add(cb.isFalse(infoJoin.get("inRandom")));
+                        }
+                    });
+                }
+            });
+
+
             criteriaQuery.distinct(true);
 
             return cb.and(predicates.toArray(new Predicate[0]));
@@ -148,10 +168,12 @@ public class FireCheckBusiness {
     }
 
     public Page<FireCheck> search(Optional<FireCheck.Status> status,
+                                    Optional<Boolean> special,
+                                    Optional<Boolean> inRandom,
                                     Optional<Integer> page,
                                     Optional<String> key,
                                     Optional<String> sort,
-                                    Optional<String> dir){
+                                    Optional<Sort.Direction> dir){
         Specification<FireCheck> specification = (Specification<FireCheck>) (root, criteriaQuery, cb) -> {
             boolean countQuery = criteriaQuery.getResultType().equals(Long.class);
             List<Predicate> predicates = new LinkedList<>();
@@ -195,6 +217,22 @@ public class FireCheckBusiness {
                 }
             });
 
+            special.ifPresent(b -> {
+                if (b){
+                    predicates.add(cb.isTrue(infoJoin.get("special")));
+                }else{
+                    predicates.add(cb.isFalse(infoJoin.get("special")));
+                    inRandom.ifPresent(r -> {
+                        if (r){
+                            predicates.add(cb.isTrue(infoJoin.get("inRandom")));
+                        }else{
+                            predicates.add(cb.isFalse(infoJoin.get("inRandom")));
+                        }
+                    });
+                }
+            });
+
+
 
             status.ifPresentOrElse(s -> {
                 predicates.add(cb.and(cb.equal(root.get("status"),s)));
@@ -205,8 +243,8 @@ public class FireCheckBusiness {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        Sort sortable = Sort.by((dir.filter(s -> !"DESC".equals(s)).map(s -> Sort.Direction.ASC).orElse(Sort.Direction.DESC))
-                , (sort.orElse("regTime")));
+        Sort sortable = Sort.by(dir.orElse(Sort.Direction.DESC)
+                , sort.orElse("regTime"));
 
         return fireCheckRepository.findAll(specification, PageRequest.of(page.orElse(0),PAGE_SIZE,sortable));
     }

@@ -24,12 +24,15 @@ import java.util.*;
 /**
  * 新版报表信息
  * 特殊建设工程消防验收申请表                    specialFireCheckRecordApply.ftl
- * 特殊建设工程消防验收申请受理/不予受理凭证       specialApply.ftl
- * 特殊建设工程消防验收意见书                    specialControlAcceptance.ftl
  * 建设工程消防验收备案表                       FireCheckRecordApply.ftl
+ * 建设工程消防验收备案抽查复查申请表          fireCheckRecordSFRApply.ftl
+ *
+ * 特殊建设工程消防验收申请受理/不予受理凭证       specialApply.ftl
  * 建设工程消防验收备案/不予备案凭证             apply.ftl
+ *
+ * 特殊建设工程消防验收意见书                    specialControlAcceptance.ftl
  * 建设工程消防验收备案抽查/复查结果通知书        FireCheckRecordSpot.ftl
- * 建设工程消防验收备案抽查(复查)申请表          fireCheckRecordSFRApply.ftl
+
  */
 
 @Service
@@ -66,6 +69,9 @@ public class ReportService {
         data.put("word",orgWord);
         data.put("joinCorp",getApplyCorp(check));
         data.put("enumData", EnumData.values());
+
+        log.debug("机构数量:" + check.getInfo().getProject().getCorps().size());
+
         return data;
     }
 
@@ -85,59 +91,22 @@ public class ReportService {
 
     //建设工程消防验收申请不予受理通知书/  建设工程竣工验收消防备案材料补正通知书 /建设工程消防验收申请受理通知书  /建设工程竣工验收消防备案凭证（未抽中）/建设工程竣工验收消防备案凭证（抽中）
     public void applyResultReport(FireCheck fireCheck){
-
-        if (FireCheck.Status.NoAccept.equals(fireCheck.getStatus())){
-            if (fireCheck.getInfo().isSpecial()){
-                createOfficialLetter(fireCheck,true,
-                        "建设工程消防验收申请不予受理通知书","applyNot.ftl" );
-            }else{
-                createOfficialLetter(fireCheck, true,
-                        "建设工程竣工验收消防备案材料补正通知书"
-                        ,"correctionDate.ftl");
-            }
+        if (fireCheck.getInfo().isSpecial()){
+            createOfficialLetter(fireCheck,false,"特殊建设工程消防验收申请受理/不予受理凭证", "specialApply.ftl");
         }else{
-            if (fireCheck.getInfo().isSpecial()){
-                createOfficialLetter(fireCheck,false,"建设工程消防验收申请受理通知书", "apply.ftl");
-            }else{
-                if (fireCheck.getInfo().isInRandom()){
-                    createOfficialLetter(fireCheck,false,"建设工程竣工验收消防备案凭证（抽中）","filingCertificateSelect.ftl");
-                }else
-                    createOfficialLetter(fireCheck, false,"建设工程竣工验收消防备案凭证（未抽中）","filingCertificateNotSelect.ftl");
-            }
+            createOfficialLetter(fireCheck,false,"建设工程消防验收备案/不予备案凭证","apply.ftl");
         }
-
     }
 
 
     //建设工程消防验收意见书(验收失败)/建设工程消防验收意见书(验收成功)/建设工程竣工验收消防备案复查意见书/建设工程竣工验收消防备案检查意见书/建设工程竣工验收消防备案检查不合格通知书
     public void viewResultReport(FireCheck fireCheck){
         if (fireCheck.getInfo().isSpecial()){
-            if (FireCheck.Status.Qualified.equals(fireCheck.getStatus())){
-                createOfficialLetter(fireCheck, false,"建设工程消防验收意见书(验收成功)",
-                        "fireControlAcceptance.ftl");
-            }else if (FireCheck.Status.Unqualified.equals(fireCheck.getStatus())) {
-                createOfficialLetter(fireCheck, true,"建设工程消防验收意见书(验收失败)",
-                        "fireNotControlAcceptance.ftl");
-            }else{
-                throw new IllegalArgumentException("check not in status");
-            }
+            createOfficialLetter(fireCheck, false,"特殊建设工程消防验收意见书",
+                        "specialControlAcceptance.ftl");
         }else{
-            if (FireCheck.Status.Qualified.equals(fireCheck.getStatus())){
-                if (FireCheck.Type.First.equals(fireCheck.getType())){
-                    createOfficialLetter(fireCheck, false,"建设工程竣工验收消防备案检查意见书"
-                            ,"checkComment.ftl");
-                }else if (FireCheck.Type.Review.equals(fireCheck.getType())){
-                    createOfficialLetter(fireCheck, false,"建设工程竣工验收消防备案复查意见书"
-                            ,"reviewComments.ftl");
-                }else{
-                    throw new IllegalArgumentException("type not in define");
-                }
-            }else if (FireCheck.Status.Unqualified.equals(fireCheck.getStatus())){
-                createOfficialLetter(fireCheck, true,"建设工程竣工验收消防备案检查不合格通知书"
-                        ,"unqualified.ftl");
-            }else{
-                throw new IllegalArgumentException("check not in status");
-            }
+            createOfficialLetter(fireCheck, false,"建设工程消防验收备案抽查/复查结果通知书",
+                    "FireCheckRecordSpot.ftl");
         }
     }
 
@@ -145,9 +114,13 @@ public class ReportService {
     //建设工程消防验收申报表 / 建设工程竣工验收消防备案申报表
     public void applyReport(FireCheck fireCheck){
         if (fireCheck.getInfo().isSpecial()){
-            createOfficialLetter(fireCheck, false,"建设工程消防验收申报表","acceptanceDeclarationForm.ftl");
+            createOfficialLetter(fireCheck, false,"特殊建设工程消防验收申请表","specialFireCheckRecordApply.ftl");
         }else{
-            createOfficialLetter(fireCheck,false,"建设工程竣工验收消防备案申报表","completedContractsRecodApply.ftl");
+            if (FireCheck.Type.First.equals(fireCheck.getType())){
+                createOfficialLetter(fireCheck,false,"建设工程消防验收备案表","FireCheckRecordApply.ftl");
+            }else{
+                createOfficialLetter(fireCheck,false,"建设工程消防验收备案抽查复查申请表","fireCheckRecordSFRApply.ftl");
+            }
         }
     }
 

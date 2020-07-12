@@ -10,6 +10,7 @@ import cc.coopersoft.cloud.business.document.repository.BusinessFileRepository;
 import cc.coopersoft.cloud.business.document.repository.DocumentRepository;
 import cc.coopersoft.common.tools.EntityOrderTools;
 import com.github.wujun234.uid.UidGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class DocumentService {
 
@@ -68,6 +70,7 @@ public class DocumentService {
         List<DocumentDefine> defines = defineService.getDocumentDefines(defineId);
         List<BusinessDocument> documents = new ArrayList<>(defines.size());
         for(DocumentDefine define: defines){
+            log.debug("init doc add:" + define.name);
             documents.add(
                     new BusinessDocument(businessId,
                             defaultUidGenerator.getUID(),

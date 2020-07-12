@@ -9,6 +9,7 @@ import cc.coopersoft.construct.fire.service.BusinessService;
 import cc.coopersoft.construct.fire.service.FireCheckBusiness;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -53,11 +54,13 @@ public class CheckController {
     @RequestMapping(value = "/search" , method = RequestMethod.GET)
     @JsonView(FireCheck.Summary.class)
     public Page<FireCheck> search(@RequestParam(value = "status", required = false) Optional<FireCheck.Status> status,
+                                  @RequestParam(value = "special") Optional<Boolean> special,
+                                  @RequestParam(value = "inRandom") Optional<Boolean> inRandom,
                                   @RequestParam(value = "page", required = false) Optional<Integer> page,
                                   @RequestParam(value = "key", required = false) Optional<String> key,
                                   @RequestParam(value = "sort", required = false) Optional<String> sort,
-                                  @RequestParam(value = "dir", required = false) Optional<String> dir){
-        return fireCheckBusiness.search(status,page,key,sort,dir);
+                                  @RequestParam(value = "dir", required = false) Optional<Sort.Direction> dir){
+        return fireCheckBusiness.search(status,special,inRandom,page,key,sort,dir);
     }
 
     @RequestMapping(value = "/check/{id}/file",method = {RequestMethod.POST, RequestMethod.PUT})

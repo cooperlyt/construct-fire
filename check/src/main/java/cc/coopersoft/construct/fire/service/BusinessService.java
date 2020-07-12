@@ -127,7 +127,7 @@ public class BusinessService {
         create(check);
         addCheckTable(check.getInfo());
 
-        remoteService.initBusinessDocuments(check.getCorp(),check.getId(),check.getInfo().isSpecial() ? FIRE_CHECK_BUSINESS_DEFINE : FIRE_RECORD_BUSINESS_DEFINE);
+        remoteService.initBusinessDocuments(check.getId(),check.getInfo().isSpecial() ? FIRE_CHECK_BUSINESS_DEFINE : FIRE_RECORD_BUSINESS_DEFINE);
 
         reportService.applyReport(check);
 
@@ -148,7 +148,7 @@ public class BusinessService {
             throw new IllegalArgumentException("project need review !");
         }
 
-
+        check.setApplyTime(new Date());
         check.setStatus(FireCheck.Status.Running);
 
         int randomInt = RandomUtils.nextInt(100);
@@ -225,7 +225,7 @@ public class BusinessService {
 
     private FireCheck createBusinessFlow(FireCheck check, BusinessDescription.Source source){
 
-        check.setApplyTime(new Date());
+
 
 //        check.getReports().add(reportService.applyReport(check));
 //        if (!check.getInfo().getItems().isEmpty())
@@ -272,7 +272,7 @@ public class BusinessService {
         }
 
         check.setId(cachedUidGenerator.getUID());
-
+        check.setApplyTime(new Date());
 
             check.getInfo().setId(check.getId());
             if (check.getInfo().isSpecial()){

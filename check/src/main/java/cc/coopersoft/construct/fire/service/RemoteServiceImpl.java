@@ -90,14 +90,20 @@ public class RemoteServiceImpl implements RemoteService {
     }
 
     @Override
-    public Mono<Long> initBusinessDocuments(long corp, long id, String define) {
-        return webClient
+    public void initBusinessDocuments(long id, String define) {
+        log.debug("extends call init business!" + define + "->" + id);
+        webClient
                 .post()
-                .uri("http://camundasvr/trust/doc/{corp}/define/{define}/{id}/init",corp,define, id)
+                .uri("http://camundasvr/master/business/define/{define}/{id}/init",define, id)
                 .attributes(clientRegistrationId("master-extend-cer"))
                 .retrieve()
                 .bodyToMono(String.class)
-                .map(Long::parseLong);
+                .map(Long::parseLong)
+                .subscribe(res -> {
+                    if (res != id){
+                        throw new IllegalStateException("init doc fail!" + res);
+                    }
+                });
 
     }
 

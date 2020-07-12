@@ -3,12 +3,16 @@ package cc.coopersoft.cloud.business.document.controller;
 import cc.coopersoft.cloud.business.document.model.BusinessDocument;
 import cc.coopersoft.cloud.business.document.model.BusinessFile;
 import cc.coopersoft.cloud.business.document.service.DocumentService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping(value="/manager/doc")
 public class MasterController {

@@ -10,6 +10,7 @@ import org.camunda.bpm.engine.variable.VariableMap;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -49,5 +50,16 @@ public class BusinessMasterController {
         return documentService.businessDocuments(id);
     }
 
+    @RequestMapping(value = "/define/{define}/{id}/init", method = RequestMethod.POST)
+    public String initBusinessDocument(@PathVariable("id") long id, @PathVariable("define") String define){
+        log.debug("call init document: " + define + "->" + id);
+        if (!businessService.existsBusiness(id)){
+            documentService.initBusinessDocument(id,define);
+            return String.valueOf(id);
+        }else{
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+    }
 
 }
