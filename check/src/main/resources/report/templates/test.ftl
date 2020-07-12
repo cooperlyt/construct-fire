@@ -221,8 +221,8 @@
 
             <td height="25px" align="center" valign="middle">建设单位</td>
             <#assign DeveloperName = "">
-            <#if (joinCorps)?exists>
-                <#list joinCorps as crop>
+            <#if (fireCheck.info.project.corps)?exists>
+                <#list fireCheck.info.project.corps as crop>
                     <#if crop.property == "Developer">
                         <#if DeveloperName =="">
                             <#assign DeveloperName = crop.name>
@@ -241,9 +241,9 @@
 
             <td height="25px" align="center" valign="middle">设计单位</td>
             <#assign DesignName = "">
-            <#if (joinCorps)?exists>
-                <#list joinCorps as crop>
-                    <#if crop.property == "Design">
+            <#if (fireCheck.info.project.corps)?exists>
+                <#list fireCheck.info.project.corps as crop>
+                    <#if crop.propjoinCjoinCorpsorpserty == "Design">
                         <#if DesignName =="">
                             <#assign DesignName = crop.name>
                         <#else>
@@ -261,8 +261,8 @@
             </td>
             <td height="25px" align="center" valign="middle">施工单位</td>
             <#assign ConstructName = "">
-            <#if (joinCorps)?exists>
-                <#list joinCorps as crop>
+            <#if (fireCheck.info.project.corps)?exists>
+                <#list fireCheck.info.project.corps as crop>
                     <#if crop.property == "Construct">
                         <#if ConstructName =="">
                             <#assign ConstructName = crop.name>
@@ -279,8 +279,8 @@
         <tr>
             <td height="25px" align="center" valign="middle">监理单位</td>
             <#assign SupervisortName = "">
-            <#if (joinCorps)?exists>
-                <#list joinCorps as crop>
+            <#if (fireCheck.info.project.corps)?exists>
+                <#list fireCheck.info.project.corps as crop>
                     <#if crop.property == "Supervisor">
                         <#if SupervisortName =="">
                             <#assign SupervisortName = crop.name>
