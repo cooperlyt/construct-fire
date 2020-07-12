@@ -32,16 +32,8 @@
 
 <body>
 <#if fireCheck.info.builds?exists && (fireCheck.info.builds?size>0)>
-    <#assign i=0,j=0/>
-    <#list fireCheck.info.builds as buildcount>
-        <#if buildcount.pass?exists && buildcount.pass == true>
-            <#assign i=i+1 />
-        </#if>
-    </#list>
-    <#list fireCheck.info.builds as build>
 
-        <#if build.pass?exists && build.pass == true>
-            <#assign j=j+1/>
+    <#list fireCheck.info.builds as build>
             <div class="page" >
                 <div class="hTitle"><p><strong>${org}</strong></p></div>
                 <div class="hTitle"><p><strong>特殊建设工程消防验收意见书</strong></p></div>
@@ -75,7 +67,7 @@
                     <#else>
                         <p class="text">主要存在以下问题：${fireCheck.opinion!}</p>
                     </#if>
-                    <p class="text">如不服本决定，可以在收到本意见书之日起_内依法向 ______申请____ 行政复议，或者____内依法向____人民法院提起行政诉讼。</p>
+                    <p class="text">如不服本决定，可以在收到本意见书之日起六十日内依法向东港市人民政府申请行政复议，或者六个月内依法向东港市人民法院提起行政诉讼。</p>
                     <div style="height: 60px"></div>
                 </#if>
 
@@ -120,8 +112,8 @@
                 </table>
 
             </div>
-        </#if>
-        <#if j lte i-1>
+
+        <#if fireCheck.info.builds?exists && (fireCheck.info.builds?size>1)>
             <span style="page-break-after:always;"></span>
         </#if>
     </#list>
