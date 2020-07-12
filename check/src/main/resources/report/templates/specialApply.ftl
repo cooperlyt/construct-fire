@@ -32,16 +32,7 @@
 
 <body>
 <#if fireCheck.info.builds?exists && (fireCheck.info.builds?size>0)>
-    <#assign i=0,j=0/>
-    <#list fireCheck.info.builds as buildcount>
-        <#if buildcount.pass?exists && buildcount.pass == true>
-            <#assign i=i+1 />
-        </#if>
-    </#list>
     <#list fireCheck.info.builds as build>
-
-        <#if build.pass?exists && build.pass == true>
-            <#assign j=j+1/>
             <div class="page" >
                 <div class="hTitle"><p><strong>${org}</strong></p></div>
                 <#if fireCheck.status != "NoAccept">
@@ -126,8 +117,8 @@
                 </table>
 
             </div>
-        </#if>
-        <#if j lte i-1>
+
+        <#if fireCheck.info.builds?exists && (fireCheck.info.builds?size>1)>
             <span style="page-break-after:always;"></span>
         </#if>
     </#list>

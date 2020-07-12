@@ -61,6 +61,15 @@ public class ReportService {
                 .stream().filter(corp -> (corp.getCode() == check.getCorp()))
                 .findFirst().orElseThrow();
     }
+    private  List<EnumData> getPackPackEnumDataList(FireCheck check){
+        if (check.getInfo().getFit()!=null && check.getInfo().getFit().getPart()!=null){
+            return EnumData.selectPackEnumData(check.getInfo().getFit().getPart().split(","));
+        }else {
+            return EnumData.getPackEnumDataList();
+        }
+
+    }
+
 
     private Map<String,Object> officialReportData(FireCheck check){
         Map<String,Object> data = new HashMap<>();
@@ -69,7 +78,7 @@ public class ReportService {
         data.put("word",orgWord);
         data.put("joinCorp",getApplyCorp(check));
         data.put("enumData", EnumData.values());
-
+        data.put("packEnumDataList",getPackPackEnumDataList(check));
         log.debug("机构数量:" + check.getInfo().getProject().getCorps().size());
 
         return data;

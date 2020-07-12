@@ -59,6 +59,9 @@ public class ReportTest {
     @Autowired
     private TestCorpRepository testCorpRepository;
 
+    @Autowired
+    private ReportService reportService;
+
     private static final Logger logger = LoggerFactory.getLogger(ReportTest.class);
 
     public static void sampleReport(OutputStream os, String qr, String markText, String templateName, Object data) {
@@ -272,11 +275,10 @@ public class ReportTest {
         storeTinCheck.setLayout(StoreTinCheck.Layout.HALF);
         storeTinCheck.setCheck(fireCheckInfo);
         fireCheckInfo.setTin(storeTinCheck);
-
         FireCheck fireCheck = new FireCheck();
         fireCheck.setId(fireCheckInfo.getId());
         fireCheck.setInfo(fireCheckInfo);
-        fireCheck.setStatus(FireCheck.Status.Unqualified);
+        fireCheck.setStatus(FireCheck.Status.NoAccept);
         fireCheck.setApplyTime(new Date());
         fireCheck.setRegTime(new Date());
         fireCheck.setNoAcceptType(FireCheck.NoAcceptType.LESS_FILE);
@@ -313,13 +315,23 @@ public class ReportTest {
 //        Optional<ProjectCorp> joinCorp = testCorpRepository.findByIdCodeAndIdProperty(fireCheck.getId(),CorpProperty.Developer);
 //
 //        Map<String, Object> data = new HashMap<>();
+//        fireCheck.getInfo().getFit().setPart("");
+//        data = reportService.officialReportData(fireCheck);
+
 //        data.put("fireCheck", fireCheck);
 //        data.put("org", "东港市住房和城乡建设局");
 //        data.put("word", "DG");
 //        data.put("joinCorp",joinCorp.get());
+//        if (fireCheck.getInfo().getFit()!=null && fireCheck.getInfo().getFit().getPart()!=null){
+//            data.put("packEnumDataList",EnumData.selectPackEnumData(fireCheck.getInfo().getFit().getPart().split(",")));
+//        }else{
+//            data.put("packEnumDataList",EnumData.selectPackEnumData(null));
+//        }
+//
+//
 //        data.put("enumData", EnumData.values());
 //        data.put("sheckTables", fireCheck.getInfo().getItems());
-//        data.put("joinCorps",fireCheck.getInfo().getProject().getCorps());
+//        //data.put("joinCorps",fireCheck.getInfo().getProject().getCorps());
 //        List<String> testList = new ArrayList<>();
 //        testList.add("test1");
 //        testList.add("test2");
@@ -329,7 +341,7 @@ public class ReportTest {
 //        try {
 //            Files.deleteIfExists(Paths.get("D:\\report\\test.pdf"));
 //            fileOutputStream = new FileOutputStream("D:\\report\\test.pdf");
-//            sampleReport(fileOutputStream, Long.toString(fireCheck.getId()), "东港市住房和城乡建设局", "fireCheckRecordSFRApply.ftl", data);
+//            sampleReport(fileOutputStream, Long.toString(fireCheck.getId()), "东港市住房和城乡建设局", "specialControlAcceptance.ftl", data);
 //            File file = new File("D:\\report\\test.pdf"); // 创建文件对象
 //            // Desktop.getDesktop().open(file);
 //        } catch (FileNotFoundException e) {

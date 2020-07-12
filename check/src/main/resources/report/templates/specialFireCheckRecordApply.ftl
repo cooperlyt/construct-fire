@@ -104,8 +104,8 @@
                 <td width="18%">项目负责人(身份证号)</td>
                 <td width="15%">联系电话（移动电话和座机)</td>
             </tr>
-            <#if (joinCorps)?exists>
-                <#list joinCorps ? sort_by("property") as corp>
+            <#if (fireCheck.info.project.corps)?exists>
+                <#list fireCheck.info.project.corps ? sort_by("property") as corp>
                     <tr align="center" valign="middle">
 
                         <#if corp.property == "Developer">
@@ -269,9 +269,9 @@
                             <td width="10%" style="border-right:0.5px">地下层数</td>
                             <td width="10%" style="border-right:0.5px">高度(m)</td>
                             <td width="10%" style="border-right:0.5px">长度(m)</td>
-                            <td width="10%" style="border-right:0.5px">占地面积(㎡)</td>
-                            <td width="10%" style="border-right:0.5px">地上建筑面积(㎡)</td>
-                            <td width="10%">地下建筑面积(㎡)</td>
+                            <td width="10%" style="border-right:0.5px">占地面积<sub>(㎡)</sub></td>
+                            <td width="10%" style="border-right:0.5px">地上建筑面积<sub>(㎡)</sub></td>
+                            <td width="10%">地下建筑面积<sub>(㎡)</sub></td>
                         </tr>
                         <#list fireCheck.info.builds as build>
                             <tr align="center" valign="middle">
@@ -317,22 +317,23 @@
                             <tr align="center" valign="middle">
                                 <td width="20%"  style="border-right:0.5px;border-top: 0.5px" rowspan="2" colspan="2">装饰装修</td>
                                 <td style="border-right:0.5px;border-top: 0.5px" height="40px" colspan="2">装修部位</td>
-                                <#assign partName="">
-                                <#if fireCheck.info.fit.part??>
-                                    <#list fireCheck.info.fit.part?split(",") as part>
-                                        <#if (enumData)?exists>
-                                            <#list enumData as enumItem>
-                                                <#if enumItem.type == "PART"  && enumItem.code==part >
-                                                    <#assign partName = partName+"    "+enumItem.desc>
+                                <td style="border-top: 0.5px" colspan="8">
+                                    <#if fireCheck.info.fit.pack??>
+                                        <#if (packEnumDataList)?exists>
+                                            <#list packEnumDataList as enumItem>
+                                                <#if enumItem.select == true>
+                                                      √${enumItem.desc}
+                                                  <#else>
+                                                      □${enumItem.desc}
                                                 </#if>
                                             </#list>
                                         </#if>
-                                    </#list>
-                                </#if>
-                                <td style="border-top: 0.5px" colspan="8">${partName}</td>
+                                    </#if>
+
+                                </td>
                             </tr>
                             <tr align="center" valign="middle">
-                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">装修面积(㎡)</td>
+                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">装修面积<sub>(㎡)</sub></td>
                                 <td style="border-top: 0.5px;border-right: 0.5px" colspan="3">${(fireCheck.info.fit.area?string('#.000'))!}</td>
                                 <td style="border-right:0.5px;border-top: 0.5px" colspan="2">装修所在层数</td>
                                 <td style="border-top: 0.5px" colspan="3">${fireCheck.info.fit.layers!}</td>
@@ -344,7 +345,7 @@
                                 <td style="border-top: 0.5px" colspan="8"></td>
                             </tr>
                             <tr align="center" valign="middle">
-                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">装修面积(㎡)</td>
+                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">装修面积<sub>(㎡)</sub></td>
                                 <td style="border-top: 0.5px;border-right: 0.5px" colspan="3"></td>
                                 <td style="border-right:0.5px;border-top: 0.5px" colspan="2">装修所在层数</td>
                                 <td style="border-top: 0.5px" colspan="3"></td>
@@ -591,7 +592,7 @@
                             <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
 
                                 <tr style="text-align: left">
-                                    <td height="20px" width="50%">备注：${fireCheck.memo}</td>
+                                    <td height="20px" width="50%">备注：${fireCheck.memo!}</td>
                                     <td width="50%"></td>
                                 </tr>
 

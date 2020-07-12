@@ -1,5 +1,8 @@
 package cc.coopersoft.construct.fire.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum EnumData {
     ENUM_DATA_1("GroupIdType","COMPANY_CODE", "营业执照"),
     ENUM_DATA_2("GroupIdType","CORP_CODE", "机构代码证"),
@@ -160,17 +163,33 @@ public enum EnumData {
     ENUM_DATA_146("PART","OTHER", "其他");
 
 
+
     private String code;
     private String desc;
     private String type;
+    private static List<EnumData> packEnumDataList = new ArrayList<EnumData>(0);
+
+
+
+
 
     private EnumData(String type,String code, String desc) {
         this.code = code;
         this.desc = desc;
         this.type =type;
     }
+    private boolean select;
+
+    public boolean isSelect() {
+        return select;
+    }
+
+    public void setSelect(boolean select) {
+        this.select = select;
+    }
 
     public String getType() {
+
         return type;
     }
 
@@ -189,5 +208,36 @@ public enum EnumData {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    public static void initPackEnumData() {
+        packEnumDataList.clear();
+        for (EnumData e : EnumData.values()) {
+            if (e.getType().equals("PART")) {
+                e.setSelect(false);
+                packEnumDataList.add(e);
+            }
+        }
+    }
+    public static List<EnumData> selectPackEnumData(String[] packStr){
+        initPackEnumData();
+        if (packStr!=null && packStr.length>0) {
+            for (EnumData e : packEnumDataList) {
+                for(String s:packStr){
+                    if(s.equals(e.getCode())){
+                        e.setSelect(true);
+                    }
+                }
+            }
+        }
+        return packEnumDataList;
+    }
+    public static List<EnumData> getPackEnumDataList() {
+        return packEnumDataList;
+    }
+    public static void setPackEnumDataList(List<EnumData> packEnumDataList) {
+        EnumData.packEnumDataList = packEnumDataList;
+    }
+
+
 
 }
