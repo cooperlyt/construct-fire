@@ -93,7 +93,7 @@
             <tr>
                 <td width="10%" height="40px" colspan="2">工程投资额（万元）</td>
                 <td width="36%">${(fireCheck.info.project.putMoney?string('#.000'))!}</td>
-                <td width="12%" colspan="2">总建筑面积<sub>(㎡)</sub></td>
+                <td width="12%" colspan="2">总建筑面积(m<sup>2</sup>)</td>
                 <td width="36%" colspan="2">${(fireCheck.info.project.area?string('#.000'))!}</td>
             </tr>
 
@@ -273,9 +273,9 @@
                             <td width="10%" style="border-right:0.5px">地下层数</td>
                             <td width="10%" style="border-right:0.5px">高度(m)</td>
                             <td width="10%" style="border-right:0.5px">长度(m)</td>
-                            <td width="10%" style="border-right:0.5px">占地面积<sub>(㎡)</sub></td>
-                            <td width="10%" style="border-right:0.5px">地上建筑面积<sub>(㎡)</sub></td>
-                            <td width="10%">地下建筑面积<sub>(㎡)</sub></td>
+                            <td width="10%" style="border-right:0.5px">占地面积(m<sup>2</sup>)</td>
+                            <td width="10%" style="border-right:0.5px">地上建筑面积(m<sup>2</sup>)</td>
+                            <td width="10%">地下建筑面积(m<sup>2</sup>)</td>
                         </tr>
                         <#list fireCheck.info.builds as build>
                             <tr align="center" valign="middle">
@@ -338,7 +338,7 @@
                                 </td>
                             </tr>
                             <tr align="center" valign="middle">
-                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">装修面积<sub>(㎡)</sub></td>
+                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">装修面积(m<sup>2</sup>)</td>
                                 <td style="border-top: 0.5px;border-right: 0.5px" colspan="3">${(fireCheck.info.fit.area?string('#.000'))!}</td>
                                 <td style="border-right:0.5px;border-top: 0.5px" colspan="2">装修所在层数</td>
                                 <td style="border-top: 0.5px" colspan="3">${fireCheck.info.fit.layers!}</td>
@@ -350,7 +350,7 @@
                                 <td style="border-top: 0.5px" colspan="8"></td>
                             </tr>
                             <tr align="center" valign="middle">
-                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">装修面积<sub>(㎡)</sub></td>
+                                <td style="border-right:0.5px;border-top: 0.5px" colspan="2" height="40px">装修面积(m<sup>2</sup>)</td>
                                 <td style="border-top: 0.5px;border-right: 0.5px" colspan="3"></td>
                                 <td style="border-right:0.5px;border-top: 0.5px" colspan="2">装修所在层数</td>
                                 <td style="border-top: 0.5px" colspan="3"></td>

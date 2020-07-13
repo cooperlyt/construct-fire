@@ -86,15 +86,13 @@
                         <p class="text" style="line-height: 25px">存在以下情形，不予备案:√1.依法不应办理消防验收备案；□2.提交的上列第_项材料不符合相关要求；□3.申请材料不齐全，需要补正上列第_项材料。</p>
                     </#if>
                     <#if fireCheck.noAcceptType == "WRONG_FILE">
-
                         <p class="text" style="line-height: 25px">
                             存在以下情形，不予备案:□1.依法不应办理消防验收备案；√2.提交的上列第:<strong class="underline">${notSelect!}</strong>项材料不符合相关要求。□3.申请材料不齐全，需要补正上列第_项材料。
                         </p>
                     </#if>
                     <#if fireCheck.noAcceptType == "LESS_FILE">
-
                         <p class="text" style="line-height: 25px">
-                            存在以下情形，不予备案:□1.依法不应办理消防验收备案;□2.提交的上列第_项材料不符合相关要求；√3.申请材料不齐全,需要补正上列第:<strong class="underline">${notSelect!}</strong>项材料。
+                            存在以下情形，□1.依法不应办理消防验收备案;□2.提交的上列第_项材料不符合相关要求；√3.申请材料不齐全,需要补正上列第:<strong class="underline">${notSelect!}</strong>项材料。
                         </p>
                     </#if>
                 </#if>
