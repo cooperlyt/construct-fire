@@ -76,18 +76,31 @@
                 </#if>
                 <#if fireCheck.status != "NoAccept">
                     <p class="text">备案材料齐全，准予备案</p>
+                    <#if fireCheck.info.inRandom == false>
+                        <p class="text">该工程未被确定为检查对象。</p>
+                    <#else>
+                        <p class="text">该工程被确定为检查对象，我单位将在十五个工作日内进行检查，请做好准备。 </p>
+                    </#if>
                 <#else>
-                    <p class="text" style="line-height: 25px"> 存在以下情形，不予备案。□1.依法不应办理消防验收备案；√2.提交的上列第；
-                        <strong class="underline">${notSelect!}</strong>项材料不符合相关要求。□3．申请材料不齐全，需要补 正上列第__项材料。
-                    </p>
+                    <#if fireCheck.noAcceptType == "WRONG_APPLY">
+                        <p class="text" style="line-height: 25px">存在以下情形，不予备案:√1.依法不应办理消防验收备案；□2.提交的上列第_项材料不符合相关要求；□3.申请材料不齐全，需要补正上列第_项材料。</p>
+                    </#if>
+                    <#if fireCheck.noAcceptType == "WRONG_FILE">
+
+                        <p class="text" style="line-height: 25px">
+                            存在以下情形，不予备案:□1.依法不应办理消防验收备案；√2.提交的上列第:<strong class="underline">${notSelect!}</strong>项材料不符合相关要求。□3.申请材料不齐全，需要补正上列第_项材料。
+                        </p>
+                    </#if>
+                    <#if fireCheck.noAcceptType == "LESS_FILE">
+
+                        <p class="text" style="line-height: 25px">
+                            存在以下情形，不予备案:□1.依法不应办理消防验收备案;□2.提交的上列第_项材料不符合相关要求；√3.申请材料不齐全,需要补正上列第:<strong class="underline">${notSelect!}</strong>项材料。
+                        </p>
+                    </#if>
                 </#if>
 
 
-                <#if fireCheck.info.inRandom == false>
-                    <p class="text">该工程未被确定为检查对象。</p>
-                <#else>
-                    <p class="text">该工程被确定为检查对象，我单位将在十五个工作日内进行检查，请做好准备。 </p>
-                </#if>
+
 
                 <table border="0" width="100%" >
                     <tr>

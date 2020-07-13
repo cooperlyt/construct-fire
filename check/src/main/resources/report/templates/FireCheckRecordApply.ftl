@@ -74,14 +74,18 @@
                 </#if>
                 <td width="36%" colspan="3">
                     ${pproperty!}
-                    <#if fireCheck.info.project.modifyFit?? && fireCheck.info.project.modifyFit == true>
-                        <input type="checkbox" checked="true" />、装饰装修
-                    </#if>
-                    <#if fireCheck.info.project.modifyWarm?? && fireCheck.info.project.modifyWarm == true>
-                        <input type="checkbox" checked="true"/>、建筑保温
-                    </#if>
-                    <#if fireCheck.info.project.modifyUse?? && fireCheck.info.project.modifyUse == true>
-                        <input type="checkbox" checked="true"/>、改变用途
+                    <#if fireCheck.info.project.property == "MODIFY">
+                        (
+                        <#if fireCheck.info.project.modifyFit?? && fireCheck.info.project.modifyFit == true>
+                            <input type="checkbox" checked="true" />&nbsp;装饰装修&nbsp;
+                        </#if>
+                        <#if fireCheck.info.project.modifyWarm?? && fireCheck.info.project.modifyWarm == true>
+                            <input type="checkbox" checked="true"/>&nbsp;建筑保温&nbsp;
+                        </#if>
+                        <#if fireCheck.info.project.modifyUse?? && fireCheck.info.project.modifyUse == true>
+                            <input type="checkbox" checked="true"/>&nbsp;改变用途&nbsp;
+                        </#if>
+                        )
                     </#if>
                 </td>
             </tr>
@@ -89,7 +93,7 @@
             <tr>
                 <td width="10%" height="40px" colspan="2">工程投资额（万元）</td>
                 <td width="36%">${(fireCheck.info.project.putMoney?string('#.000'))!}</td>
-                <td width="12%" colspan="2">总建筑面积（㎡）</td>
+                <td width="12%" colspan="2">总建筑面积<sub>(㎡)</sub></td>
                 <td width="36%" colspan="2">${(fireCheck.info.project.area?string('#.000'))!}</td>
             </tr>
 
