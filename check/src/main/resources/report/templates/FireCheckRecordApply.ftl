@@ -274,12 +274,14 @@
                                 </#if>
                                 <td width="10%" style="border-right:0.5px;border-top: 0.5px;">${bStruct!}</td>
 
-                                <#if (enumData)?exists>
-                                    <#list enumData as enumItem>
-                                        <#if enumItem.type == "UseProperty" && enumItem.code==build.property>
-                                            <#assign useProperty = enumItem.desc>
-                                        </#if>
-                                    </#list>
+                                <#if build.property??>
+                                    <#if (enumData)?exists>
+                                        <#list enumData as enumItem>
+                                            <#if enumItem.type == "UseProperty" && enumItem.code==build.property>
+                                                <#assign useProperty = enumItem.desc>
+                                            </#if>
+                                        </#list>
+                                    </#if>
                                 </#if>
                                 <td width="10%" style="border-right:0.5px;border-top: 0.5px;">${useProperty!}</td>
 
@@ -343,12 +345,14 @@
                             <tr>
                                 <td width="20%"  style="border-right:0.5px;border-top: 0.5px"  colspan="2">改变用途</td>
                                 <td style="border-right:0.5px;border-top: 0.5px" height="40px" colspan="2">使用性质</td>
+                                <#if fireCheck.info.useChange.property??>
                                 <#if (enumData)?exists>
                                     <#list enumData as enumItem>
                                         <#if enumItem.type == "UseProperty" && enumItem.code==fireCheck.info.useChange.property>
                                             <#assign cProperty = enumItem.desc>
                                         </#if>
                                     </#list>
+                                </#if>
                                 </#if>
                                 <td style="border-top: 0.5px;border-right: 0.5px" colspan="3">${cProperty!}</td>
                                 <td style="border-right:0.5px;border-top: 0.5px" height="40px" colspan="2">原有用途</td>
@@ -397,7 +401,7 @@
                             <td style="border-top: 0.5px;border-right: 0.5px" colspan="3"></td>
                             <td style="border-right:0.5px;border-top: 0.5px" colspan="2">保温材料</td>
                             <td style="border-top: 0.5px" colspan="3"></td>
-
+                        </tr>
                         </#if>
                     </table>
                 </td>
@@ -579,7 +583,7 @@
                             <table table style="margin:auto; width:100%;font-size: 100%;padding: 0;" border="0" cellspacing="0" >
 
                                 <tr style="text-align: left">
-                                    <td height="20px" width="50%">备注：${fireCheck.memo}</td>
+                                    <td height="20px" width="50%">备注：${fireCheck.memo!}</td>
                                     <td width="50%"></td>
                                 </tr>
 
