@@ -31,9 +31,9 @@ CREATE TABLE `ACT_GE_BYTEARRAY` (
     `GENERATED_` tinyint(4) DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `TYPE_` int(11) DEFAULT NULL,
-    `CREATE_TIME_` datetime DEFAULT NULL,
+    `CREATE_TIME_` datetime(3) DEFAULT NULL,
     `ROOT_PROC_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_FK_BYTEARR_DEPL` (`DEPLOYMENT_ID_`),
     KEY `ACT_IDX_BYTEARRAY_ROOT_PI` (`ROOT_PROC_INST_ID_`),
@@ -49,7 +49,7 @@ CREATE TABLE `ACT_GE_BYTEARRAY` (
 
 LOCK TABLES `ACT_GE_BYTEARRAY` WRITE;
 /*!40000 ALTER TABLE `ACT_GE_BYTEARRAY` DISABLE KEYS */;
-INSERT INTO `ACT_GE_BYTEARRAY` VALUES ('747d0b34-9547-11ea-957d-0242c0a8200e',1,'BOOT-INF/classes/bpmn/fire_check.bpmn','747cbd13-9547-11ea-957d-0242c0a8200e','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:camunda=\"http://camunda.org/schema/1.0/bpmn\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" id=\"Definitions_0an2ffa\" targetNamespace=\"http://bpmn.io/schema/bpmn\" exporter=\"Camunda Modeler\" exporterVersion=\"3.6.0\">\n  <bpmn:process id=\"construct-fire-check\" name=\"建设工程消防验收\" isExecutable=\"true\">\n    <bpmn:documentation>process description:${description}</bpmn:documentation>\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:extensionElements>\n        <camunda:formData>\n          <camunda:formField id=\"reapply\" label=\"重新受理\" type=\"boolean\" defaultValue=\"false\" />\n          <camunda:formField id=\"approved\" label=\"通过\" type=\"boolean\" defaultValue=\"true\" />\n          <camunda:formField id=\"description\" label=\"业务描述\" type=\"string\" />\n          <camunda:formField id=\"define\" label=\"定义\" type=\"string\" />\n          <camunda:formField id=\"_key\" label=\"key\" type=\"string\" />\n        </camunda:formData>\n      </bpmn:extensionElements>\n      <bpmn:outgoing>SequenceFlow_1g9236z</bpmn:outgoing>\n    </bpmn:startEvent>\n    <bpmn:userTask id=\"Task_0uh9i46\" name=\"初审\">\n      <bpmn:documentation>task description : ${approved}</bpmn:documentation>\n      <bpmn:extensionElements>\n        <camunda:properties>\n          <camunda:property name=\"check\" value=\"true\" />\n        </camunda:properties>\n      </bpmn:extensionElements>\n      <bpmn:incoming>SequenceFlow_07nl9hl</bpmn:incoming>\n      <bpmn:incoming>SequenceFlow_1g9236z</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_05iexw2</bpmn:outgoing>\n    </bpmn:userTask>\n    <bpmn:userTask id=\"Task_1n7az2l\" name=\"现场勘查\">\n      <bpmn:documentation>task description : ${approved}</bpmn:documentation>\n      <bpmn:incoming>SequenceFlow_1j45le8</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1a4il65</bpmn:outgoing>\n    </bpmn:userTask>\n    <bpmn:exclusiveGateway id=\"ExclusiveGateway_096df9l\">\n      <bpmn:incoming>SequenceFlow_05iexw2</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1j45le8</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_1q35odi</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_0cshi8n</bpmn:outgoing>\n    </bpmn:exclusiveGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_05iexw2\" sourceRef=\"Task_0uh9i46\" targetRef=\"ExclusiveGateway_096df9l\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1j45le8\" name=\"通过\" sourceRef=\"ExclusiveGateway_096df9l\" targetRef=\"Task_1n7az2l\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${approved &amp;&amp; !reapply}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:exclusiveGateway id=\"ExclusiveGateway_0hyq89q\">\n      <bpmn:incoming>SequenceFlow_1a4il65</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0utdw6c</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_1ihydai</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_0pei03o</bpmn:outgoing>\n    </bpmn:exclusiveGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1a4il65\" sourceRef=\"Task_1n7az2l\" targetRef=\"ExclusiveGateway_0hyq89q\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_0utdw6c\" name=\"合格\" sourceRef=\"ExclusiveGateway_0hyq89q\" targetRef=\"Task_0srpcip\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${approved &amp;&amp; !reapply}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:userTask id=\"Task_0srpcip\" name=\"审批\">\n      <bpmn:incoming>SequenceFlow_0utdw6c</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0qoi6ga</bpmn:outgoing>\n    </bpmn:userTask>\n    <bpmn:exclusiveGateway id=\"ExclusiveGateway_149chwv\">\n      <bpmn:incoming>SequenceFlow_0qoi6ga</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1tvahgj</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_1cgqxaw</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_1gnecqi</bpmn:outgoing>\n    </bpmn:exclusiveGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0qoi6ga\" sourceRef=\"Task_0srpcip\" targetRef=\"ExclusiveGateway_149chwv\" />\n    <bpmn:userTask id=\"Task_0kxq805\" name=\"重新受理\">\n      <bpmn:incoming>SequenceFlow_1q35odi</bpmn:incoming>\n      <bpmn:incoming>SequenceFlow_1ihydai</bpmn:incoming>\n      <bpmn:incoming>SequenceFlow_1tvahgj</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_07nl9hl</bpmn:outgoing>\n    </bpmn:userTask>\n    <bpmn:sequenceFlow id=\"SequenceFlow_07nl9hl\" sourceRef=\"Task_0kxq805\" targetRef=\"Task_0uh9i46\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1q35odi\" sourceRef=\"ExclusiveGateway_096df9l\" targetRef=\"Task_0kxq805\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${reapply ==true}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1ihydai\" sourceRef=\"ExclusiveGateway_0hyq89q\" targetRef=\"Task_0kxq805\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${reapply ==true}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1tvahgj\" sourceRef=\"ExclusiveGateway_149chwv\" targetRef=\"Task_0kxq805\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${reapply ==true}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:serviceTask id=\"Task_18x713w\" name=\"验收合格\" camunda:delegateExpression=\"${qualifiedDelegate}\">\n      <bpmn:incoming>SequenceFlow_1cgqxaw</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1oz9rbs</bpmn:outgoing>\n    </bpmn:serviceTask>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1cgqxaw\" name=\"合格\" sourceRef=\"ExclusiveGateway_149chwv\" targetRef=\"Task_18x713w\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${approved &amp;&amp; !reapply}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:endEvent id=\"EndEvent_12kfhux\">\n      <bpmn:incoming>SequenceFlow_1oz9rbs</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1oz9rbs\" sourceRef=\"Task_18x713w\" targetRef=\"EndEvent_12kfhux\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1gnecqi\" sourceRef=\"ExclusiveGateway_149chwv\" targetRef=\"Task_0dbpyfv\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${!approved &amp;&amp; !reapply}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:serviceTask id=\"Task_0dbpyfv\" name=\"不合格\" camunda:delegateExpression=\"${unqualifiedDelegate}\">\n      <bpmn:incoming>SequenceFlow_1gnecqi</bpmn:incoming>\n      <bpmn:incoming>SequenceFlow_0pei03o</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1ogc7q3</bpmn:outgoing>\n    </bpmn:serviceTask>\n    <bpmn:endEvent id=\"EndEvent_0tmg0tf\">\n      <bpmn:incoming>SequenceFlow_1ogc7q3</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1ogc7q3\" sourceRef=\"Task_0dbpyfv\" targetRef=\"EndEvent_0tmg0tf\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_0pei03o\" sourceRef=\"ExclusiveGateway_0hyq89q\" targetRef=\"Task_0dbpyfv\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${!approved &amp;&amp; !reapply}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0cshi8n\" sourceRef=\"ExclusiveGateway_096df9l\" targetRef=\"Task_05swjnd\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${!approved &amp;&amp; !reapply}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:serviceTask id=\"Task_05swjnd\" name=\"不予受理\" camunda:delegateExpression=\"${noAcceptDelegate}\">\n      <bpmn:incoming>SequenceFlow_0cshi8n</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_163vend</bpmn:outgoing>\n    </bpmn:serviceTask>\n    <bpmn:endEvent id=\"EndEvent_0j9rh26\">\n      <bpmn:incoming>SequenceFlow_163vend</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_163vend\" sourceRef=\"Task_05swjnd\" targetRef=\"EndEvent_0j9rh26\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1g9236z\" sourceRef=\"StartEvent_1\" targetRef=\"Task_0uh9i46\" />\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"construct-fire-check\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"152\" y=\"252\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"149\" y=\"295\" width=\"22\" height=\"14\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"UserTask_09cp3wf_di\" bpmnElement=\"Task_0uh9i46\">\n        <dc:Bounds x=\"270\" y=\"230\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"UserTask_0h8a1y2_di\" bpmnElement=\"Task_1n7az2l\">\n        <dc:Bounds x=\"570\" y=\"230\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"ExclusiveGateway_096df9l_di\" bpmnElement=\"ExclusiveGateway_096df9l\" isMarkerVisible=\"true\">\n        <dc:Bounds x=\"455\" y=\"245\" width=\"50\" height=\"50\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_05iexw2_di\" bpmnElement=\"SequenceFlow_05iexw2\">\n        <di:waypoint x=\"370\" y=\"270\" />\n        <di:waypoint x=\"455\" y=\"270\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1j45le8_di\" bpmnElement=\"SequenceFlow_1j45le8\">\n        <di:waypoint x=\"505\" y=\"270\" />\n        <di:waypoint x=\"570\" y=\"270\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"527\" y=\"252\" width=\"22\" height=\"14\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ExclusiveGateway_0hyq89q_di\" bpmnElement=\"ExclusiveGateway_0hyq89q\" isMarkerVisible=\"true\">\n        <dc:Bounds x=\"715\" y=\"245\" width=\"50\" height=\"50\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1a4il65_di\" bpmnElement=\"SequenceFlow_1a4il65\">\n        <di:waypoint x=\"670\" y=\"270\" />\n        <di:waypoint x=\"715\" y=\"270\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0utdw6c_di\" bpmnElement=\"SequenceFlow_0utdw6c\">\n        <di:waypoint x=\"765\" y=\"270\" />\n        <di:waypoint x=\"820\" y=\"270\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"783\" y=\"252\" width=\"22\" height=\"14\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"UserTask_1o0tn02_di\" bpmnElement=\"Task_0srpcip\">\n        <dc:Bounds x=\"820\" y=\"230\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"ExclusiveGateway_149chwv_di\" bpmnElement=\"ExclusiveGateway_149chwv\" isMarkerVisible=\"true\">\n        <dc:Bounds x=\"965\" y=\"245\" width=\"50\" height=\"50\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0qoi6ga_di\" bpmnElement=\"SequenceFlow_0qoi6ga\">\n        <di:waypoint x=\"920\" y=\"270\" />\n        <di:waypoint x=\"965\" y=\"270\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"UserTask_0kg69p2_di\" bpmnElement=\"Task_0kxq805\">\n        <dc:Bounds x=\"270\" y=\"90\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_07nl9hl_di\" bpmnElement=\"SequenceFlow_07nl9hl\">\n        <di:waypoint x=\"320\" y=\"170\" />\n        <di:waypoint x=\"320\" y=\"230\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1q35odi_di\" bpmnElement=\"SequenceFlow_1q35odi\">\n        <di:waypoint x=\"480\" y=\"245\" />\n        <di:waypoint x=\"480\" y=\"130\" />\n        <di:waypoint x=\"370\" y=\"130\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1ihydai_di\" bpmnElement=\"SequenceFlow_1ihydai\">\n        <di:waypoint x=\"740\" y=\"245\" />\n        <di:waypoint x=\"740\" y=\"130\" />\n        <di:waypoint x=\"370\" y=\"130\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1tvahgj_di\" bpmnElement=\"SequenceFlow_1tvahgj\">\n        <di:waypoint x=\"990\" y=\"245\" />\n        <di:waypoint x=\"990\" y=\"130\" />\n        <di:waypoint x=\"370\" y=\"130\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ServiceTask_0ecic8i_di\" bpmnElement=\"Task_18x713w\">\n        <dc:Bounds x=\"1080\" y=\"230\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1cgqxaw_di\" bpmnElement=\"SequenceFlow_1cgqxaw\">\n        <di:waypoint x=\"1015\" y=\"270\" />\n        <di:waypoint x=\"1080\" y=\"270\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"1037\" y=\"252\" width=\"22\" height=\"14\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_12kfhux_di\" bpmnElement=\"EndEvent_12kfhux\">\n        <dc:Bounds x=\"1252\" y=\"252\" width=\"36\" height=\"36\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1oz9rbs_di\" bpmnElement=\"SequenceFlow_1oz9rbs\">\n        <di:waypoint x=\"1180\" y=\"270\" />\n        <di:waypoint x=\"1252\" y=\"270\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1gnecqi_di\" bpmnElement=\"SequenceFlow_1gnecqi\">\n        <di:waypoint x=\"990\" y=\"295\" />\n        <di:waypoint x=\"990\" y=\"380\" />\n        <di:waypoint x=\"1080\" y=\"380\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ServiceTask_0wu0sl1_di\" bpmnElement=\"Task_0dbpyfv\">\n        <dc:Bounds x=\"1080\" y=\"340\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"EndEvent_0tmg0tf_di\" bpmnElement=\"EndEvent_0tmg0tf\">\n        <dc:Bounds x=\"1252\" y=\"362\" width=\"36\" height=\"36\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1ogc7q3_di\" bpmnElement=\"SequenceFlow_1ogc7q3\">\n        <di:waypoint x=\"1180\" y=\"380\" />\n        <di:waypoint x=\"1252\" y=\"380\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0pei03o_di\" bpmnElement=\"SequenceFlow_0pei03o\">\n        <di:waypoint x=\"740\" y=\"295\" />\n        <di:waypoint x=\"740\" y=\"380\" />\n        <di:waypoint x=\"1080\" y=\"380\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0cshi8n_di\" bpmnElement=\"SequenceFlow_0cshi8n\">\n        <di:waypoint x=\"480\" y=\"295\" />\n        <di:waypoint x=\"480\" y=\"380\" />\n        <di:waypoint x=\"570\" y=\"380\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ServiceTask_1pmralp_di\" bpmnElement=\"Task_05swjnd\">\n        <dc:Bounds x=\"570\" y=\"340\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"EndEvent_0j9rh26_di\" bpmnElement=\"EndEvent_0j9rh26\">\n        <dc:Bounds x=\"722\" y=\"452\" width=\"36\" height=\"36\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_163vend_di\" bpmnElement=\"SequenceFlow_163vend\">\n        <di:waypoint x=\"620\" y=\"420\" />\n        <di:waypoint x=\"620\" y=\"470\" />\n        <di:waypoint x=\"722\" y=\"470\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1g9236z_di\" bpmnElement=\"SequenceFlow_1g9236z\">\n        <di:waypoint x=\"188\" y=\"270\" />\n        <di:waypoint x=\"270\" y=\"270\" />\n      </bpmndi:BPMNEdge>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n',0,NULL,1,'2020-05-14 02:27:51',NULL,NULL),('747d0b35-9547-11ea-957d-0242c0a8200e',1,'BOOT-INF/classes/bpmn/sample.bpmn','747cbd13-9547-11ea-957d-0242c0a8200e','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn2:definitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmn2=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xsi:schemaLocation=\"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd\" id=\"_VtQR8L0REeSNuv6S7H6XsA\" exporter=\"camunda modeler\" exporterVersion=\"2.7.0\" targetNamespace=\"http://camunda.org/examples\">\n    <bpmn2:process id=\"testProcess\" isExecutable=\"true\">\n        <bpmn2:startEvent id=\"StartEvent_1\">\n            <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>\n        </bpmn2:startEvent>\n        <bpmn2:scriptTask id=\"ScriptTask_1\" name=\"Extract Price\" scriptFormat=\"javascript\">\n            <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>\n            <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>\n            <bpmn2:script><![CDATA[var carJson = execution.getVariableTyped(\"car\").getValueSerialized();\nvar price = S(carJson ).prop(\"price\").numberValue();\nexecution.setVariable(\"price\", price);]]></bpmn2:script>\n        </bpmn2:scriptTask>\n        <bpmn2:sequenceFlow id=\"SequenceFlow_1\" name=\"\" sourceRef=\"StartEvent_1\" targetRef=\"ScriptTask_1\"/>\n        <bpmn2:userTask id=\"UserTask_1\" name=\"Examine Price\">\n            <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>\n            <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>\n        </bpmn2:userTask>\n        <bpmn2:sequenceFlow id=\"SequenceFlow_2\" name=\"\" sourceRef=\"ScriptTask_1\" targetRef=\"UserTask_1\"/>\n        <bpmn2:endEvent id=\"EndEvent_1\">\n            <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>\n        </bpmn2:endEvent>\n        <bpmn2:sequenceFlow id=\"SequenceFlow_3\" name=\"\" sourceRef=\"UserTask_1\" targetRef=\"EndEvent_1\"/>\n    </bpmn2:process>\n    <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n        <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"testProcess\">\n            <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_39\" bpmnElement=\"StartEvent_1\">\n                <dc:Bounds height=\"36.0\" width=\"36.0\" x=\"120.0\" y=\"217.0\"/>\n            </bpmndi:BPMNShape>\n            <bpmndi:BPMNShape id=\"_BPMNShape_ScriptTask_2\" bpmnElement=\"ScriptTask_1\">\n                <dc:Bounds height=\"80.0\" width=\"100.0\" x=\"206.0\" y=\"195.0\"/>\n            </bpmndi:BPMNShape>\n            <bpmndi:BPMNEdge id=\"BPMNEdge_SequenceFlow_1\" bpmnElement=\"SequenceFlow_1\" sourceElement=\"_BPMNShape_StartEvent_39\" targetElement=\"_BPMNShape_ScriptTask_2\">\n                <di:waypoint xsi:type=\"dc:Point\" x=\"156.0\" y=\"235.0\"/>\n                <di:waypoint xsi:type=\"dc:Point\" x=\"206.0\" y=\"235.0\"/>\n            </bpmndi:BPMNEdge>\n            <bpmndi:BPMNShape id=\"_BPMNShape_UserTask_2\" bpmnElement=\"UserTask_1\">\n                <dc:Bounds height=\"80.0\" width=\"100.0\" x=\"356.0\" y=\"195.0\"/>\n            </bpmndi:BPMNShape>\n            <bpmndi:BPMNEdge id=\"BPMNEdge_SequenceFlow_2\" bpmnElement=\"SequenceFlow_2\" sourceElement=\"_BPMNShape_ScriptTask_2\" targetElement=\"_BPMNShape_UserTask_2\">\n                <di:waypoint xsi:type=\"dc:Point\" x=\"306.0\" y=\"235.0\"/>\n                <di:waypoint xsi:type=\"dc:Point\" x=\"356.0\" y=\"235.0\"/>\n            </bpmndi:BPMNEdge>\n            <bpmndi:BPMNShape id=\"_BPMNShape_EndEvent_102\" bpmnElement=\"EndEvent_1\">\n                <dc:Bounds height=\"36.0\" width=\"36.0\" x=\"506.0\" y=\"217.0\"/>\n            </bpmndi:BPMNShape>\n            <bpmndi:BPMNEdge id=\"BPMNEdge_SequenceFlow_3\" bpmnElement=\"SequenceFlow_3\" sourceElement=\"_BPMNShape_UserTask_2\" targetElement=\"_BPMNShape_EndEvent_102\">\n                <di:waypoint xsi:type=\"dc:Point\" x=\"456.0\" y=\"235.0\"/>\n                <di:waypoint xsi:type=\"dc:Point\" x=\"506.0\" y=\"235.0\"/>\n            </bpmndi:BPMNEdge>\n        </bpmndi:BPMNPlane>\n    </bpmndi:BPMNDiagram>\n</bpmn2:definitions>',0,NULL,1,'2020-05-14 02:27:51',NULL,NULL);
+INSERT INTO `ACT_GE_BYTEARRAY` VALUES ('fb129c4e-c6c1-11ea-a81e-0242ac17000f',1,'BOOT-INF/classes/bpmn/fire_check.bpmn','fb12753d-c6c1-11ea-a81e-0242ac17000f','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:camunda=\"http://camunda.org/schema/1.0/bpmn\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" id=\"Definitions_0an2ffa\" targetNamespace=\"http://bpmn.io/schema/bpmn\" exporter=\"Camunda Modeler\" exporterVersion=\"3.6.0\">\n  <bpmn:process id=\"construct-fire-check\" name=\"建设工程消防验收\" isExecutable=\"true\">\n    <bpmn:documentation>process description:${description}</bpmn:documentation>\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:extensionElements>\n        <camunda:formData>\n          <camunda:formField id=\"reapply\" label=\"重新受理\" type=\"boolean\" defaultValue=\"false\" />\n          <camunda:formField id=\"approved\" label=\"通过\" type=\"boolean\" defaultValue=\"true\" />\n          <camunda:formField id=\"description\" label=\"业务描述\" type=\"string\" />\n          <camunda:formField id=\"define\" label=\"定义\" type=\"string\" />\n          <camunda:formField id=\"_key\" label=\"key\" type=\"string\" />\n          <camunda:formField id=\"_full\" type=\"boolean\" />\n        </camunda:formData>\n      </bpmn:extensionElements>\n      <bpmn:outgoing>SequenceFlow_1u8j3vd</bpmn:outgoing>\n    </bpmn:startEvent>\n    <bpmn:userTask id=\"Task_0uh9i46\" name=\"受理审核\" camunda:candidateGroups=\"camunda-fire-apply\">\n      <bpmn:documentation>&lt;strong&gt;建设工程消防${special ? \"验收\" : \"备案\"}${applyType eq \"First\" ? \"申请\"  : \"复查\"} - ${name}  - ${property eq \"NEW\" ? \"新建\" :  property eq \"MODIFY\"  ?  \"改建\"  : property eq \"BIG\" ? \"扩建\" : property eq \"MOVE\"  ? \"迁建\"  : \"临建\"}  - ${inRandom ? \"抽中\"  : \"未抽中\"}&lt;/strong&gt; &lt;strong&gt;申请单位:&lt;/strong&gt;${applyCorp}&lt;strong&gt; 开发单位:&lt;/strong&gt;${developer}</bpmn:documentation>\n      <bpmn:extensionElements>\n        <camunda:properties>\n          <camunda:property name=\"check\" value=\"approved\" />\n          <camunda:property name=\"view\" value=\"fire_check_view\" />\n          <camunda:property name=\"edit\" value=\"fire_apply_edit\" />\n        </camunda:properties>\n        <camunda:inputOutput>\n          <camunda:inputParameter name=\"Input_0ho5lt3\" />\n        </camunda:inputOutput>\n      </bpmn:extensionElements>\n      <bpmn:incoming>SequenceFlow_14txz14</bpmn:incoming>\n      <bpmn:incoming>SequenceFlow_1nv4xu1</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_05iexw2</bpmn:outgoing>\n    </bpmn:userTask>\n    <bpmn:userTask id=\"Task_1n7az2l\" name=\"现场勘查\" camunda:candidateGroups=\"camunda-fire-site\">\n      <bpmn:documentation>&lt;strong&gt;建设工程消防${special ? \"验收\" : \"备案\"}${applyType eq \"First\" ? \"申请\"  : \"复查\"} - ${name}  - ${property eq \"NEW\" ? \"新建\" :  property eq \"MODIFY\"  ?  \"改建\"  : property eq \"BIG\" ? \"扩建\" : property eq \"MOVE\"  ? \"迁建\"  : \"临建\"}  - ${inRandom ? \"抽中\"  : \"未抽中\"}&lt;/strong&gt; &lt;strong&gt;申请单位:&lt;/strong&gt;${applyCorp}&lt;strong&gt; 开发单位:&lt;/strong&gt;${developer}</bpmn:documentation>\n      <bpmn:extensionElements>\n        <camunda:properties>\n          <camunda:property name=\"view\" value=\"fire_check_view\" />\n          <camunda:property name=\"check\" value=\"approved\" />\n          <camunda:property name=\"edit\" value=\"fire_check_opinion\" />\n        </camunda:properties>\n      </bpmn:extensionElements>\n      <bpmn:incoming>SequenceFlow_1sz5hh2</bpmn:incoming>\n      <bpmn:incoming>SequenceFlow_0memgd9</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0dqam8z</bpmn:outgoing>\n    </bpmn:userTask>\n    <bpmn:exclusiveGateway id=\"ExclusiveGateway_096df9l\">\n      <bpmn:incoming>SequenceFlow_05iexw2</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1j45le8</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_0cshi8n</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_0u19gym</bpmn:outgoing>\n    </bpmn:exclusiveGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_05iexw2\" sourceRef=\"Task_0uh9i46\" targetRef=\"ExclusiveGateway_096df9l\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1j45le8\" name=\"通过\" sourceRef=\"ExclusiveGateway_096df9l\" targetRef=\"Task_0mudfeh\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${ !(applyType eq \'Review\' ) &amp;&amp; approved}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:serviceTask id=\"Task_0dbpyfv\" name=\"检查不合格\" camunda:delegateExpression=\"${unqualifiedDelegate}\">\n      <bpmn:incoming>SequenceFlow_0nh0axe</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1udhdj1</bpmn:outgoing>\n    </bpmn:serviceTask>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0cshi8n\" sourceRef=\"ExclusiveGateway_096df9l\" targetRef=\"Task_05swjnd\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${!approved}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:serviceTask id=\"Task_05swjnd\" name=\"不予受理\" camunda:delegateExpression=\"${noAcceptDelegate}\">\n      <bpmn:incoming>SequenceFlow_0cshi8n</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_163vend</bpmn:outgoing>\n    </bpmn:serviceTask>\n    <bpmn:endEvent id=\"EndEvent_0j9rh26\">\n      <bpmn:incoming>SequenceFlow_163vend</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_163vend\" sourceRef=\"Task_05swjnd\" targetRef=\"EndEvent_0j9rh26\" />\n    <bpmn:userTask id=\"Task_1qebp26\" name=\"窗口受理\" camunda:candidateGroups=\"camunda-fire-apply\">\n      <bpmn:documentation>&lt;strong&gt;建设工程消防${special ? \"验收\" : \"备案\"}${applyType eq \"First\" ? \"申请\"  : \"复查\"} - ${name}  - ${property eq \"NEW\" ? \"新建\" :  property eq \"MODIFY\"  ?  \"改建\"  : property eq \"BIG\" ? \"扩建\" : property eq \"MOVE\"  ? \"迁建\"  : \"临建\"}  - ${inRandom ? \"抽中\"  : \"未抽中\"}&lt;/strong&gt; &lt;strong&gt;申请单位:&lt;/strong&gt;${applyCorp}&lt;strong&gt; 开发单位:&lt;/strong&gt;${developer}</bpmn:documentation>\n      <bpmn:extensionElements>\n        <camunda:properties>\n          <camunda:property name=\"view\" value=\"fire_check_view\" />\n        </camunda:properties>\n        <camunda:executionListener delegateExpression=\"${generateDocuments}\" event=\"start\" />\n      </bpmn:extensionElements>\n      <bpmn:incoming>SequenceFlow_13a5k75</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_14txz14</bpmn:outgoing>\n    </bpmn:userTask>\n    <bpmn:sequenceFlow id=\"SequenceFlow_14txz14\" sourceRef=\"Task_1qebp26\" targetRef=\"Task_0uh9i46\" />\n    <bpmn:exclusiveGateway id=\"ExclusiveGateway_1a3z3is\">\n      <bpmn:incoming>SequenceFlow_1u8j3vd</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_13a5k75</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_1nv4xu1</bpmn:outgoing>\n    </bpmn:exclusiveGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_13a5k75\" sourceRef=\"ExclusiveGateway_1a3z3is\" targetRef=\"Task_1qebp26\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${!_full}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1nv4xu1\" sourceRef=\"ExclusiveGateway_1a3z3is\" targetRef=\"Task_0uh9i46\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${_full}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1u8j3vd\" sourceRef=\"StartEvent_1\" targetRef=\"ExclusiveGateway_1a3z3is\" />\n    <bpmn:serviceTask id=\"Task_0mudfeh\" name=\"受理业务\" camunda:delegateExpression=\"${fireApplyDelegate}\">\n      <bpmn:incoming>SequenceFlow_1j45le8</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1l4fp3d</bpmn:outgoing>\n    </bpmn:serviceTask>\n    <bpmn:exclusiveGateway id=\"ExclusiveGateway_0xme57s\">\n      <bpmn:incoming>SequenceFlow_1l4fp3d</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1ppf1wk</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_0memgd9</bpmn:outgoing>\n    </bpmn:exclusiveGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1l4fp3d\" sourceRef=\"Task_0mudfeh\" targetRef=\"ExclusiveGateway_0xme57s\" />\n    <bpmn:serviceTask id=\"Task_167xclj\" name=\"复查\" camunda:delegateExpression=\"${reviewDelegate}\">\n      <bpmn:incoming>SequenceFlow_0u19gym</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1sz5hh2</bpmn:outgoing>\n    </bpmn:serviceTask>\n    <bpmn:endEvent id=\"EndEvent_0vheplo\">\n      <bpmn:incoming>SequenceFlow_1udhdj1</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1udhdj1\" sourceRef=\"Task_0dbpyfv\" targetRef=\"EndEvent_0vheplo\" />\n    <bpmn:exclusiveGateway id=\"ExclusiveGateway_1uiy91d\">\n      <bpmn:incoming>SequenceFlow_0dqam8z</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0nh0axe</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_0kgtd9a</bpmn:outgoing>\n    </bpmn:exclusiveGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0dqam8z\" sourceRef=\"Task_1n7az2l\" targetRef=\"ExclusiveGateway_1uiy91d\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_0nh0axe\" sourceRef=\"ExclusiveGateway_1uiy91d\" targetRef=\"Task_0dbpyfv\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${!approved}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0u19gym\" name=\"复查\" sourceRef=\"ExclusiveGateway_096df9l\" targetRef=\"Task_167xclj\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${ applyType eq \'Review\' &amp;&amp; approved}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:serviceTask id=\"Task_0o47mcq\" name=\"检查合格\" camunda:delegateExpression=\"${qualifiedDelegate}\">\n      <bpmn:incoming>SequenceFlow_0kgtd9a</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_19r90ee</bpmn:outgoing>\n    </bpmn:serviceTask>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0kgtd9a\" sourceRef=\"ExclusiveGateway_1uiy91d\" targetRef=\"Task_0o47mcq\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${approved}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:endEvent id=\"EndEvent_1dcwx6n\">\n      <bpmn:incoming>SequenceFlow_19r90ee</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_19r90ee\" sourceRef=\"Task_0o47mcq\" targetRef=\"EndEvent_1dcwx6n\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1ppf1wk\" name=\"未抽中\" sourceRef=\"ExclusiveGateway_0xme57s\" targetRef=\"Task_0na8bcb\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${!special &amp;&amp; !inRandom}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n    <bpmn:serviceTask id=\"Task_0na8bcb\" name=\"备案\" camunda:delegateExpression=\"${recordDelegate}\">\n      <bpmn:incoming>SequenceFlow_1ppf1wk</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_15oe4s9</bpmn:outgoing>\n    </bpmn:serviceTask>\n    <bpmn:endEvent id=\"EndEvent_0qs0y8v\">\n      <bpmn:incoming>SequenceFlow_15oe4s9</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_15oe4s9\" sourceRef=\"Task_0na8bcb\" targetRef=\"EndEvent_0qs0y8v\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1sz5hh2\" sourceRef=\"Task_167xclj\" targetRef=\"Task_1n7az2l\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_0memgd9\" name=\"特殊工程/抽查\" sourceRef=\"ExclusiveGateway_0xme57s\" targetRef=\"Task_1n7az2l\">\n      <bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\">${special || inRandom}</bpmn:conditionExpression>\n    </bpmn:sequenceFlow>\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"construct-fire-check\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"152\" y=\"202\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"149\" y=\"295\" width=\"22\" height=\"14\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"UserTask_09cp3wf_di\" bpmnElement=\"Task_0uh9i46\">\n        <dc:Bounds x=\"320\" y=\"180\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"UserTask_0h8a1y2_di\" bpmnElement=\"Task_1n7az2l\">\n        <dc:Bounds x=\"910\" y=\"80\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"ExclusiveGateway_096df9l_di\" bpmnElement=\"ExclusiveGateway_096df9l\" isMarkerVisible=\"true\">\n        <dc:Bounds x=\"465\" y=\"195\" width=\"50\" height=\"50\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_05iexw2_di\" bpmnElement=\"SequenceFlow_05iexw2\">\n        <di:waypoint x=\"420\" y=\"220\" />\n        <di:waypoint x=\"465\" y=\"220\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1j45le8_di\" bpmnElement=\"SequenceFlow_1j45le8\">\n        <di:waypoint x=\"515\" y=\"220\" />\n        <di:waypoint x=\"570\" y=\"220\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"532\" y=\"202\" width=\"22\" height=\"14\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ServiceTask_0wu0sl1_di\" bpmnElement=\"Task_0dbpyfv\">\n        <dc:Bounds x=\"1040\" y=\"280\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0cshi8n_di\" bpmnElement=\"SequenceFlow_0cshi8n\">\n        <di:waypoint x=\"490\" y=\"245\" />\n        <di:waypoint x=\"490\" y=\"320\" />\n        <di:waypoint x=\"570\" y=\"320\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ServiceTask_1pmralp_di\" bpmnElement=\"Task_05swjnd\">\n        <dc:Bounds x=\"570\" y=\"280\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"EndEvent_0j9rh26_di\" bpmnElement=\"EndEvent_0j9rh26\">\n        <dc:Bounds x=\"712\" y=\"372\" width=\"36\" height=\"36\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_163vend_di\" bpmnElement=\"SequenceFlow_163vend\">\n        <di:waypoint x=\"620\" y=\"360\" />\n        <di:waypoint x=\"620\" y=\"390\" />\n        <di:waypoint x=\"712\" y=\"390\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"UserTask_0r36c9l_di\" bpmnElement=\"Task_1qebp26\">\n        <dc:Bounds x=\"320\" y=\"280\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_14txz14_di\" bpmnElement=\"SequenceFlow_14txz14\">\n        <di:waypoint x=\"370\" y=\"280\" />\n        <di:waypoint x=\"370\" y=\"260\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ExclusiveGateway_1a3z3is_di\" bpmnElement=\"ExclusiveGateway_1a3z3is\" isMarkerVisible=\"true\">\n        <dc:Bounds x=\"225\" y=\"195\" width=\"50\" height=\"50\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_13a5k75_di\" bpmnElement=\"SequenceFlow_13a5k75\">\n        <di:waypoint x=\"250\" y=\"245\" />\n        <di:waypoint x=\"250\" y=\"320\" />\n        <di:waypoint x=\"320\" y=\"320\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1nv4xu1_di\" bpmnElement=\"SequenceFlow_1nv4xu1\">\n        <di:waypoint x=\"275\" y=\"220\" />\n        <di:waypoint x=\"320\" y=\"220\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1u8j3vd_di\" bpmnElement=\"SequenceFlow_1u8j3vd\">\n        <di:waypoint x=\"188\" y=\"220\" />\n        <di:waypoint x=\"225\" y=\"220\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ServiceTask_0da4556_di\" bpmnElement=\"Task_0mudfeh\">\n        <dc:Bounds x=\"570\" y=\"180\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"ExclusiveGateway_0xme57s_di\" bpmnElement=\"ExclusiveGateway_0xme57s\" isMarkerVisible=\"true\">\n        <dc:Bounds x=\"705\" y=\"195\" width=\"50\" height=\"50\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1l4fp3d_di\" bpmnElement=\"SequenceFlow_1l4fp3d\">\n        <di:waypoint x=\"670\" y=\"220\" />\n        <di:waypoint x=\"705\" y=\"220\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ServiceTask_1r9tvhr_di\" bpmnElement=\"Task_167xclj\">\n        <dc:Bounds x=\"570\" y=\"80\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"EndEvent_0vheplo_di\" bpmnElement=\"EndEvent_0vheplo\">\n        <dc:Bounds x=\"1192\" y=\"302\" width=\"36\" height=\"36\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1udhdj1_di\" bpmnElement=\"SequenceFlow_1udhdj1\">\n        <di:waypoint x=\"1140\" y=\"320\" />\n        <di:waypoint x=\"1192\" y=\"320\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ExclusiveGateway_1uiy91d_di\" bpmnElement=\"ExclusiveGateway_1uiy91d\" isMarkerVisible=\"true\">\n        <dc:Bounds x=\"935\" y=\"195\" width=\"50\" height=\"50\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0dqam8z_di\" bpmnElement=\"SequenceFlow_0dqam8z\">\n        <di:waypoint x=\"960\" y=\"160\" />\n        <di:waypoint x=\"960\" y=\"195\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0nh0axe_di\" bpmnElement=\"SequenceFlow_0nh0axe\">\n        <di:waypoint x=\"960\" y=\"245\" />\n        <di:waypoint x=\"960\" y=\"320\" />\n        <di:waypoint x=\"1040\" y=\"320\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0u19gym_di\" bpmnElement=\"SequenceFlow_0u19gym\">\n        <di:waypoint x=\"490\" y=\"195\" />\n        <di:waypoint x=\"490\" y=\"120\" />\n        <di:waypoint x=\"570\" y=\"120\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"459\" y=\"155\" width=\"22\" height=\"14\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ServiceTask_1t1dfse_di\" bpmnElement=\"Task_0o47mcq\">\n        <dc:Bounds x=\"1040\" y=\"180\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0kgtd9a_di\" bpmnElement=\"SequenceFlow_0kgtd9a\">\n        <di:waypoint x=\"985\" y=\"220\" />\n        <di:waypoint x=\"1040\" y=\"220\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_1dcwx6n_di\" bpmnElement=\"EndEvent_1dcwx6n\">\n        <dc:Bounds x=\"1192\" y=\"202\" width=\"36\" height=\"36\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_19r90ee_di\" bpmnElement=\"SequenceFlow_19r90ee\">\n        <di:waypoint x=\"1140\" y=\"220\" />\n        <di:waypoint x=\"1192\" y=\"220\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1ppf1wk_di\" bpmnElement=\"SequenceFlow_1ppf1wk\">\n        <di:waypoint x=\"730\" y=\"245\" />\n        <di:waypoint x=\"730\" y=\"320\" />\n        <di:waypoint x=\"790\" y=\"320\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"693\" y=\"272\" width=\"33\" height=\"14\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ServiceTask_0xmilh9_di\" bpmnElement=\"Task_0na8bcb\">\n        <dc:Bounds x=\"790\" y=\"280\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"EndEvent_0qs0y8v_di\" bpmnElement=\"EndEvent_0qs0y8v\">\n        <dc:Bounds x=\"932\" y=\"372\" width=\"36\" height=\"36\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_15oe4s9_di\" bpmnElement=\"SequenceFlow_15oe4s9\">\n        <di:waypoint x=\"840\" y=\"360\" />\n        <di:waypoint x=\"840\" y=\"390\" />\n        <di:waypoint x=\"932\" y=\"390\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1sz5hh2_di\" bpmnElement=\"SequenceFlow_1sz5hh2\">\n        <di:waypoint x=\"670\" y=\"120\" />\n        <di:waypoint x=\"910\" y=\"120\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0memgd9_di\" bpmnElement=\"SequenceFlow_0memgd9\">\n        <di:waypoint x=\"730\" y=\"195\" />\n        <di:waypoint x=\"730\" y=\"120\" />\n        <di:waypoint x=\"910\" y=\"120\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"680\" y=\"155\" width=\"70\" height=\"14\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n',0,NULL,1,'2020-07-16 01:38:23.000',NULL,NULL);
 /*!40000 ALTER TABLE `ACT_GE_BYTEARRAY` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +87,7 @@ DROP TABLE IF EXISTS `ACT_GE_SCHEMA_LOG`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ACT_GE_SCHEMA_LOG` (
     `ID_` varchar(64) COLLATE utf8_bin NOT NULL,
-    `TIMESTAMP_` datetime DEFAULT NULL,
+    `TIMESTAMP_` datetime(3) DEFAULT NULL,
     `VERSION_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     PRIMARY KEY (`ID_`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -99,7 +99,7 @@ CREATE TABLE `ACT_GE_SCHEMA_LOG` (
 
 LOCK TABLES `ACT_GE_SCHEMA_LOG` WRITE;
 /*!40000 ALTER TABLE `ACT_GE_SCHEMA_LOG` DISABLE KEYS */;
-INSERT INTO `ACT_GE_SCHEMA_LOG` VALUES ('0','2020-05-14 02:23:21','7.12.0');
+INSERT INTO `ACT_GE_SCHEMA_LOG` VALUES ('0','2020-07-16 01:38:08.000','7.12.0');
 /*!40000 ALTER TABLE `ACT_GE_SCHEMA_LOG` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -125,13 +125,13 @@ CREATE TABLE `ACT_HI_ACTINST` (
     `ACT_NAME_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `ACT_TYPE_` varchar(255) COLLATE utf8_bin NOT NULL,
     `ASSIGNEE_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `START_TIME_` datetime NOT NULL,
-    `END_TIME_` datetime DEFAULT NULL,
+    `START_TIME_` datetime(3) NOT NULL,
+    `END_TIME_` datetime(3) DEFAULT NULL,
     `DURATION_` bigint(20) DEFAULT NULL,
     `ACT_INST_STATE_` int(11) DEFAULT NULL,
     `SEQUENCE_COUNTER_` bigint(20) DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_ACTINST_ROOT_PI` (`ROOT_PROC_INST_ID_`),
     KEY `ACT_IDX_HI_ACT_INST_START` (`START_TIME_`),
@@ -175,8 +175,8 @@ CREATE TABLE `ACT_HI_ATTACHMENT` (
     `URL_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `CONTENT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `CREATE_TIME_` datetime DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `CREATE_TIME_` datetime(3) DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_ATTACHMENT_CONTENT` (`CONTENT_ID_`),
     KEY `ACT_IDX_HI_ATTACHMENT_ROOT_PI` (`ROOT_PROC_INST_ID_`),
@@ -213,9 +213,9 @@ CREATE TABLE `ACT_HI_BATCH` (
     `BATCH_JOB_DEF_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `CREATE_USER_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-    `START_TIME_` datetime NOT NULL,
-    `END_TIME_` datetime DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `START_TIME_` datetime(3) NOT NULL,
+    `END_TIME_` datetime(3) DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_HI_BAT_RM_TIME` (`REMOVAL_TIME_`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -248,8 +248,8 @@ CREATE TABLE `ACT_HI_CASEACTINST` (
     `CALL_CASE_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `CASE_ACT_NAME_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `CASE_ACT_TYPE_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-    `CREATE_TIME_` datetime NOT NULL,
-    `END_TIME_` datetime DEFAULT NULL,
+    `CREATE_TIME_` datetime(3) NOT NULL,
+    `END_TIME_` datetime(3) DEFAULT NULL,
     `DURATION_` bigint(20) DEFAULT NULL,
     `STATE_` int(11) DEFAULT NULL,
     `REQUIRED_` tinyint(1) DEFAULT NULL,
@@ -284,8 +284,8 @@ CREATE TABLE `ACT_HI_CASEINST` (
     `CASE_INST_ID_` varchar(64) COLLATE utf8_bin NOT NULL,
     `BUSINESS_KEY_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `CASE_DEF_ID_` varchar(64) COLLATE utf8_bin NOT NULL,
-    `CREATE_TIME_` datetime NOT NULL,
-    `CLOSE_TIME_` datetime DEFAULT NULL,
+    `CREATE_TIME_` datetime(3) NOT NULL,
+    `CLOSE_TIME_` datetime(3) DEFAULT NULL,
     `DURATION_` bigint(20) DEFAULT NULL,
     `STATE_` int(11) DEFAULT NULL,
     `CREATE_USER_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
@@ -319,7 +319,7 @@ DROP TABLE IF EXISTS `ACT_HI_COMMENT`;
 CREATE TABLE `ACT_HI_COMMENT` (
     `ID_` varchar(64) COLLATE utf8_bin NOT NULL,
     `TYPE_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-    `TIME_` datetime NOT NULL,
+    `TIME_` datetime(3) NOT NULL,
     `USER_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `TASK_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `ROOT_PROC_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
@@ -328,7 +328,7 @@ CREATE TABLE `ACT_HI_COMMENT` (
     `MESSAGE_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `FULL_MSG_` longblob DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_COMMENT_TASK` (`TASK_ID_`),
     KEY `ACT_IDX_HI_COMMENT_ROOT_PI` (`ROOT_PROC_INST_ID_`),
@@ -366,8 +366,8 @@ CREATE TABLE `ACT_HI_DECINST` (
     `CASE_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `ACT_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `ACT_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-    `EVAL_TIME_` datetime NOT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `EVAL_TIME_` datetime(3) NOT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     `COLLECT_VALUE_` double DEFAULT NULL,
     `USER_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `ROOT_DEC_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
@@ -420,9 +420,9 @@ CREATE TABLE `ACT_HI_DEC_IN` (
     `TEXT_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `TEXT2_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `CREATE_TIME_` datetime DEFAULT NULL,
+    `CREATE_TIME_` datetime(3) DEFAULT NULL,
     `ROOT_PROC_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_DEC_IN_INST` (`DEC_INST_ID_`),
     KEY `ACT_IDX_HI_DEC_IN_CLAUSE` (`DEC_INST_ID_`,`CLAUSE_ID_`),
@@ -462,9 +462,9 @@ CREATE TABLE `ACT_HI_DEC_OUT` (
     `TEXT_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `TEXT2_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `CREATE_TIME_` datetime DEFAULT NULL,
+    `CREATE_TIME_` datetime(3) DEFAULT NULL,
     `ROOT_PROC_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_DEC_OUT_INST` (`DEC_INST_ID_`),
     KEY `ACT_IDX_HI_DEC_OUT_RULE` (`RULE_ORDER_`,`CLAUSE_ID_`),
@@ -507,7 +507,7 @@ CREATE TABLE `ACT_HI_DETAIL` (
     `NAME_` varchar(255) COLLATE utf8_bin NOT NULL,
     `VAR_TYPE_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `REV_` int(11) DEFAULT NULL,
-    `TIME_` datetime NOT NULL,
+    `TIME_` datetime(3) NOT NULL,
     `BYTEARRAY_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `DOUBLE_` double DEFAULT NULL,
     `LONG_` bigint(20) DEFAULT NULL,
@@ -516,7 +516,7 @@ CREATE TABLE `ACT_HI_DETAIL` (
     `SEQUENCE_COUNTER_` bigint(20) DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `OPERATION_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_DETAIL_ROOT_PI` (`ROOT_PROC_INST_ID_`),
     KEY `ACT_IDX_HI_DETAIL_PROC_INST` (`PROC_INST_ID_`),
@@ -553,7 +553,7 @@ DROP TABLE IF EXISTS `ACT_HI_EXT_TASK_LOG`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ACT_HI_EXT_TASK_LOG` (
     `ID_` varchar(64) COLLATE utf8_bin NOT NULL,
-    `TIMESTAMP_` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `TIMESTAMP_` timestamp(3) NOT NULL DEFAULT current_timestamp(3) ON UPDATE current_timestamp(3),
     `EXT_TASK_ID_` varchar(64) COLLATE utf8_bin NOT NULL,
     `RETRIES_` int(11) DEFAULT NULL,
     `TOPIC_NAME_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
@@ -570,8 +570,7 @@ CREATE TABLE `ACT_HI_EXT_TASK_LOG` (
     `PROC_DEF_KEY_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `STATE_` int(11) DEFAULT NULL,
-    `REV_` int(11) DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_HI_EXT_TASK_LOG_ROOT_PI` (`ROOT_PROC_INST_ID_`),
     KEY `ACT_HI_EXT_TASK_LOG_PROCINST` (`PROC_INST_ID_`),
@@ -601,7 +600,7 @@ DROP TABLE IF EXISTS `ACT_HI_IDENTITYLINK`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ACT_HI_IDENTITYLINK` (
     `ID_` varchar(64) COLLATE utf8_bin NOT NULL,
-    `TIMESTAMP_` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `TIMESTAMP_` timestamp(3) NOT NULL DEFAULT current_timestamp(3) ON UPDATE current_timestamp(3),
     `TYPE_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `USER_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `GROUP_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
@@ -612,7 +611,7 @@ CREATE TABLE `ACT_HI_IDENTITYLINK` (
     `ASSIGNER_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `PROC_DEF_KEY_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_IDENT_LNK_ROOT_PI` (`ROOT_PROC_INST_ID_`),
     KEY `ACT_IDX_HI_IDENT_LNK_USER` (`USER_ID_`),
@@ -648,8 +647,8 @@ CREATE TABLE `ACT_HI_INCIDENT` (
     `ROOT_PROC_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `PROC_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `EXECUTION_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `CREATE_TIME_` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `END_TIME_` timestamp NULL DEFAULT NULL,
+    `CREATE_TIME_` timestamp(3) NOT NULL DEFAULT current_timestamp(3) ON UPDATE current_timestamp(3),
+    `END_TIME_` timestamp(3) NULL DEFAULT NULL,
     `INCIDENT_MSG_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `INCIDENT_TYPE_` varchar(255) COLLATE utf8_bin NOT NULL,
     `ACTIVITY_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
@@ -660,7 +659,7 @@ CREATE TABLE `ACT_HI_INCIDENT` (
     `INCIDENT_STATE_` int(11) DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `JOB_DEF_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_INCIDENT_TENANT_ID` (`TENANT_ID_`),
     KEY `ACT_IDX_HI_INCIDENT_PROC_DEF_KEY` (`PROC_DEF_KEY_`),
@@ -688,9 +687,9 @@ DROP TABLE IF EXISTS `ACT_HI_JOB_LOG`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ACT_HI_JOB_LOG` (
     `ID_` varchar(64) COLLATE utf8_bin NOT NULL,
-    `TIMESTAMP_` datetime NOT NULL,
+    `TIMESTAMP_` datetime(3) NOT NULL,
     `JOB_ID_` varchar(64) COLLATE utf8_bin NOT NULL,
-    `JOB_DUEDATE_` datetime DEFAULT NULL,
+    `JOB_DUEDATE_` datetime(3) DEFAULT NULL,
     `JOB_RETRIES_` int(11) DEFAULT NULL,
     `JOB_PRIORITY_` bigint(20) NOT NULL DEFAULT 0,
     `JOB_EXCEPTION_MSG_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
@@ -700,15 +699,15 @@ CREATE TABLE `ACT_HI_JOB_LOG` (
     `JOB_DEF_TYPE_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `JOB_DEF_CONFIGURATION_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `ACT_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-    `EXECUTION_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `ROOT_PROC_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+    `EXECUTION_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `PROCESS_INSTANCE_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `PROCESS_DEF_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `PROCESS_DEF_KEY_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `DEPLOYMENT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `SEQUENCE_COUNTER_` bigint(20) DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_JOB_LOG_ROOT_PI` (`ROOT_PROC_INST_ID_`),
     KEY `ACT_IDX_HI_JOB_LOG_PROCINST` (`PROCESS_INSTANCE_ID_`),
@@ -754,7 +753,7 @@ CREATE TABLE `ACT_HI_OP_LOG` (
     `JOB_DEF_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `BATCH_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `USER_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-    `TIMESTAMP_` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `TIMESTAMP_` timestamp(3) NOT NULL DEFAULT current_timestamp(3) ON UPDATE current_timestamp(3),
     `OPERATION_TYPE_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `OPERATION_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `ENTITY_TYPE_` varchar(30) COLLATE utf8_bin DEFAULT NULL,
@@ -762,7 +761,7 @@ CREATE TABLE `ACT_HI_OP_LOG` (
     `ORG_VALUE_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `NEW_VALUE_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     `CATEGORY_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `EXTERNAL_TASK_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `ANNOTATION_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
@@ -785,6 +784,7 @@ CREATE TABLE `ACT_HI_OP_LOG` (
 
 LOCK TABLES `ACT_HI_OP_LOG` WRITE;
 /*!40000 ALTER TABLE `ACT_HI_OP_LOG` DISABLE KEYS */;
+INSERT INTO `ACT_HI_OP_LOG` VALUES ('0ab2be75-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:45:58.000','Create','0ab2be74-c6c3-11ea-a5b8-0242ac170011','Authorization','permissionBits',NULL,'10',NULL,NULL,'Admin',NULL,NULL),('0ab2be76-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:45:58.000','Create','0ab2be74-c6c3-11ea-a5b8-0242ac170011','Authorization','permissions',NULL,'READ, CREATE',NULL,NULL,'Admin',NULL,NULL),('0ab2e587-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:45:58.000','Create','0ab2be74-c6c3-11ea-a5b8-0242ac170011','Authorization','type',NULL,'1',NULL,NULL,'Admin',NULL,NULL),('0ab2e588-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:45:58.000','Create','0ab2be74-c6c3-11ea-a5b8-0242ac170011','Authorization','resource',NULL,'ProcessInstance',NULL,NULL,'Admin',NULL,NULL),('0ab2e589-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:45:58.000','Create','0ab2be74-c6c3-11ea-a5b8-0242ac170011','Authorization','resourceId',NULL,'*',NULL,NULL,'Admin',NULL,NULL),('0ab30c9a-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:45:58.000','Create','0ab2be74-c6c3-11ea-a5b8-0242ac170011','Authorization','groupId',NULL,'camunda-fire-apply',NULL,NULL,'Admin',NULL,NULL),('20c4287d-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:46:35.000','Create','20c4016c-c6c3-11ea-a5b8-0242ac170011','Authorization','permissionBits',NULL,'2',NULL,NULL,'Admin',NULL,NULL),('20c4287e-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:46:35.000','Create','20c4016c-c6c3-11ea-a5b8-0242ac170011','Authorization','permissions',NULL,'READ',NULL,NULL,'Admin',NULL,NULL),('20c4287f-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:46:35.000','Create','20c4016c-c6c3-11ea-a5b8-0242ac170011','Authorization','type',NULL,'1',NULL,NULL,'Admin',NULL,NULL),('20c44f90-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:46:35.000','Create','20c4016c-c6c3-11ea-a5b8-0242ac170011','Authorization','resource',NULL,'ProcessInstance',NULL,NULL,'Admin',NULL,NULL),('20c44f91-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:46:35.000','Create','20c4016c-c6c3-11ea-a5b8-0242ac170011','Authorization','resourceId',NULL,'*',NULL,NULL,'Admin',NULL,NULL),('20c44f92-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:46:35.000','Create','20c4016c-c6c3-11ea-a5b8-0242ac170011','Authorization','groupId',NULL,'camunda-fire-site',NULL,NULL,'Admin',NULL,NULL),('2fc78ac5-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:01.000','Create','2fc78ac4-c6c3-11ea-a5b8-0242ac170011','Authorization','permissionBits',NULL,'2147483647',NULL,NULL,'Admin',NULL,NULL),('2fc78ac6-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:01.000','Create','2fc78ac4-c6c3-11ea-a5b8-0242ac170011','Authorization','permissions',NULL,'ALL',NULL,NULL,'Admin',NULL,NULL),('2fc7b1d7-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:01.000','Create','2fc78ac4-c6c3-11ea-a5b8-0242ac170011','Authorization','type',NULL,'1',NULL,NULL,'Admin',NULL,NULL),('2fc7b1d8-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:01.000','Create','2fc78ac4-c6c3-11ea-a5b8-0242ac170011','Authorization','resource',NULL,'ProcessInstance',NULL,NULL,'Admin',NULL,NULL),('2fc7b1d9-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:01.000','Create','2fc78ac4-c6c3-11ea-a5b8-0242ac170011','Authorization','resourceId',NULL,'*',NULL,NULL,'Admin',NULL,NULL),('2fc7d8ea-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:01.000','Create','2fc78ac4-c6c3-11ea-a5b8-0242ac170011','Authorization','groupId',NULL,'SCOPE_Extends',NULL,NULL,'Admin',NULL,NULL),('38a3e9ed-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:15.000','Create','38a3e9ec-c6c3-11ea-a5b8-0242ac170011','Authorization','permissionBits',NULL,'8',NULL,NULL,'Admin',NULL,NULL),('38a410fe-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:15.000','Create','38a3e9ec-c6c3-11ea-a5b8-0242ac170011','Authorization','permissions',NULL,'CREATE',NULL,NULL,'Admin',NULL,NULL),('38a410ff-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:15.000','Create','38a3e9ec-c6c3-11ea-a5b8-0242ac170011','Authorization','type',NULL,'1',NULL,NULL,'Admin',NULL,NULL),('38a41100-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:15.000','Create','38a3e9ec-c6c3-11ea-a5b8-0242ac170011','Authorization','resource',NULL,'ProcessInstance',NULL,NULL,'Admin',NULL,NULL),('38a43811-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:15.000','Create','38a3e9ec-c6c3-11ea-a5b8-0242ac170011','Authorization','resourceId',NULL,'*',NULL,NULL,'Admin',NULL,NULL),('38a43812-c6c3-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:47:15.000','Create','38a3e9ec-c6c3-11ea-a5b8-0242ac170011','Authorization','groupId',NULL,'SCOPE_Trust',NULL,NULL,'Admin',NULL,NULL),('64c1aa0e-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:20.000','Create','64c15bed-c6c2-11ea-a5b8-0242ac170011','Authorization','permissionBits',NULL,'2147483647',NULL,NULL,'Admin',NULL,NULL),('64c1f82f-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:20.000','Create','64c15bed-c6c2-11ea-a5b8-0242ac170011','Authorization','permissions',NULL,'ALL',NULL,NULL,'Admin',NULL,NULL),('64c1f830-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:20.000','Create','64c15bed-c6c2-11ea-a5b8-0242ac170011','Authorization','type',NULL,'1',NULL,NULL,'Admin',NULL,NULL),('64c1f831-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:20.000','Create','64c15bed-c6c2-11ea-a5b8-0242ac170011','Authorization','resource',NULL,'ProcessDefinition',NULL,NULL,'Admin',NULL,NULL),('64c21f42-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:20.000','Create','64c15bed-c6c2-11ea-a5b8-0242ac170011','Authorization','resourceId',NULL,'construct-fire-check',NULL,NULL,'Admin',NULL,NULL),('64c21f43-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:20.000','Create','64c15bed-c6c2-11ea-a5b8-0242ac170011','Authorization','groupId',NULL,'camunda-fire-apply',NULL,NULL,'Admin',NULL,NULL),('70a44455-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:40.000','Update','70a44454-c6c2-11ea-a5b8-0242ac170011','Authorization','permissionBits','2147483647','258',NULL,NULL,'Admin',NULL,NULL),('70a44456-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:40.000','Update','70a44454-c6c2-11ea-a5b8-0242ac170011','Authorization','permissions','ALL','READ, CREATE_INSTANCE',NULL,NULL,'Admin',NULL,NULL),('70a46b67-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:40.000','Update','70a44454-c6c2-11ea-a5b8-0242ac170011','Authorization','type','1','1',NULL,NULL,'Admin',NULL,NULL),('70a46b68-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:40.000','Update','70a44454-c6c2-11ea-a5b8-0242ac170011','Authorization','resource','ProcessDefinition','ProcessDefinition',NULL,NULL,'Admin',NULL,NULL),('70a46b69-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:40.000','Update','70a44454-c6c2-11ea-a5b8-0242ac170011','Authorization','resourceId','construct-fire-check','construct-fire-check',NULL,NULL,'Admin',NULL,NULL),('70a46b6a-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:41:40.000','Update','70a44454-c6c2-11ea-a5b8-0242ac170011','Authorization','groupId','camunda-fire-apply','camunda-fire-apply',NULL,NULL,'Admin',NULL,NULL),('ad4cfbed-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:43:22.000','Create','ad4cfbec-c6c2-11ea-a5b8-0242ac170011','Authorization','permissionBits',NULL,'2',NULL,NULL,'Admin',NULL,NULL),('ad4d22fe-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:43:22.000','Create','ad4cfbec-c6c2-11ea-a5b8-0242ac170011','Authorization','permissions',NULL,'READ',NULL,NULL,'Admin',NULL,NULL),('ad4d22ff-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:43:22.000','Create','ad4cfbec-c6c2-11ea-a5b8-0242ac170011','Authorization','type',NULL,'1',NULL,NULL,'Admin',NULL,NULL),('ad4d2300-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:43:22.000','Create','ad4cfbec-c6c2-11ea-a5b8-0242ac170011','Authorization','resource',NULL,'ProcessDefinition',NULL,NULL,'Admin',NULL,NULL),('ad4d4a11-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:43:22.000','Create','ad4cfbec-c6c2-11ea-a5b8-0242ac170011','Authorization','resourceId',NULL,'construct-fire-check',NULL,NULL,'Admin',NULL,NULL),('ad4d4a12-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:43:22.000','Create','ad4cfbec-c6c2-11ea-a5b8-0242ac170011','Authorization','groupId',NULL,'camunda-fire-site',NULL,NULL,'Admin',NULL,NULL),('cc3baf75-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:14.000','Create','cc3b8864-c6c2-11ea-a5b8-0242ac170011','Authorization','permissionBits',NULL,'2147483647',NULL,NULL,'Admin',NULL,NULL),('cc3baf76-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:14.000','Create','cc3b8864-c6c2-11ea-a5b8-0242ac170011','Authorization','permissions',NULL,'ALL',NULL,NULL,'Admin',NULL,NULL),('cc3bd687-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:14.000','Create','cc3b8864-c6c2-11ea-a5b8-0242ac170011','Authorization','type',NULL,'1',NULL,NULL,'Admin',NULL,NULL),('cc3bd688-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:14.000','Create','cc3b8864-c6c2-11ea-a5b8-0242ac170011','Authorization','resource',NULL,'ProcessDefinition',NULL,NULL,'Admin',NULL,NULL),('cc3bd689-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:14.000','Create','cc3b8864-c6c2-11ea-a5b8-0242ac170011','Authorization','resourceId',NULL,'*',NULL,NULL,'Admin',NULL,NULL),('cc3bfd9a-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:14.000','Create','cc3b8864-c6c2-11ea-a5b8-0242ac170011','Authorization','groupId',NULL,'SCOPE_Extends',NULL,NULL,'Admin',NULL,NULL),('e1072bfd-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:48.000','Create','e10704ec-c6c2-11ea-a5b8-0242ac170011','Authorization','permissionBits',NULL,'256',NULL,NULL,'Admin',NULL,NULL),('e1072bfe-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:48.000','Create','e10704ec-c6c2-11ea-a5b8-0242ac170011','Authorization','permissions',NULL,'CREATE_INSTANCE',NULL,NULL,'Admin',NULL,NULL),('e107530f-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:48.000','Create','e10704ec-c6c2-11ea-a5b8-0242ac170011','Authorization','type',NULL,'1',NULL,NULL,'Admin',NULL,NULL),('e1075310-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:48.000','Create','e10704ec-c6c2-11ea-a5b8-0242ac170011','Authorization','resource',NULL,'ProcessDefinition',NULL,NULL,'Admin',NULL,NULL),('e1075311-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:48.000','Create','e10704ec-c6c2-11ea-a5b8-0242ac170011','Authorization','resourceId',NULL,'construct-fire-check',NULL,NULL,'Admin',NULL,NULL),('e1077a22-c6c2-11ea-a5b8-0242ac170011',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'camunda','2020-07-15 17:44:48.000','Create','e10704ec-c6c2-11ea-a5b8-0242ac170011','Authorization','groupId',NULL,'SCOPE_Trust',NULL,NULL,'Admin',NULL,NULL);
 /*!40000 ALTER TABLE `ACT_HI_OP_LOG` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -801,9 +801,9 @@ CREATE TABLE `ACT_HI_PROCINST` (
     `BUSINESS_KEY_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `PROC_DEF_KEY_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `PROC_DEF_ID_` varchar(64) COLLATE utf8_bin NOT NULL,
-    `START_TIME_` datetime NOT NULL,
-    `END_TIME_` datetime DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `START_TIME_` datetime(3) NOT NULL,
+    `END_TIME_` datetime(3) DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     `DURATION_` bigint(20) DEFAULT NULL,
     `START_USER_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `START_ACT_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
@@ -862,15 +862,15 @@ CREATE TABLE `ACT_HI_TASKINST` (
     `DESCRIPTION_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `OWNER_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `ASSIGNEE_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-    `START_TIME_` datetime NOT NULL,
-    `END_TIME_` datetime DEFAULT NULL,
+    `START_TIME_` datetime(3) NOT NULL,
+    `END_TIME_` datetime(3) DEFAULT NULL,
     `DURATION_` bigint(20) DEFAULT NULL,
     `DELETE_REASON_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `PRIORITY_` int(11) DEFAULT NULL,
-    `DUE_DATE_` datetime DEFAULT NULL,
-    `FOLLOW_UP_DATE_` datetime DEFAULT NULL,
+    `DUE_DATE_` datetime(3) DEFAULT NULL,
+    `FOLLOW_UP_DATE_` datetime(3) DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_TASKINST_ROOT_PI` (`ROOT_PROC_INST_ID_`),
     KEY `ACT_IDX_HI_TASK_INST_TENANT_ID` (`TENANT_ID_`),
@@ -914,7 +914,7 @@ CREATE TABLE `ACT_HI_VARINST` (
     `TASK_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `NAME_` varchar(255) COLLATE utf8_bin NOT NULL,
     `VAR_TYPE_` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-    `CREATE_TIME_` datetime DEFAULT NULL,
+    `CREATE_TIME_` datetime(3) DEFAULT NULL,
     `REV_` int(11) DEFAULT NULL,
     `BYTEARRAY_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `DOUBLE_` double DEFAULT NULL,
@@ -923,7 +923,7 @@ CREATE TABLE `ACT_HI_VARINST` (
     `TEXT2_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `STATE_` varchar(20) COLLATE utf8_bin DEFAULT NULL,
-    `REMOVAL_TIME_` datetime DEFAULT NULL,
+    `REMOVAL_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_HI_VARINST_ROOT_PI` (`ROOT_PROC_INST_ID_`),
     KEY `ACT_IDX_HI_PROCVAR_PROC_INST` (`PROC_INST_ID_`),
@@ -1098,7 +1098,7 @@ CREATE TABLE `ACT_ID_USER` (
     `EMAIL_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `PWD_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `SALT_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-    `LOCK_EXP_TIME_` datetime DEFAULT NULL,
+    `LOCK_EXP_TIME_` datetime(3) DEFAULT NULL,
     `ATTEMPTS_` int(11) DEFAULT NULL,
     `PICTURE_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     PRIMARY KEY (`ID_`)
@@ -1111,7 +1111,7 @@ CREATE TABLE `ACT_ID_USER` (
 
 LOCK TABLES `ACT_ID_USER` WRITE;
 /*!40000 ALTER TABLE `ACT_ID_USER` DISABLE KEYS */;
-INSERT INTO `ACT_ID_USER` VALUES ('camunda',1,'Camunda','Camunda','camunda@localhost','{SHA-512}xf0BI1NhEKHn6vsVdUxuZaufzzXB3LD0Wz5p7zvtJskMXf5MiCpg9mLFOw0/ZCgK2AtIypd0g13u5tbG91lDsA==','ULS0kr5jnYgf0sI0QjbYKw==',NULL,NULL,NULL);
+INSERT INTO `ACT_ID_USER` VALUES ('camunda',1,'Camunda','Camunda','camunda@localhost','{SHA-512}2ZABc/Y1Gf4wmAHSImZ1ep2FJ20bT15USb/yRKBySMtsZXdCymFxvJyUSHJ1hg9rGKgeI3yNHrIPuH7TcjjM/Q==','cn0RSVNBchrf1GibaaAHHw==',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `ACT_ID_USER` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1228,7 +1228,7 @@ DROP TABLE IF EXISTS `ACT_RE_DEPLOYMENT`;
 CREATE TABLE `ACT_RE_DEPLOYMENT` (
     `ID_` varchar(64) COLLATE utf8_bin NOT NULL,
     `NAME_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-    `DEPLOY_TIME_` datetime DEFAULT NULL,
+    `DEPLOY_TIME_` datetime(3) DEFAULT NULL,
     `SOURCE_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     PRIMARY KEY (`ID_`),
@@ -1243,7 +1243,7 @@ CREATE TABLE `ACT_RE_DEPLOYMENT` (
 
 LOCK TABLES `ACT_RE_DEPLOYMENT` WRITE;
 /*!40000 ALTER TABLE `ACT_RE_DEPLOYMENT` DISABLE KEYS */;
-INSERT INTO `ACT_RE_DEPLOYMENT` VALUES ('747cbd13-9547-11ea-957d-0242c0a8200e','application','2020-05-14 02:27:51','process application',NULL);
+INSERT INTO `ACT_RE_DEPLOYMENT` VALUES ('fb12753d-c6c1-11ea-a81e-0242ac17000f','application','2020-07-16 01:38:23.000','process application',NULL);
 /*!40000 ALTER TABLE `ACT_RE_DEPLOYMENT` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1283,7 +1283,7 @@ CREATE TABLE `ACT_RE_PROCDEF` (
 
 LOCK TABLES `ACT_RE_PROCDEF` WRITE;
 /*!40000 ALTER TABLE `ACT_RE_PROCDEF` DISABLE KEYS */;
-INSERT INTO `ACT_RE_PROCDEF` VALUES ('construct-fire-check:1:75381dd6-9547-11ea-957d-0242c0a8200e',1,'http://bpmn.io/schema/bpmn','建设工程消防验收','construct-fire-check',1,'747cbd13-9547-11ea-957d-0242c0a8200e','BOOT-INF/classes/bpmn/fire_check.bpmn',NULL,0,1,NULL,NULL,NULL,1),('testProcess:1:753b5227-9547-11ea-957d-0242c0a8200e',1,'http://camunda.org/examples',NULL,'testProcess',1,'747cbd13-9547-11ea-957d-0242c0a8200e','BOOT-INF/classes/bpmn/sample.bpmn',NULL,0,1,NULL,NULL,NULL,1);
+INSERT INTO `ACT_RE_PROCDEF` VALUES ('construct-fire-check:1:fb58cd0f-c6c1-11ea-a81e-0242ac17000f',1,'http://bpmn.io/schema/bpmn','建设工程消防验收','construct-fire-check',1,'fb12753d-c6c1-11ea-a81e-0242ac17000f','BOOT-INF/classes/bpmn/fire_check.bpmn',NULL,0,1,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `ACT_RE_PROCDEF` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1317,7 +1317,7 @@ CREATE TABLE `ACT_RU_AUTHORIZATION` (
 
 LOCK TABLES `ACT_RU_AUTHORIZATION` WRITE;
 /*!40000 ALTER TABLE `ACT_RU_AUTHORIZATION` DISABLE KEYS */;
-INSERT INTO `ACT_RU_AUTHORIZATION` VALUES ('d79532b1-9546-11ea-9b87-0242c0a8200c',1,1,NULL,'camunda',1,'camunda',2147483647),('d7a426d2-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,2,'camunda-admin',2),('d7aab683-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,0,'*',2147483647),('d7ae38f4-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,1,'*',2147483647),('d7b16d45-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,2,'*',2147483647),('d7b45376-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,3,'*',2147483647),('d7b82407-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,4,'*',2147483647),('d7bba678-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,5,'*',2147483647),('d7c2d269-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,6,'*',2147483647),('d7c9d74a-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,7,'*',2147483647),('d7d0b51b-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,8,'*',2147483647),('d7d4fadc-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,9,'*',2147483647),('d7d9198d-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,10,'*',2147483647),('d7dc4dde-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,11,'*',2147483647),('d7dee5ef-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,12,'*',2147483647),('d7e1a510-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,13,'*',2147483647),('d7e54e91-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,14,'*',2147483647),('d7e882e2-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,15,'*',2147483647),('d7eb4203-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,16,'*',2147483647),('d7ef87c4-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,17,'*',2147483647),('d7f21fd5-9546-11ea-9b87-0242c0a8200c',1,1,'camunda-admin',NULL,18,'*',2147483647);
+INSERT INTO `ACT_RU_AUTHORIZATION` VALUES ('0ab29763-c6c3-11ea-a5b8-0242ac170011',1,1,'camunda-fire-apply',NULL,8,'*',10),('20c4016b-c6c3-11ea-a5b8-0242ac170011',1,1,'camunda-fire-site',NULL,8,'*',2),('2fc763b3-c6c3-11ea-a5b8-0242ac170011',1,1,'SCOPE_Extends',NULL,8,'*',2147483647),('38a3c2db-c6c3-11ea-a5b8-0242ac170011',1,1,'SCOPE_Trust',NULL,8,'*',8),('64bfae3c-c6c2-11ea-a5b8-0242ac170011',2,1,'camunda-fire-apply',NULL,6,'construct-fire-check',258),('ad4cfbeb-c6c2-11ea-a5b8-0242ac170011',1,1,'camunda-fire-site',NULL,6,'construct-fire-check',2),('cc3b8863-c6c2-11ea-a5b8-0242ac170011',1,1,'SCOPE_Extends',NULL,6,'*',2147483647),('e10704eb-c6c2-11ea-a5b8-0242ac170011',1,1,'SCOPE_Trust',NULL,6,'construct-fire-check',256),('f60100b6-c6c1-11ea-a81e-0242ac17000f',1,1,NULL,'camunda',1,'camunda',2147483647),('f6096527-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,2,'camunda-admin',2),('f613ec78-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,0,'*',2147483647),('f616d2a9-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,1,'*',2147483647),('f6196aba-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,2,'*',2147483647),('f61c50eb-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,3,'*',2147483647),('f61fd35c-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,4,'*',2147483647),('f6237cdd-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,5,'*',2147483647),('f62810be-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,6,'*',2147483647),('f62acfdf-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,7,'*',2147483647),('f62ccbb0-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,8,'*',2147483647),('f62fd8f1-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,9,'*',2147483647),('f63222e2-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,10,'*',2147483647),('f63445c3-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,11,'*',2147483647),('f6361a84-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,12,'*',2147483647),('f6381655-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,13,'*',2147483647),('f63ad576-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,14,'*',2147483647),('f63d4677-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,15,'*',2147483647),('f63f4248-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,16,'*',2147483647),('f6413e19-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,17,'*',2147483647),('f642ebca-c6c1-11ea-a81e-0242ac17000f',1,1,'camunda-admin',NULL,18,'*',2147483647);
 /*!40000 ALTER TABLE `ACT_RU_AUTHORIZATION` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1458,7 +1458,7 @@ CREATE TABLE `ACT_RU_EVENT_SUBSCR` (
     `PROC_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `ACTIVITY_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `CONFIGURATION_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-    `CREATED_` datetime NOT NULL,
+    `CREATED_` datetime(3) NOT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_EVENT_SUBSCR_CONFIG_` (`CONFIGURATION_`),
@@ -1545,7 +1545,7 @@ CREATE TABLE `ACT_RU_EXT_TASK` (
     `RETRIES_` int(11) DEFAULT NULL,
     `ERROR_MSG_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `ERROR_DETAILS_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `LOCK_EXP_TIME_` datetime DEFAULT NULL,
+    `LOCK_EXP_TIME_` datetime(3) DEFAULT NULL,
     `SUSPENSION_STATE_` int(11) DEFAULT NULL,
     `EXECUTION_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `PROC_INST_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
@@ -1600,7 +1600,7 @@ CREATE TABLE `ACT_RU_FILTER` (
 
 LOCK TABLES `ACT_RU_FILTER` WRITE;
 /*!40000 ALTER TABLE `ACT_RU_FILTER` DISABLE KEYS */;
-INSERT INTO `ACT_RU_FILTER` VALUES ('d806b947-9546-11ea-9b87-0242c0a8200c',1,'Task','All tasks',NULL,'{}','');
+INSERT INTO `ACT_RU_FILTER` VALUES ('f654ed2c-c6c1-11ea-a81e-0242ac17000f',1,'Task','All tasks',NULL,'{}','');
 /*!40000 ALTER TABLE `ACT_RU_FILTER` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1649,7 +1649,7 @@ DROP TABLE IF EXISTS `ACT_RU_INCIDENT`;
 CREATE TABLE `ACT_RU_INCIDENT` (
     `ID_` varchar(64) COLLATE utf8_bin NOT NULL,
     `REV_` int(11) NOT NULL,
-    `INCIDENT_TIMESTAMP_` datetime NOT NULL,
+    `INCIDENT_TIMESTAMP_` datetime(3) NOT NULL,
     `INCIDENT_MSG_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
     `INCIDENT_TYPE_` varchar(255) COLLATE utf8_bin NOT NULL,
     `EXECUTION_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
@@ -1699,7 +1699,7 @@ CREATE TABLE `ACT_RU_JOB` (
     `ID_` varchar(64) COLLATE utf8_bin NOT NULL,
     `REV_` int(11) DEFAULT NULL,
     `TYPE_` varchar(255) COLLATE utf8_bin NOT NULL,
-    `LOCK_EXP_TIME_` datetime DEFAULT NULL,
+    `LOCK_EXP_TIME_` datetime(3) DEFAULT NULL,
     `LOCK_OWNER_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `EXCLUSIVE_` tinyint(1) DEFAULT NULL,
     `EXECUTION_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
@@ -1709,7 +1709,7 @@ CREATE TABLE `ACT_RU_JOB` (
     `RETRIES_` int(11) DEFAULT NULL,
     `EXCEPTION_STACK_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `EXCEPTION_MSG_` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
-    `DUEDATE_` datetime DEFAULT NULL,
+    `DUEDATE_` datetime(3) DEFAULT NULL,
     `REPEAT_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `REPEAT_OFFSET_` bigint(20) DEFAULT 0,
     `HANDLER_TYPE_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
@@ -1720,7 +1720,7 @@ CREATE TABLE `ACT_RU_JOB` (
     `PRIORITY_` bigint(20) NOT NULL DEFAULT 0,
     `SEQUENCE_COUNTER_` bigint(20) DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-    `CREATE_TIME_` datetime DEFAULT NULL,
+    `CREATE_TIME_` datetime(3) DEFAULT NULL,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_JOB_EXECUTION_ID` (`EXECUTION_ID_`),
     KEY `ACT_IDX_JOB_HANDLER` (`HANDLER_TYPE_`(100),`HANDLER_CFG_`(155)),
@@ -1787,7 +1787,7 @@ CREATE TABLE `ACT_RU_METER_LOG` (
     `NAME_` varchar(64) COLLATE utf8_bin NOT NULL,
     `REPORTER_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `VALUE_` bigint(20) DEFAULT NULL,
-    `TIMESTAMP_` datetime DEFAULT NULL,
+    `TIMESTAMP_` datetime(3) DEFAULT NULL,
     `MILLISECONDS_` bigint(20) DEFAULT 0,
     PRIMARY KEY (`ID_`),
     KEY `ACT_IDX_METER_LOG_MS` (`MILLISECONDS_`),
@@ -1804,7 +1804,6 @@ CREATE TABLE `ACT_RU_METER_LOG` (
 
 LOCK TABLES `ACT_RU_METER_LOG` WRITE;
 /*!40000 ALTER TABLE `ACT_RU_METER_LOG` DISABLE KEYS */;
-INSERT INTO `ACT_RU_METER_LOG` VALUES ('dadfc9e8-9546-11ea-9b87-0242c0a8200c','activity-instance-start','192.168.32.12$default',0,'2020-05-14 02:23:34',1589394214050),('dadfc9e9-9546-11ea-9b87-0242c0a8200c','job-acquired-failure','192.168.32.12$default',0,'2020-05-14 02:23:34',1589394214050),('dadfc9ea-9546-11ea-9b87-0242c0a8200c','job-locked-exclusive','192.168.32.12$default',0,'2020-05-14 02:23:34',1589394214050),('dadff0fb-9546-11ea-9b87-0242c0a8200c','job-execution-rejected','192.168.32.12$default',0,'2020-05-14 02:23:34',1589394214051),('dadff0fc-9546-11ea-9b87-0242c0a8200c','executed-decision-elements','192.168.32.12$default',0,'2020-05-14 02:23:34',1589394214051),('dadff0fd-9546-11ea-9b87-0242c0a8200c','activity-instance-end','192.168.32.12$default',0,'2020-05-14 02:23:34',1589394214051),('dadff0fe-9546-11ea-9b87-0242c0a8200c','job-successful','192.168.32.12$default',0,'2020-05-14 02:23:34',1589394214051),('dadff0ff-9546-11ea-9b87-0242c0a8200c','job-acquired-success','192.168.32.12$default',0,'2020-05-14 02:23:34',1589394214051),('dadff100-9546-11ea-9b87-0242c0a8200c','job-acquisition-attempt','192.168.32.12$default',0,'2020-05-14 02:23:34',1589394214051),('dadff101-9546-11ea-9b87-0242c0a8200c','job-failed','192.168.32.12$default',0,'2020-05-14 02:23:34',1589394214051);
 /*!40000 ALTER TABLE `ACT_RU_METER_LOG` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1832,9 +1831,9 @@ CREATE TABLE `ACT_RU_TASK` (
     `ASSIGNEE_` varchar(255) COLLATE utf8_bin DEFAULT NULL,
     `DELEGATION_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     `PRIORITY_` int(11) DEFAULT NULL,
-    `CREATE_TIME_` datetime DEFAULT NULL,
-    `DUE_DATE_` datetime DEFAULT NULL,
-    `FOLLOW_UP_DATE_` datetime DEFAULT NULL,
+    `CREATE_TIME_` datetime(3) DEFAULT NULL,
+    `DUE_DATE_` datetime(3) DEFAULT NULL,
+    `FOLLOW_UP_DATE_` datetime(3) DEFAULT NULL,
     `SUSPENSION_STATE_` int(11) DEFAULT NULL,
     `TENANT_ID_` varchar(64) COLLATE utf8_bin DEFAULT NULL,
     PRIMARY KEY (`ID_`),
@@ -1915,5 +1914,267 @@ LOCK TABLES `ACT_RU_VARIABLE` WRITE;
 /*!40000 ALTER TABLE `ACT_RU_VARIABLE` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `BUSINESS`
+--
 
+DROP TABLE IF EXISTS `BUSINESS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `BUSINESS` (
+    `ID` bigint(20) NOT NULL,
+    `STATUS` varchar(9) NOT NULL,
+    `CREATE_TIME` datetime NOT NULL,
+    `COMPLETE_TIME` datetime DEFAULT NULL,
+    `DEFINE` varchar(32) NOT NULL,
+    `NAME` varchar(32) NOT NULL,
+    PRIMARY KEY (`ID`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Dumping data for table `BUSINESS`
+--
+
+LOCK TABLES `BUSINESS` WRITE;
+/*!40000 ALTER TABLE `BUSINESS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `BUSINESS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `BUSINESS_DEFINE`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_DEFINE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `BUSINESS_DEFINE` (
+    `NAME` varchar(32) NOT NULL,
+    `ID` varchar(32) NOT NULL,
+    `PROCESS` varchar(32) DEFAULT NULL,
+    `DESCRIPTION_TEMPLATE` text NOT NULL,
+    PRIMARY KEY (`ID`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `BUSINESS_DEFINE`
+--
+
+LOCK TABLES `BUSINESS_DEFINE` WRITE;
+/*!40000 ALTER TABLE `BUSINESS_DEFINE` DISABLE KEYS */;
+INSERT INTO `BUSINESS_DEFINE` VALUES ('特殊建设工程消防验收','FIRE_CHECK','construct-fire-check','项目名称为${name!\"-\"}, 面积${area!\"-\"}'),('建设工程消防验收备案','FIRE_RECORD','construct-fire-check','项目名称为${name!\"-\"}, 面积${area!\"-\"}');
+/*!40000 ALTER TABLE `BUSINESS_DEFINE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `BUSINESS_DESCRIPTION`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_DESCRIPTION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `BUSINESS_DESCRIPTION` (
+    `ID` bigint(20) NOT NULL,
+    `DESCRIPTION` text NOT NULL,
+    `_KEYS` varchar(1024) DEFAULT NULL,
+    `TAGS` text DEFAULT NULL,
+    `SOURCE` varchar(8) NOT NULL,
+    PRIMARY KEY (`ID`),
+    CONSTRAINT `BUSINESS_DESCRIPTION_ibfk_1` FOREIGN KEY (`ID`) REFERENCES `BUSINESS` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `BUSINESS_DESCRIPTION`
+--
+
+LOCK TABLES `BUSINESS_DESCRIPTION` WRITE;
+/*!40000 ALTER TABLE `BUSINESS_DESCRIPTION` DISABLE KEYS */;
+/*!40000 ALTER TABLE `BUSINESS_DESCRIPTION` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `BUSINESS_DOCUMENT`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_DOCUMENT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `BUSINESS_DOCUMENT` (
+    `NAME` varchar(512) NOT NULL,
+    `BUSINESS_ID` bigint(20) NOT NULL,
+    `ID` bigint(20) NOT NULL,
+    `PAGE_COUNT` int(11) NOT NULL,
+    `NEED` tinyint(1) NOT NULL,
+    `_ORDER` int(11) NOT NULL,
+    `DESCRIPTION` varchar(1024) DEFAULT NULL,
+    PRIMARY KEY (`ID`),
+    UNIQUE KEY `BUSINESS_DOC_NAME_UNIQUE` (`NAME`,`BUSINESS_ID`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `BUSINESS_DOCUMENT`
+--
+
+LOCK TABLES `BUSINESS_DOCUMENT` WRITE;
+/*!40000 ALTER TABLE `BUSINESS_DOCUMENT` DISABLE KEYS */;
+/*!40000 ALTER TABLE `BUSINESS_DOCUMENT` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `BUSINESS_FILE`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_FILE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `BUSINESS_FILE` (
+    `FILE_ID` bigint(20) NOT NULL,
+    `_ORDER` int(11) NOT NULL,
+    `FILE_ITEM_ID` varchar(32) NOT NULL,
+    `MD5` varchar(32) DEFAULT NULL,
+    `UPLOAD_TIME` datetime NOT NULL,
+    `FILE_TYPE` varchar(512) NOT NULL,
+    `FILE_SIZE` int(11) DEFAULT NULL,
+    `EXT_NAME` varchar(8) DEFAULT NULL,
+    PRIMARY KEY (`FILE_ITEM_ID`),
+    KEY `FILE_ID` (`FILE_ID`),
+    CONSTRAINT `BUSINESS_FILE_ibfk_1` FOREIGN KEY (`FILE_ID`) REFERENCES `BUSINESS_DOCUMENT` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `BUSINESS_FILE`
+--
+
+LOCK TABLES `BUSINESS_FILE` WRITE;
+/*!40000 ALTER TABLE `BUSINESS_FILE` DISABLE KEYS */;
+/*!40000 ALTER TABLE `BUSINESS_FILE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `BUSINESS_FILE_DEFINE`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_FILE_DEFINE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `BUSINESS_FILE_DEFINE` (
+    `BUSINESS` varchar(32) NOT NULL,
+    `_ORDER` int(11) NOT NULL,
+    `NAME` varchar(512) NOT NULL,
+    `TYPE` varchar(4) NOT NULL,
+    `EL` varchar(512) DEFAULT NULL,
+    `DESCRIPTION` varchar(1024) DEFAULT NULL,
+    PRIMARY KEY (`BUSINESS`,`_ORDER`),
+    CONSTRAINT `BUSINESS_FILE_DEFINE_ibfk_1` FOREIGN KEY (`BUSINESS`) REFERENCES `BUSINESS_DEFINE` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `BUSINESS_FILE_DEFINE`
+--
+
+LOCK TABLES `BUSINESS_FILE_DEFINE` WRITE;
+/*!40000 ALTER TABLE `BUSINESS_FILE_DEFINE` DISABLE KEYS */;
+INSERT INTO `BUSINESS_FILE_DEFINE` VALUES ('FIRE_CHECK',1,'消防验收申请表','REQ',NULL,''),('FIRE_CHECK',2,'工程竣工验收报告','REQ',NULL,''),('FIRE_CHECK',3,'涉及消防的建设工程竣工图纸','REQ',NULL,''),('FIRE_RECORD',1,'消防验收备案表','REQ',NULL,''),('FIRE_RECORD',2,'工程竣工验收报告','REQ',NULL,''),('FIRE_RECORD',3,'涉及消防的建设工程竣工图纸','REQ',NULL,'');
+/*!40000 ALTER TABLE `BUSINESS_FILE_DEFINE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `DEFINE_KEY`
+--
+
+DROP TABLE IF EXISTS `DEFINE_KEY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `DEFINE_KEY` (
+    `BUSINESS` bigint(20) NOT NULL,
+    `CATEGORY` varchar(16) NOT NULL,
+    `_KEYS` varchar(1024) NOT NULL,
+    PRIMARY KEY (`BUSINESS`,`CATEGORY`),
+    CONSTRAINT `DEFINE_KEY_ibfk_1` FOREIGN KEY (`BUSINESS`) REFERENCES `BUSINESS_DESCRIPTION` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `DEFINE_KEY`
+--
+
+LOCK TABLES `DEFINE_KEY` WRITE;
+/*!40000 ALTER TABLE `DEFINE_KEY` DISABLE KEYS */;
+/*!40000 ALTER TABLE `DEFINE_KEY` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `OPERATION`
+--
+
+DROP TABLE IF EXISTS `OPERATION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `OPERATION` (
+    `BUSINESS_ID` bigint(20) NOT NULL,
+    `OPERATION_TIME` datetime NOT NULL,
+    `TYPE` varchar(16) NOT NULL,
+    `EMP_ID` varchar(36) DEFAULT NULL,
+    `EMP_NAME` varchar(32) DEFAULT NULL,
+    `TASK_NAME` varchar(32) DEFAULT NULL,
+    `DESCRIPTION` varchar(512) DEFAULT NULL,
+    `ID` bigint(20) NOT NULL,
+    PRIMARY KEY (`ID`),
+    KEY `BUSINESS_ID` (`BUSINESS_ID`),
+    CONSTRAINT `OPERATION_ibfk_1` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `OPERATION`
+--
+
+LOCK TABLES `OPERATION` WRITE;
+/*!40000 ALTER TABLE `OPERATION` DISABLE KEYS */;
+/*!40000 ALTER TABLE `OPERATION` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `WORKER_NODE`
+--
+
+DROP TABLE IF EXISTS `WORKER_NODE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `WORKER_NODE` (
+    `ID` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'auto increment id',
+    `HOST_NAME` varchar(64) NOT NULL COMMENT 'host name',
+    `PORT` varchar(64) NOT NULL COMMENT 'port',
+    `TYPE` int(11) NOT NULL COMMENT 'node type: CONTAINER(1), ACTUAL(2), FAKE(3)',
+    `LAUNCH_DATE` date NOT NULL COMMENT 'launch date',
+    `MODIFIED` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT 'modified time',
+    `CREATED` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'created time',
+    PRIMARY KEY (`ID`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='DB WorkerID Assigner for UID Generator';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `WORKER_NODE`
+--
+
+LOCK TABLES `WORKER_NODE` WRITE;
+/*!40000 ALTER TABLE `WORKER_NODE` DISABLE KEYS */;
+INSERT INTO `WORKER_NODE` VALUES (1,'172.23.0.15','1594834697541-95748',2,'2020-07-16','2020-07-15 17:38:17','2020-07-15 17:38:17');
+/*!40000 ALTER TABLE `WORKER_NODE` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2020-07-16  1:50:33

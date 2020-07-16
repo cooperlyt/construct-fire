@@ -76,76 +76,160 @@ services:
 #      - JAVA_OPTS= -Dlogging.level.root=info   -Drocketmq.namesrv.addr=rmqnamesrv:9876
 #      - Dcom.rocketmq.sendMessageWithVIPChannel=false
 
-  eurekaserver:
-    image:   coopersoft/cloud-eurekasvr:latest
-    restart: always
+
+  consul:
+    image: consul:latest
+    command: agent -server -bootstrap -ui -node=node1 -client=0.0.0.0
     ports:
-      - "8761:8761"
-    environment:
-      TZ: Asia/Shanghai
+      - 8500:8500
+    volumes:
+      - /home/data/consul:/consul/data
 
 
-  configserver:
-    image: coopersoft/cloud-confsvr:latest
-    restart: always
+  keycloak:
+    image: jboss/keycloak:10.0.2
     ports:
-      - "8888:8888"
+      - 8901:8080
     environment:
-      EUREKASERVER_PORT: 8761
-      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
-      TZ: Asia/Shanghai
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: mariadb
+      DB_ADDR: database
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: k@ycl0ck
+      DB_PORT: 3306
     links:
-      - eurekaserver:eurekaserver
+      - database:database
     depends_on:
-      - eurekaserver
+      - database
 
-
-  gatewayserver:
-    image: coopersoft/cloud-gatewaysvr:latest
-    restart: always
+  gatewaysvr:
+    image: coopersoft/cloud-gatewaysvr:1.0.1
     ports:
       - "5555:5555"
     environment:
       PROFILE: "default"
       SERVER_PORT: "5555"
-      CONFIGSERVER_PORT: 8888
-      EUREKASERVER_PORT: 8761
-      CONFIGSERVER_URI: "http://configserver:8888"
-      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+      CONSULSERVER_PORT: 8500
+      CONSULSERVER_HOST: "consul"
       TZ: Asia/Shanghai
-    links:
-      - eurekaserver:eurekaserver
-      - configserver:configserver
     depends_on:
-      - eurekaserver
-      - configserver
+      - consul
+    links:
+      - consul:consul
 
-  authenticationservice:
-    image: coopersoft/cloud-authentication-service:latest
+
+  # ==================  archive app ===================================================
+
+  corpservices:
+    image: coopersoft/construct-attach-corp-service:1.0.1
     restart: always
-    ports:
-      - "8901:8901"
+    expose:
+      - "19001"
     environment:
-      PROFILE: "default"
-      SERVER_PORT: "8901"
-      DATABASE_PORT:     3306
+      PROFILE: "prod"
+      SERVER_PORT: "19001"
       CONFIGSERVER_PORT: 8888
       EUREKASERVER_PORT: 8761
+      AUTHSERVER_PORT:   8091
       CONFIGSERVER_URI: "http://configserver:8888"
       EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
       ENCRYPT_KEY:       "IMSYMMETRIC"
       TZ: Asia/Shanghai
     links:
       - eurekaserver:eurekaserver
       - database:database
       - configserver:configserver
+      - rmqnamesrv:rmqnamesrv
+      - authenticationservice:authenticationservice
     depends_on:
       - eurekaserver
       - database
       - configserver
+      - rmqnamesrv
+      - authenticationservice
 
-  # ==================  archive app ===================================================
+  projectservices:
+    image: coopersoft/construct-project-service:1.0.1
+    restart: always
+    expose:
+      - "19002"
+    environment:
+      PROFILE: "prod"
+      SERVER_PORT: "19002"
+      CONFIGSERVER_PORT: 8888
+      EUREKASERVER_PORT: 8761
+      AUTHSERVER_PORT:   8091
+      CONFIGSERVER_URI: "http://configserver:8888"
+      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
+      ENCRYPT_KEY:       "IMSYMMETRIC"
+      TZ: Asia/Shanghai
+    links:
+      - eurekaserver:eurekaserver
+      - database:database
+      - configserver:configserver
+      - rmqnamesrv:rmqnamesrv
+      - authenticationservice:authenticationservice
+    depends_on:
+      - eurekaserver
+      - database
+      - configserver
+      - rmqnamesrv
+      - authenticationservice
+
+  cacheservices:
+    image: coopersoft/construct-project-cache-service:1.0.1
+    restart: always
+    expose:
+      - "19003"
+    environment:
+      PROFILE: "prod"
+      SERVER_PORT: "19003"
+      CONFIGSERVER_PORT: 8888
+      EUREKASERVER_PORT: 8761
+      AUTHSERVER_PORT:   8091
+      CONFIGSERVER_URI: "http://configserver:8888"
+      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
+      ENCRYPT_KEY:       "IMSYMMETRIC"
+      TZ: Asia/Shanghai
+    links:
+      - eurekaserver:eurekaserver
+      - configserver:configserver
+      - rmqnamesrv:rmqnamesrv
+      - redis:redis
+      - authenticationservice:authenticationservice
+    depends_on:
+      - eurekaserver
+      - configserver
+      - rmqnamesrv
+      - redis
+      - authenticationservice
+
+  trustgatewaysvr:
+    image: coopersoft/trust-gatewaysvr:1.0.1
+    ports:
+      - "5556:5556"
+    environment:
+      PROFILE: "dev"
+      SERVER_PORT: "5556"
+      CONSULSERVER_PORT: 8500
+      CONSULSERVER_HOST: "consul"
+      TZ: Asia/Shanghai
+    depends_on:
+      - consul
+      - rmqnamesrv
+      - redis
+    links:
+      - consul:consul
+      - rmqnamesrv:rmqnamesrv
+      - redis:redis
+
+
+
 
   camunda:
     image: coopersoft/construct-camunda-service:latest
@@ -177,92 +261,20 @@ services:
       - authenticationservice
 
 
-  corpservices:
-    image: coopersoft/construct-attach-corp-service:latest
-    restart: always
-    expose:
-      - "19001"
+  camundaconsole:
+    image: coopersoft/camunda-console:latest
+    ports:
+      - 18902:18902
     environment:
-      PROFILE: "prod"
-      SERVER_PORT: "19001"
-      CONFIGSERVER_PORT: 8888
-      EUREKASERVER_PORT: 8761
-      AUTHSERVER_PORT:   8091
-      CONFIGSERVER_URI: "http://configserver:8888"
-      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
-      TZ: Asia/Shanghai
-    links:
-      - eurekaserver:eurekaserver
-      - database:database
-      - configserver:configserver
-      - rmqnamesrv:rmqnamesrv
-      - authenticationservice:authenticationservice
+      PROFILE: "default"
+      SERVER_PORT: "18902"
+      CAMUNDA_PORT: 18086
     depends_on:
-      - eurekaserver
       - database
-      - configserver
-      - rmqnamesrv
-      - authenticationservice
-
-  projectservices:
-    image: coopersoft/construct-project-service:latest
-    restart: always
-    expose:
-      - "19002"
-    environment:
-      PROFILE: "prod"
-      SERVER_PORT: "19002"
-      CONFIGSERVER_PORT: 8888
-      EUREKASERVER_PORT: 8761
-      AUTHSERVER_PORT:   8091
-      CONFIGSERVER_URI: "http://configserver:8888"
-      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
-      TZ: Asia/Shanghai
+      - camunda
     links:
-      - eurekaserver:eurekaserver
       - database:database
-      - configserver:configserver
-      - rmqnamesrv:rmqnamesrv
-      - authenticationservice:authenticationservice
-    depends_on:
-      - eurekaserver
-      - database
-      - configserver
-      - rmqnamesrv
-      - authenticationservice
-
-  cacheservices:
-    image: coopersoft/construct-project-cache-service:latest
-    restart: always
-    expose:
-      - "19003"
-    environment:
-      PROFILE: "prod"
-      SERVER_PORT: "19003"
-      CONFIGSERVER_PORT: 8888
-      EUREKASERVER_PORT: 8761
-      AUTHSERVER_PORT:   8091
-      CONFIGSERVER_URI: "http://configserver:8888"
-      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
-      TZ: Asia/Shanghai
-    links:
-      - eurekaserver:eurekaserver
-      - configserver:configserver
-      - rmqnamesrv:rmqnamesrv
-      - redis:redis
-      - authenticationservice:authenticationservice
-    depends_on:
-      - eurekaserver
-      - configserver
-      - rmqnamesrv
-      - redis
-      - authenticationservice
+      - camunda:camunda
 
   fireconstructcheck:
     image: coopersoft/construct-fire-check-service:latest

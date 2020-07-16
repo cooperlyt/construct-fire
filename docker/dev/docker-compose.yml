@@ -213,6 +213,23 @@ services:
       - database:database
       - camunda:camunda
 
+  cms:
+    image: coopersoft/little-cms-endpoint:snapshot
+    ports:
+      - 17001:17001
+    environment:
+      PROFILE: "default"
+      SERVER_PORT: "17001"
+      CONSULSERVER_PORT: 8500
+      CONSULSERVER_HOST: "consul"
+      TZ: Asia/Shanghai
+    links:
+      - database:database
+      - consul:consul
+    depends_on:
+      - database
+      - consul
+
   fireconstructcheck:
     image: coopersoft/construct-fire-check-service:snapshot
     expose:
