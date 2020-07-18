@@ -90,12 +90,14 @@ echo "********************************************************"
 
 mv data /home/
 
+
 firewall-cmd --zone=public --add-service=http --permanent
 firewall-cmd --zone=public --add-port=5200/tcp --permanent
 firewall-cmd --zone=public --add-port=5201/tcp --permanent
 
 systemctl restart firewalld
 
+docker run  -v /home/data/db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=p0stgr@s -e MYSQL_DATABASE=keycloak -e MYSQL_USER=keycloak -e MYSQL_PASSWORD=k@ycl0ck -e TZ=Asia/Shanghai -d  coopersoft/mariadb-min:v1
 
 
 echo "setup completed!";

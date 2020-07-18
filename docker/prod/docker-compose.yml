@@ -10,8 +10,10 @@ services:
     volumes:
       - "/home/data/db:/var/lib/mysql"
     environment:
-      MYSQL_DATABASE: archives
       MYSQL_ROOT_PASSWORD: p0stgr@s
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: k@ycl0ck
       TZ: Asia/Shanghai
 
 
@@ -79,6 +81,7 @@ services:
 
   consul:
     image: consul:latest
+    restart: always
     command: agent -server -bootstrap -ui -node=node1 -client=0.0.0.0
     ports:
       - 8500:8500
@@ -88,6 +91,7 @@ services:
 
   keycloak:
     image: jboss/keycloak:10.0.2
+    restart: always
     ports:
       - 8901:8080
     environment:
@@ -106,6 +110,7 @@ services:
 
   gatewaysvr:
     image: coopersoft/cloud-gatewaysvr:1.0.1
+    restart: always
     ports:
       - "5555:5555"
     environment:
@@ -128,28 +133,21 @@ services:
     expose:
       - "19001"
     environment:
-      PROFILE: "prod"
+      PROFILE: "dev"
       SERVER_PORT: "19001"
-      CONFIGSERVER_PORT: 8888
-      EUREKASERVER_PORT: 8761
-      AUTHSERVER_PORT:   8091
-      CONFIGSERVER_URI: "http://configserver:8888"
-      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
+      CONSULSERVER_PORT: 8500
+      CONSULSERVER_HOST: "consul"
       TZ: Asia/Shanghai
     links:
-      - eurekaserver:eurekaserver
       - database:database
-      - configserver:configserver
       - rmqnamesrv:rmqnamesrv
-      - authenticationservice:authenticationservice
+      - keycloak:keycloak
+      - consul:consul
     depends_on:
-      - eurekaserver
       - database
-      - configserver
       - rmqnamesrv
-      - authenticationservice
+      - keycloak
+      - consul
 
   projectservices:
     image: coopersoft/construct-project-service:1.0.1
@@ -157,28 +155,21 @@ services:
     expose:
       - "19002"
     environment:
-      PROFILE: "prod"
+      PROFILE: "dev"
       SERVER_PORT: "19002"
-      CONFIGSERVER_PORT: 8888
-      EUREKASERVER_PORT: 8761
-      AUTHSERVER_PORT:   8091
-      CONFIGSERVER_URI: "http://configserver:8888"
-      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
+      CONSULSERVER_PORT: 8500
+      CONSULSERVER_HOST: "consul"
       TZ: Asia/Shanghai
     links:
-      - eurekaserver:eurekaserver
       - database:database
-      - configserver:configserver
       - rmqnamesrv:rmqnamesrv
-      - authenticationservice:authenticationservice
+      - keycloak:keycloak
+      - consul:consul
     depends_on:
-      - eurekaserver
       - database
-      - configserver
       - rmqnamesrv
-      - authenticationservice
+      - keycloak
+      - consul
 
   cacheservices:
     image: coopersoft/construct-project-cache-service:1.0.1
@@ -186,35 +177,29 @@ services:
     expose:
       - "19003"
     environment:
-      PROFILE: "prod"
+      PROFILE: "dev"
       SERVER_PORT: "19003"
-      CONFIGSERVER_PORT: 8888
-      EUREKASERVER_PORT: 8761
-      AUTHSERVER_PORT:   8091
-      CONFIGSERVER_URI: "http://configserver:8888"
-      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
+      CONSULSERVER_PORT: 8500
+      CONSULSERVER_HOST: "consul"
       TZ: Asia/Shanghai
     links:
-      - eurekaserver:eurekaserver
-      - configserver:configserver
       - rmqnamesrv:rmqnamesrv
       - redis:redis
-      - authenticationservice:authenticationservice
+      - keycloak:keycloak
+      - consul:consul
     depends_on:
-      - eurekaserver
-      - configserver
-      - rmqnamesrv
       - redis
-      - authenticationservice
+      - rmqnamesrv
+      - keycloak
+      - consul
 
   trustgatewaysvr:
     image: coopersoft/trust-gatewaysvr:1.0.1
+    restart: always
     ports:
       - "5556:5556"
     environment:
-      PROFILE: "dev"
+      PROFILE: "prod"
       SERVER_PORT: "5556"
       CONSULSERVER_PORT: 8500
       CONSULSERVER_HOST: "consul"
@@ -232,84 +217,89 @@ services:
 
 
   camunda:
-    image: coopersoft/construct-camunda-service:latest
+    image: coopersoft/construct-camunda-service:1.0.1
     restart: always
     ports:
       - 18086:18086
     environment:
       PROFILE: "prod"
       SERVER_PORT: "18086"
-      DATABASE_PORT:     3306
-      CONFIGSERVER_PORT: 8888
-      EUREKASERVER_PORT: 8761
-      CONFIGSERVER_URI: "http://configserver:8888"
-      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
+      CONSULSERVER_PORT: 8500
+      CONSULSERVER_HOST: "consul"
       TZ: Asia/Shanghai
     links:
-      - eurekaserver:eurekaserver
       - database:database
-      - configserver:configserver
       - rmqnamesrv:rmqnamesrv
-      - authenticationservice:authenticationservice
+      - keycloak:keycloak
+      - consul:consul
     depends_on:
-      - eurekaserver
       - database
-      - configserver
       - rmqnamesrv
-      - authenticationservice
+      - keycloak
+      - consul
 
 
-  camundaconsole:
-    image: coopersoft/camunda-console:latest
-    ports:
-      - 18902:18902
-    environment:
-      PROFILE: "default"
-      SERVER_PORT: "18902"
-      CAMUNDA_PORT: 18086
-    depends_on:
-      - database
-      - camunda
-    links:
-      - database:database
-      - camunda:camunda
+#  camundaconsole:
+#    image: coopersoft/camunda-console:latest
+#    ports:
+#      - 18902:18902
+#    environment:
+#      PROFILE: "default"
+#      SERVER_PORT: "18902"
+#      CAMUNDA_PORT: 18086
+#    depends_on:
+#      - database
+#      - camunda
+#    links:
+#      - database:database
+#      - camunda:camunda
 
   fireconstructcheck:
-    image: coopersoft/construct-fire-check-service:latest
+    image: coopersoft/construct-fire-check-service:1.0.1
     restart: always
     expose:
       - "19004"
     environment:
       PROFILE: "prod"
       SERVER_PORT: "19004"
-      CONFIGSERVER_PORT: 8888
-      EUREKASERVER_PORT: 8761
-      AUTHSERVER_PORT:   8091
-      CONFIGSERVER_URI: "http://configserver:8888"
-      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-      AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
+      CONSULSERVER_PORT: 8500
+      CONSULSERVER_HOST: "consul"
       TZ: Asia/Shanghai
     links:
-      - eurekaserver:eurekaserver
-      - configserver:configserver
+      - database:database
       - rmqnamesrv:rmqnamesrv
-      - authenticationservice:authenticationservice
-      - mediaservice:mediaservice
+      - keycloak:keycloak
+      - consul:consul
     depends_on:
-      - eurekaserver
-      - configserver
+      - database
       - rmqnamesrv
-      - authenticationservice
-      - mediaservice
+      - keycloak
+      - consul
 
+
+
+  cms:
+    image: coopersoft/little-cms-endpoint:0.0.1
+    restart: always
+    ports:
+      - 17001:17001
+    environment:
+      PROFILE: "prod"
+      SERVER_PORT: "17001"
+      CONSULSERVER_PORT: 8500
+      CONSULSERVER_HOST: "consul"
+      TZ: Asia/Shanghai
+    links:
+      - database:database
+      - consul:consul
+    depends_on:
+      - database
+      - consul
   # ==================  client ===================================================
 
 
   webclient:
-    image: coopersoft/construct-webclient:latest
+    image: coopersoft/construct-webclient:1.0.1
     restart: always
     ports:
       - "5200:5200"
@@ -317,19 +307,21 @@ services:
     environment:
       API_URL: 'http://192.168.1.21:5555'
       FILE_URL: 'http://192.168.1.21:6699'
+      AUTH_URL: 'http://192.168.1.21:8901/auth'
 
   webcollaborativeclient:
-    image: coopersoft/construct-collaborative-webclient:latest
+    image: coopersoft/construct-collaborative-webclient:1.0.1
     restart: always
     ports:
       - "5201:5201"
     network_mode: "host"
     environment:
-      API_URL: 'http://192.168.1.21:5555'
+      API_URL: 'http://192.168.1.21:5556'
       FILE_URL: 'http://192.168.1.21:6699'
+      AUTH_URL: 'http://192.168.1.21:8901/auth'
 
   website:
-    image: coopersoft/construct-website:nosse
+    image: coopersoft/construct-website:nosse-0.0.2
     restart: always
     ports:
       - "80:6698"

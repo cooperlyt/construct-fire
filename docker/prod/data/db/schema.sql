@@ -4917,22 +4917,22 @@ UNLOCK TABLES;
 
 
 
-USE camunda;
+# USE camunda;
+#
 
 
-
-insert into BUSINESS_DEFINE(ID, NAME,PROCESS,DESCRIPTION_TEMPLATE) VALUES ('FIRE_CHECK','特殊建设工程消防验收','construct-fire-check','项目名称为${name!"-"}, 面积${area!"-"}');
-
-insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_CHECK',1,'消防验收申请表','','REQ');
-insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_CHECK',2,'工程竣工验收报告','','REQ');
-insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_CHECK',3,'涉及消防的建设工程竣工图纸','','REQ');
-
-
-insert into BUSINESS_DEFINE(ID, NAME,PROCESS,DESCRIPTION_TEMPLATE) VALUES ('FIRE_RECORD','建设工程消防验收备案','construct-fire-check','项目名称为${name!"-"}, 面积${area!"-"}');
-
-insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_RECORD',1,'消防验收备案表','','REQ');
-insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_RECORD',2,'工程竣工验收报告','','REQ');
-insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_RECORD',3,'涉及消防的建设工程竣工图纸','','REQ');
+# insert into BUSINESS_DEFINE(ID, NAME,PROCESS,DESCRIPTION_TEMPLATE) VALUES ('FIRE_CHECK','特殊建设工程消防验收','construct-fire-check','项目名称为${name!"-"}, 面积${area!"-"}');
+#
+# insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_CHECK',1,'消防验收申请表','','REQ');
+# insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_CHECK',2,'工程竣工验收报告','','REQ');
+# insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_CHECK',3,'涉及消防的建设工程竣工图纸','','REQ');
+#
+#
+# insert into BUSINESS_DEFINE(ID, NAME,PROCESS,DESCRIPTION_TEMPLATE) VALUES ('FIRE_RECORD','建设工程消防验收备案','construct-fire-check','项目名称为${name!"-"}, 面积${area!"-"}');
+#
+# insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_RECORD',1,'消防验收备案表','','REQ');
+# insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_RECORD',2,'工程竣工验收报告','','REQ');
+# insert into BUSINESS_FILE_DEFINE(BUSINESS, _ORDER,NAME,DESCRIPTION, TYPE) VALUES ('FIRE_RECORD',3,'涉及消防的建设工程竣工图纸','','REQ');
 
 
 

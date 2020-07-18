@@ -23,7 +23,7 @@
         <camunda.spring.boot.starter.version>3.4.0</camunda.spring.boot.starter.version>
         <start-class>cc.coopersoft.cloud.business.Application</start-class>
         <docker.image.name>coopersoft/construct-camunda-service</docker.image.name>
-        <docker.image.tag>snapshot</docker.image.tag>
+        <docker.image.tag>1.0.1</docker.image.tag>
     </properties>
 
 
